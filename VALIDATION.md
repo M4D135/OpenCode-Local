@@ -19,6 +19,7 @@ Vérifications effectuées le 4 novembre 2026. Les rapports structurés conserv�
 | Runtime Microsoft | PASS | Extraction contrôlée de 12 DLL PE x64, identiques à celles du payload |
 | Compilation C++ Windows | PASS | MinGW x64, sans avertissement ; imports du lanceur et de l’assembleur limités aux DLL système Windows |
 | Compilation de l’installateur NSIS | PASS | Fixture puis pack complet ; véritable `Setup.exe`, compression zlib, code de retour 0 |
+| Archive finale et extraction | PASS | `7z t` code 0 ; 3 809 fichiers de payload ; SHA-256 des trois exécutables principaux extraits identique à leurs sources |
 
 ## Limites observées
 

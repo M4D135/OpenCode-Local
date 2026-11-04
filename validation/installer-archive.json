@@ -1,0 +1,33 @@
+{
+  "archive": "dist/Setup.exe",
+  "archive_bytes": 127193139,
+  "tool": "7-Zip 23.01 (x64), Ubuntu 23.01+dfsg-11",
+  "archive_type": "NSIS-3 Unicode",
+  "compression": "Deflate",
+  "test_exit_code": 0,
+  "test_result": "Everything is Ok",
+  "archive_entries": 3816,
+  "installed_entries": 3811,
+  "embedded_payload_files": 3809,
+  "core_extraction_checks": [
+    {
+      "path": "OpenCodeLocal.exe",
+      "extracted_bytes": 3476503,
+      "sha256": "57461cee2ca4479f8c01712ec804ee2c8a73b90091fd3863ec516bbc3aadc1c5",
+      "matches_payload": true
+    },
+    {
+      "path": "wad/engine/llama-server.exe",
+      "extracted_bytes": 9728,
+      "sha256": "192ba16e22d51cd6b991e1b279c73ef68285a49f7db6be5a813f8bfbef78fe05",
+      "matches_payload": true
+    },
+    {
+      "path": "wad/opencode/opencode.exe",
+      "extracted_bytes": 211564424,
+      "sha256": "6f15c8f241f3df22375f174753193a71c488f6c0a6bbbae3f9fa34d112673b7b",
+      "matches_payload": true
+    }
+  ],
+  "windows_execution_tested": false
+}
