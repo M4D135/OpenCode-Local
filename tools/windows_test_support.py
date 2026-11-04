@@ -59,25 +59,41 @@ def sparse_file(path: Path, size: int, prefix: bytes = b"TEST") -> dict:
     """
     if size < len(prefix):
         prefix = prefix[:size]
-    with path.open("xb") as stream:
+    with path.open("xb", buffering=0) as stream:
         if os.name == "nt":
             import msvcrt
             from ctypes import wintypes
             kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+            handle = msvcrt.get_osfhandle(stream.fileno())
             method = kernel.DeviceIoControl
             method.argtypes = (wintypes.HANDLE, wintypes.DWORD, wintypes.LPVOID,
                                wintypes.DWORD, wintypes.LPVOID, wintypes.DWORD,
                                ctypes.POINTER(wintypes.DWORD), wintypes.LPVOID)
             method.restype = wintypes.BOOL
             count = wintypes.DWORD()
-            if not method(msvcrt.get_osfhandle(stream.fileno()), 0x000900C4,
+            if not method(handle, 0x000900C4,
                           None, 0, None, 0, ctypes.byref(count), None):
                 raise ctypes.WinError(ctypes.get_last_error())
         stream.write(prefix)
-        stream.truncate(size)
+        if os.name == "nt":
+            # Python's Windows truncate uses the CRT resizing operation,
+            # which appends zero bytes and can allocate the whole range.
+            # Extend the already-sparse file with the 64-bit Win32 APIs.
+            seek = kernel.SetFilePointerEx
+            seek.argtypes = (wintypes.HANDLE, ctypes.c_longlong,
+                             ctypes.POINTER(ctypes.c_longlong), wintypes.DWORD)
+            seek.restype = wintypes.BOOL
+            end = kernel.SetEndOfFile
+            end.argtypes = (wintypes.HANDLE,)
+            end.restype = wintypes.BOOL
+            if not seek(handle, size, None, 0) or not end(handle):
+                raise ctypes.WinError(ctypes.get_last_error())
+        else:
+            stream.truncate(size)
     actual = path.stat().st_size
     allocated = allocation_bytes(path)
     if actual != size or allocated > 1024 * 1024:
-        raise RuntimeError(f"Sparse fixture was not created as expected: {path.name}")
+        raise RuntimeError(f"Sparse fixture was not created as expected: {path.name}; "
+                           f"expected={size}, actual={actual}, allocated={allocated}")
     return {"name": path.name, "logical_bytes": actual, "allocated_bytes": allocated,
             "contents": "size-only sparse fixture; not a model"}

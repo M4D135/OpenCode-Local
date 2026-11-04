@@ -65,10 +65,10 @@ RequestExecutionLevel user
 SilentInstall silent
 AutoCloseWindow true
 Name "OpenCode Local production-function regression"
-OutFile "{nsis_escape(executable.as_posix())}"
+OutFile "{nsis_escape(str(executable))}"
 !include "LogicLib.nsh"
 !include "FileFunc.nsh"
-!include "{nsis_escape(config.as_posix())}"
+!include "{nsis_escape(str(config))}"
 !define PRODUCT_MARKER {definition("PRODUCT_MARKER")}
 !define MARKER_PATH {definition("MARKER_PATH")}
 !define PROFILE_DIRECTORY {profile_value}
