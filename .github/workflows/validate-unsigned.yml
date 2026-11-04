@@ -1,0 +1,175 @@
+name: Build and Windows validation (unsigned)
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - README.md
+      - BUILD.md
+      - VALIDATION.md
+      - CODE_SIGNING.md
+      - PRIVACY.md
+      - docs/**
+      - validation/**
+      - .signpath/README.md
+  pull_request:
+  workflow_dispatch:
+
+# This workflow never receives a SignPath token and never publishes a release.
+permissions:
+  contents: read
+
+concurrency:
+  group: unsigned-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    outputs:
+      candidate_id: ${{ steps.upload.outputs.artifact-id }}
+      version: ${{ steps.preflight.outputs.version }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out this workflow's source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Check artifact restrictions and pinned actions
+        id: preflight
+        run: python .signpath/ci_gate.py preflight
+
+      - name: Install local build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y g++-mingw-w64-x86-64-posix nsis 7zip
+          python -m pip install -r requirements-build.txt
+          node --version
+          npm --version
+          python - <<'PY'
+          import os, shutil
+          sevenzip = shutil.which('7z') or shutil.which('7zz')
+          if not sevenzip:
+              raise SystemExit('7-Zip is required for installer integrity checks')
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              output.write('OPENCODE_SEVENZIP=' + sevenzip + '\n')
+          PY
+
+      - name: Prepare only pinned upstream dependencies, without models
+        run: python tools/build.py --prepare-only --setup-only --signing unsigned
+
+      - name: Compile our six executables from source
+        run: >-
+          python tools/build_packs.py --phase native --signing unsigned --pack all
+          --base-payload build/payload --work-root build/signing --artifact-root signing --setup-only
+
+      - name: Assemble both unsigned installers and check their archives
+        run: >-
+          python tools/build_packs.py --phase setup --signing unsigned --pack all
+          --base-payload build/payload --work-root build/signing --artifact-root signing
+          --setup-only --sevenzip "$OPENCODE_SEVENZIP"
+
+      - name: Exercise the assembler and compile the production path harness
+        run: |
+          python tools/test_signing.py
+          python tools/test_assembler_profiles.py
+          python tools/test_installer_paths.py --build-only
+
+      - name: Bound the transfer and record its origin
+        run: |
+          python .signpath/ci_gate.py layout native signing/native --max-bytes 50000000
+          python .signpath/ci_gate.py layout setup signing/setup
+          python .signpath/ci_gate.py provenance signing/workflow-provenance.json
+          python .signpath/ci_gate.py budget signing/native signing/setup signing/native-manifest.json signing/setup-manifest.json signing/workflow-provenance.json
+
+      # One transfer bundle, at most 300 MB; no model or prepared payload.
+      - name: Transfer unsigned candidates for Windows validation
+        id: upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unsigned-candidates-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            signing/native/
+            signing/setup/
+            signing/native-manifest.json
+            signing/setup-manifest.json
+            signing/workflow-provenance.json
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+          archive: true
+
+      - name: Keep small Linux validation reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unsigned-linux-reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            validation/assembler-new-profiles.json
+            validation/installer-paths.json
+          if-no-files-found: ignore
+          retention-days: 1
+
+  windows:
+    needs: build
+    runs-on: windows-2022
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Preserve source bytes across Linux and Windows
+        run: git config --global core.autocrlf false
+
+      - name: Check out the identical source commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Download this run's exact unsigned artifact
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.build.outputs.candidate_id }}
+          path: signing
+          merge-multiple: true
+          digest-mismatch: error
+
+      - name: Check executables, installer contents, and small Windows fixtures
+        run: |
+          & ./tools/windows_validate.ps1 -Phase All -NativeRoot signing/native -SetupRoot signing/setup -WorkRoot build/signing -Pack @('16go', '32go') -ReportPath validation/windows-unsigned.json
+
+      - name: Verify final ZIP packaging locally, without duplicating uploads
+        run: >-
+          python tools/build_packs.py --phase finalize --signing unsigned --pack all
+          --artifact-root signing --output-root dist --setup-only
+
+      - name: Record the unsigned result
+        if: success()
+        run: |
+          'Windows validation completed. These are unsigned development artifacts; no signed release was published. Model files were neither downloaded nor changed.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+
+      - name: Keep Windows validation reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unsigned-windows-reports-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            validation/windows-unsigned.json
+            signing/finalize-manifest.json
+          if-no-files-found: ignore
+          retention-days: 1

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Import as a separate SignPath artifact configuration. No upstream binary is selected. -->
+<artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
+  <parameters>
+    <parameter name="version" required="true" />
+  </parameters>
+  <zip-file>
+    <pe-file path="16go/OpenCodeLocal.exe" product-name="OpenCode Local" product-version="${version}" original-filename="OpenCodeLocal.exe">
+      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
+    </pe-file>
+    <pe-file path="16go/AssembleModel.exe" product-name="OpenCode Local" product-version="${version}" original-filename="AssembleModel.exe">
+      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
+    </pe-file>
+    <pe-file path="16go/Uninstall.exe" product-name="OpenCode Local" product-version="${version}" original-filename="Uninstall.exe">
+      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
+    </pe-file>
+    <pe-file path="32go/OpenCodeLocal.exe" product-name="OpenCode Local" product-version="${version}" original-filename="OpenCodeLocal.exe">
+      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
+    </pe-file>
+    <pe-file path="32go/AssembleModel.exe" product-name="OpenCode Local" product-version="${version}" original-filename="AssembleModel.exe">
+      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
+    </pe-file>
+    <pe-file path="32go/Uninstall.exe" product-name="OpenCode Local" product-version="${version}" original-filename="Uninstall.exe">
+      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
+    </pe-file>
+  </zip-file>
+</artifact-configuration>

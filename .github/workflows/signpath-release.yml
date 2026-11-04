@@ -1,0 +1,262 @@
+name: SignPath release candidates (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      signing_policy_slug:
+        description: Exact approved SignPath release policy slug (must match repository configuration)
+        required: true
+        type: string
+
+# No push, PR, pull_request_target, or workflow_run trigger may access signing.
+permissions:
+  contents: read
+
+concurrency:
+  group: signpath-release-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  build_and_sign:
+    if: github.event.repository.private == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      candidate_id: ${{ steps.upload_candidates.outputs.artifact-id }}
+      version: ${{ steps.preflight.outputs.version }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out this workflow's source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Require explicit SignPath setup before any build or request
+        id: preflight
+        env:
+          HAS_SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN != '' }}
+          SIGNPATH_ORGANIZATION_ID: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          SIGNPATH_PROJECT_SLUG: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          SIGNPATH_SIGNING_POLICY_SLUG: ${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}
+          SIGNPATH_NATIVE_ARTIFACT_CONFIGURATION_SLUG: ${{ vars.SIGNPATH_NATIVE_ARTIFACT_CONFIGURATION_SLUG }}
+          SIGNPATH_SETUP_ARTIFACT_CONFIGURATION_SLUG: ${{ vars.SIGNPATH_SETUP_ARTIFACT_CONFIGURATION_SLUG }}
+          SIGNPATH_EXPECTED_PUBLISHER: ${{ vars.SIGNPATH_EXPECTED_PUBLISHER }}
+          SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
+          REQUESTED_SIGNING_POLICY: ${{ inputs.signing_policy_slug }}
+        run: python .signpath/ci_gate.py preflight --require-signpath
+
+      - name: Install local build and verification prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y g++-mingw-w64-x86-64-posix nsis 7zip cmake pkg-config libssl-dev libcurl4-openssl-dev zlib1g-dev ca-certificates
+          python -m pip install -r requirements-build.txt
+          node --version
+          npm --version
+          python - <<'PY'
+          import os, shutil
+          sevenzip = shutil.which('7z') or shutil.which('7zz')
+          if not sevenzip:
+              raise SystemExit('7-Zip is required for installer integrity checks')
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              output.write('OPENCODE_SEVENZIP=' + sevenzip + '\n')
+          PY
+
+      - name: Build the SHA-256-pinned signature verifier
+        run: python .signpath/install_verifier.py --prefix "$RUNNER_TEMP/opencode-signing-verifier"
+
+      - name: Prepare only pinned upstream dependencies, without models
+        run: python tools/build.py --prepare-only --setup-only --signing unsigned
+
+      - name: Compile our six executables from this source commit
+        run: >-
+          python tools/build_packs.py --phase native --signing unsigned --pack all
+          --base-payload build/payload --work-root build/signing --artifact-root signing --setup-only
+
+      - name: Restrict the first signing input to our six PE files
+        run: python .signpath/ci_gate.py layout native signing/native --max-bytes 50000000
+
+      - name: Upload native input for verified GitHub provenance
+        id: upload_native
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signpath-native-input-${{ github.run_id }}-${{ github.run_attempt }}
+          path: signing/native/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+          archive: true
+
+      - name: Request approval and signature of our native executables
+        id: sign_native
+        uses: SignPath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ inputs.signing_policy_slug }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_NATIVE_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.upload_native.outputs.artifact-id }}
+          github-token: ${{ github.token }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed/native
+          parameters: |
+            version: ${{ toJSON(steps.preflight.outputs.version) }}
+
+      - name: Verify returned signatures and assemble installers with signed natives
+        env:
+          SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
+        run: |
+          python .signpath/ci_gate.py layout native signed/native --max-bytes 50000000
+          python tools/build_packs.py --phase setup --signing signed --pack all --base-payload build/payload --work-root build/signing --artifact-root signing --signed-native-root signed/native --expected-signer-sha256 "$SIGNPATH_EXPECTED_SIGNER_SHA256" --setup-only --sevenzip "$OPENCODE_SEVENZIP"
+          python .signpath/ci_gate.py layout setup signing/setup
+
+      - name: Upload final installer input for verified GitHub provenance
+        id: upload_setup
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signpath-setup-input-${{ github.run_id }}-${{ github.run_attempt }}
+          path: signing/setup/
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+          archive: true
+
+      - name: Request approval and signature of the two outer installers
+        id: sign_setup
+        uses: SignPath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
+        with:
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: ${{ vars.SIGNPATH_ORGANIZATION_ID }}
+          project-slug: ${{ vars.SIGNPATH_PROJECT_SLUG }}
+          signing-policy-slug: ${{ inputs.signing_policy_slug }}
+          artifact-configuration-slug: ${{ vars.SIGNPATH_SETUP_ARTIFACT_CONFIGURATION_SLUG }}
+          github-artifact-id: ${{ steps.upload_setup.outputs.artifact-id }}
+          github-token: ${{ github.token }}
+          wait-for-completion: true
+          wait-for-completion-timeout-in-seconds: 3600
+          output-artifact-directory: signed/setup
+          parameters: |
+            version: ${{ toJSON(steps.preflight.outputs.version) }}
+
+      - name: Bound the Windows transfer and record the two requests
+        env:
+          NATIVE_ARTIFACT_ID: ${{ steps.upload_native.outputs.artifact-id }}
+          SETUP_ARTIFACT_ID: ${{ steps.upload_setup.outputs.artifact-id }}
+          NATIVE_SIGNING_REQUEST_ID: ${{ steps.sign_native.outputs.signing-request-id }}
+          SETUP_SIGNING_REQUEST_ID: ${{ steps.sign_setup.outputs.signing-request-id }}
+          REQUESTED_SIGNING_POLICY: ${{ inputs.signing_policy_slug }}
+        run: |
+          python .signpath/ci_gate.py layout setup signed/setup
+          python .signpath/ci_gate.py provenance signing/workflow-provenance.json
+          python .signpath/ci_gate.py budget signed/native signed/setup signing/native-manifest.json signing/setup-manifest.json signing/workflow-provenance.json
+
+      # This artifact is a candidate until the dependent Windows job succeeds.
+      # That job replaces it with validated ZIPs, avoiding a duplicate final upload.
+      - name: Transfer signed candidates and provenance to Windows
+        id: upload_candidates
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signpath-output-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            signed/native/
+            signed/setup/
+            signing/native-manifest.json
+            signing/setup-manifest.json
+            signing/workflow-provenance.json
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 6
+          archive: true
+
+  windows_validate_and_package:
+    needs: build_and_sign
+    runs-on: windows-2022
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Require the initial manual run
+        run: |
+          if ($env:GITHUB_RUN_ATTEMPT -ne '1') { throw 'Start a new manual signing workflow instead of re-running a packaging job.' }
+
+      - name: Preserve source bytes across Linux and Windows
+        run: git config --global core.autocrlf false
+
+      - name: Check out the identical source commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Download only the candidate artifact produced by this run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.build_and_sign.outputs.candidate_id }}
+          path: .
+          merge-multiple: true
+          digest-mismatch: error
+
+      - name: Require trusted, timestamped, expected-publisher signatures on Windows
+        env:
+          SIGNPATH_EXPECTED_PUBLISHER: ${{ vars.SIGNPATH_EXPECTED_PUBLISHER }}
+          SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
+        run: |
+          & ./tools/windows_validate.ps1 -Phase All -NativeRoot signed/native -SetupRoot signed/setup -WorkRoot build/signing -Pack @('16go', '32go') -ReportPath validation/windows-signed.json -RequireSigned -ExpectedPublisher $env:SIGNPATH_EXPECTED_PUBLISHER -ExpectedSignerSha256 $env:SIGNPATH_EXPECTED_SIGNER_SHA256
+
+      - name: Package the exact verified setups, with fresh checksums
+        env:
+          SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
+        run: >-
+          python tools/build_packs.py --phase finalize --signing signed --pack all
+          --artifact-root signing --output-root dist --signed-native-root signed/native
+          --signed-setup-root signed/setup --expected-signer-sha256 "$env:SIGNPATH_EXPECTED_SIGNER_SHA256" --setup-only
+
+      - name: Prepare the final validated artifact without standalone EXE duplicates
+        run: |
+          New-Item -ItemType Directory -Force dist/verification | Out-Null
+          Copy-Item signing/native-manifest.json, signing/setup-manifest.json, signing/finalize-manifest.json, signing/workflow-provenance.json, validation/windows-signed.json dist/verification/
+          $record = Get-Content -Raw dist/verification/workflow-provenance.json | ConvertFrom-Json
+          $record.status = 'windows_validated_and_packaged'
+          $record | ConvertTo-Json -Depth 10 | Set-Content -Encoding utf8 dist/verification/workflow-provenance.json
+          python .signpath/ci_gate.py budget dist
+
+      - name: Replace the candidate artifact with the validated ZIPs and reports
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signpath-output-${{ github.run_id }}-${{ github.run_attempt }}
+          path: dist/
+          overwrite: true
+          if-no-files-found: error
+          retention-days: 1
+          compression-level: 0
+          archive: true
+
+      - name: Describe the completed validation
+        if: success()
+        run: |
+          'Both installer ZIPs contain only Setup.exe. Native and installer signatures, publisher, certificate pin, timestamps, embedded-file identity, and small Windows fixtures passed. No GitHub release was published; model parts were unchanged. TEHTRIS acceptance on the target computer remains unverified.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+
+      - name: Keep the Windows report even if validation fails
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: signpath-windows-report-${{ github.run_id }}-${{ github.run_attempt }}
+          path: validation/windows-signed.json
+          if-no-files-found: ignore
+          retention-days: 1

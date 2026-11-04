@@ -1,0 +1,8 @@
+# Import into the SignPath project's pipeline policy after project approval.
+# Repository/ref/workflow restrictions and mandatory human approval must also be
+# configured in SignPath; this file does not activate a service or an account.
+github-build-policies:
+  version: '1.0'
+  disallow_reruns: true
+  runners:
+    require_github_hosted: true

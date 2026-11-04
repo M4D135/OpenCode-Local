@@ -1,0 +1,43 @@
+#pragma code_page(65001)
+#include <winres.h>
+
+#ifndef PACK_VERSION_STRING
+#error "PACK_VERSION_STRING must be generated from config/packs.json"
+#endif
+#ifndef PACK_VERSION_NUMBER
+#error "PACK_VERSION_NUMBER must be generated from config/packs.json"
+#endif
+
+// The same asInvoker policy also applies to this console helper.
+#ifndef PACK_MANIFEST_PATH
+#error "PACK_MANIFEST_PATH must point to the generated app manifest"
+#endif
+1 RT_MANIFEST PACK_MANIFEST_PATH
+1 VERSIONINFO
+ FILEVERSION PACK_VERSION_NUMBER
+ PRODUCTVERSION PACK_VERSION_NUMBER
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+ FILEFLAGS 0x0L
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040c04b0"
+        BEGIN
+            VALUE "CompanyName", "M4D135"
+            VALUE "FileDescription", "Assemblage et vérification du modèle OpenCode Local"
+            VALUE "FileVersion", PACK_VERSION_STRING
+            VALUE "InternalName", "AssembleModel"
+            VALUE "LegalCopyright", "OpenCode Local - M4D135"
+            VALUE "OriginalFilename", "AssembleModel.exe"
+            VALUE "ProductName", "OpenCode Local"
+            VALUE "ProductVersion", PACK_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x040c, 1200
+    END
+END

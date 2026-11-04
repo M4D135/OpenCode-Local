@@ -7,13 +7,16 @@
 #define PACK_DISPLAY_NAME "OpenCode Local"
 #endif
 #ifndef PACK_VERSION_STRING
-#define PACK_VERSION_STRING "1.1.0"
+#error "PACK_VERSION_STRING must be generated from config/packs.json"
 #endif
 #ifndef PACK_VERSION_NUMBER
-#define PACK_VERSION_NUMBER 1,1,0,0
+#error "PACK_VERSION_NUMBER must be generated from config/packs.json"
 #endif
 
-1 RT_MANIFEST "launcher.manifest"
+#ifndef PACK_MANIFEST_PATH
+#error "PACK_MANIFEST_PATH must point to the generated app manifest"
+#endif
+1 RT_MANIFEST PACK_MANIFEST_PATH
 
 1 VERSIONINFO
  FILEVERSION PACK_VERSION_NUMBER
@@ -34,7 +37,7 @@ BEGIN
             VALUE "InternalName", "OpenCodeLocal"
             VALUE "LegalCopyright", "OpenCode Local — M4D135"
             VALUE "OriginalFilename", "OpenCodeLocal.exe"
-            VALUE "ProductName", PACK_DISPLAY_NAME
+            VALUE "ProductName", "OpenCode Local"
             VALUE "ProductVersion", PACK_VERSION_STRING
         END
     END

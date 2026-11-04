@@ -1,0 +1,7 @@
+# Identical source bytes on Linux and Windows for signing provenance checks.
+* text=auto eol=lf
+*.exe binary
+*.dll binary
+*.zip binary
+*.bin binary
+*.gguf binary

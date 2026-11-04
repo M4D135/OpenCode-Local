@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "1.1.0",
+  "app_version": "1.1.1",
   "slice_bytes": 1500000000,
   "packs": {
     "16go": {

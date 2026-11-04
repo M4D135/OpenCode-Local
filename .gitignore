@@ -2,6 +2,7 @@
 /tooldeps/
 /build/
 /dist/
+/signing/
 /qa/
 /opencode-integration.md
 __pycache__/
@@ -9,3 +10,5 @@ __pycache__/
 *.partial
 *.tmp
 /.venv/
+*.pfx
+*.p12

@@ -42,12 +42,29 @@ InstallDir "$LOCALAPPDATA\Programs\${PACK_INSTALL_DIR}"
 InstallDirRegKey HKCU "${UNINSTALL_KEY}" "InstallLocation"
 BrandingText "${PACK_DISPLAY_NAME} | Installation hors ligne"
 VIProductVersion "${AppVersion}.0"
-VIAddVersionKey /LANG=1036 "ProductName" "${PRODUCT_NAME}"
+; One signing product identity for both RAM profiles and all house binaries.
+VIAddVersionKey /LANG=1036 "ProductName" "OpenCode Local"
 VIAddVersionKey /LANG=1036 "ProductVersion" "${AppVersion}"
+!ifdef ExportUninstallerPath
+VIAddVersionKey /LANG=1036 "OriginalFilename" "Uninstall.exe"
+VIAddVersionKey /LANG=1036 "FileDescription" "Désinstallation de OpenCode Local"
+!else
+VIAddVersionKey /LANG=1036 "OriginalFilename" "Setup.exe"
 VIAddVersionKey /LANG=1036 "FileDescription" "Installation hors ligne de OpenCode Local"
+!endif
 VIAddVersionKey /LANG=1036 "FileVersion" "${AppVersion}.0"
 VIAddVersionKey /LANG=1036 "CompanyName" "M4D135"
 VIAddVersionKey /LANG=1036 "LegalCopyright" "OpenCode Local - M4D135"
+!ifdef ExportUninstallerPath
+  !ifdef ImportedUninstallerPath
+    !error "Cannot export and import an uninstaller in the same compilation"
+  !endif
+  ; NSIS 3.08+ writes the complete PE at compile time. This hook copies it;
+  ; no Windows executable is run on the build host. The outer workflow signs
+  ; the exported PE, then the final compilation imports those exact bytes.
+  ; https://nsis.sourceforge.io/Signing_an_Uninstaller_externally
+  !uninstfinalize '"${PythonExe}" "${SigningHelperPath}" capture-uninstaller "%1" "${ExportUninstallerPath}"' = 0
+!endif
 ; The model already lives in external slices. Zlib keeps builds and install
 ; extraction fast for the executable/dependency payload on modest CPUs.
 SetCompressor zlib
@@ -71,10 +88,12 @@ AutoCloseWindow false
 !define MUI_FINISHPAGE_RUN_FUNCTION LaunchApplication
 !define MUI_FINISHPAGE_RUN_TEXT "Ouvrir OpenCode Local"
 !insertmacro MUI_PAGE_FINISH
+!ifndef ImportedUninstallerPath
 !define MUI_UNCONFIRMPAGE_TEXT_TOP "OpenCode Local et ses composants seront retirés de ce dossier.$\r$\n$\r$\nVos projets, conversations et réglages personnels seront conservés."
 !insertmacro MUI_UNPAGE_CONFIRM
 !insertmacro MUI_UNPAGE_INSTFILES
 !insertmacro MUI_UNPAGE_FINISH
+!endif
 !insertmacro MUI_LANGUAGE "French"
 
 Var Problem
@@ -213,7 +232,9 @@ acquire_done:
 FunctionEnd
 !macroend
 !insertmacro SharedFunctions ""
+!ifndef ImportedUninstallerPath
 !insertmacro SharedFunctions "un."
+!endif
 
 Function .onInit
   SetShellVarContext current
@@ -438,6 +459,11 @@ FunctionEnd
 
 Section "${PACK_DISPLAY_NAME} et modèle Qwen (obligatoire)" SEC_MAIN
   SectionIn RO
+!ifdef ExportUninstallerPath
+  ; The first pass only needs the real uninstall code and exact removal list.
+  ; Do not embed another copy of the upstream runtime just to export this PE.
+  WriteUninstaller "$TEMP\OpenCodeLocal-uninstaller-export.exe"
+!else
   AddSize ${PACK_MODEL_EXTRA_KIB}
   Call ValidateTarget
   StrCmp $Problem "" +2
@@ -482,7 +508,12 @@ Section "${PACK_DISPLAY_NAME} et modèle Qwen (obligatoire)" SEC_MAIN
   Call InstallationFailure
 model_ready:
   ClearErrors
+!ifdef ImportedUninstallerPath
+  SetOutPath "$StageDir\wad\support"
+  File /oname=Uninstall.exe "${ImportedUninstallerPath}"
+!else
   WriteUninstaller "$StageDir\wad\support\Uninstall.exe"
+!endif
   IfErrors uninstaller_error
   Call ValidateTarget
   StrCmp $Problem "" +2
@@ -566,6 +597,7 @@ rollback_failed:
   StrCpy $Problem "La mise en place a échoué. L’ancienne installation est conservée dans $BackupDir. Aucun de ses fichiers n’a été supprimé."
   Call InstallationFailure
 main_end:
+!endif
 SectionEnd
 
 Section /o "Raccourci sur le Bureau" SEC_DESKTOP
@@ -582,6 +614,7 @@ Function LaunchApplication
   Exec '"$INSTDIR\OpenCodeLocal.exe"'
 FunctionEnd
 
+!ifndef ImportedUninstallerPath
 Function un.onInit
   SetShellVarContext current
   SetRegView 64
@@ -635,3 +668,4 @@ un_files:
   DetailPrint "Les conversations, réglages et projets personnels sont conservés."
   Call un.ReleaseProfileLock
 SectionEnd
+!endif

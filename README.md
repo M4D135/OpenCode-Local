@@ -44,6 +44,14 @@ Les contextes proposés sont 4 096, 8 192 et 16 384 tokens. Une ancienne préfé
 
 Le pack 32 Go désactive le repacking CPU pour utiliser le chemin de chargement mémoire mappée vérifié. Une seule séquence de calcul est utilisée par session. Le débit dépend du processeur et de la mémoire ; aucun débit mesuré sur le poste cible n’est annoncé.
 
+## Code signing policy
+
+La [politique de signature](CODE_SIGNING.md) décrit les exécutables concernés,
+les contrôles et les responsabilités. Une candidature SignPath Foundation et
+la chaîne de signature de la version 1.1.1 sont en préparation. **La signature
+n'est pas encore active ; les releases 1.0.0 à 1.1.0 restent non signées.**
+Voir également la [politique de confidentialité](PRIVACY.md).
+
 ## Réseau et sécurité du poste
 
 OpenCode communique avec son moteur sur **127.0.0.1**, avec une clé aléatoire par session et un port disponible entre `18741` et `18780`. Le serveur n’écoute pas sur le réseau local. Si les connexions localhost sont interdites, utiliser **Discussion directe** ; l’installateur ne modifie pas le pare-feu.
@@ -73,4 +81,8 @@ Les licences sont conservées dans `wad/licenses` et les arborescences des dépe
 
 ## Construction
 
-Voir [BUILD.md](BUILD.md). La compilation locale produit `dist/16go` et `dist/32go`. Aucun workflow GitHub Actions ni Git LFS n’est nécessaire.
+Voir [BUILD.md](BUILD.md). La compilation locale produit `dist/16go` et `dist/32go`.
+La validation et la chaîne de signature disposent aussi de workflows sur les
+machines standard GitHub Actions. La signature exige l'acceptation du projet
+et la configuration du service ; aucun certificat n'est fourni par le dépôt.
+Les modèles restent hors du stockage Git et n'utilisent pas Git LFS.
