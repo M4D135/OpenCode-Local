@@ -7,6 +7,7 @@ signatures. No private key, self-signed certificate or OS trust change is used.
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 import struct
 import tempfile
@@ -14,7 +15,9 @@ import unittest
 from unittest import mock
 
 import build
+import build_packs
 import signing
+from pack_profiles import load_pack
 
 
 def pe_fixture() -> bytes:
@@ -152,6 +155,27 @@ class SigningIntegrityTests(unittest.TestCase):
             build.stage(False)
         self.assertEqual([call.args[0]["file"] for call in fetch.call_args_list], ["engine.zip"])
         self.assertFalse(any((payload / "wad/model").iterdir()))
+
+    def test_reused_base_copies_only_manifest_declared_files(self):
+        base = self.root / "base"
+        for relative in ("wad/config", "wad/docs", "wad/support", "wad/model", "wad/opencode"):
+            (base / relative).mkdir(parents=True, exist_ok=True)
+        (base / "wad/config/opencode.json").write_bytes((build_packs.ROOT / "config/opencode.json.template").read_bytes())
+        (base / "wad/opencode/opencode.exe").write_bytes(b"verified upstream fixture")
+        entries = [{"path": path.relative_to(base).as_posix(), "size": path.stat().st_size,
+                    "sha256": signing.digest(path)} for path in base.rglob("*") if path.is_file()]
+        (base / "wad/support/payload-manifest.json").write_text(json.dumps(entries), encoding="utf-8")
+        undeclared = (base / "wad/opencode/unlisted.exe", base / "wad/opencode/.opencode.exe.interrupted")
+        for path in undeclared:
+            path.write_bytes(b"not declared by the verified input manifest")
+        build_packs.verify_base(base)
+        payload = build_packs.prepare_payload(base, self.root / "work", load_pack("16go"))
+        self.assertEqual((payload / "wad/opencode/opencode.exe").read_bytes(), b"verified upstream fixture")
+        for path in undeclared:
+            self.assertTrue(path.is_file(), "The original base must remain untouched")
+            self.assertFalse((payload / path.relative_to(base)).exists())
+        new_manifest = build_packs.write_manifest(payload, load_pack("16go"))
+        self.assertFalse(any(entry["path"].endswith(("unlisted.exe", ".interrupted")) for entry in new_manifest))
 
 
 if __name__ == "__main__":

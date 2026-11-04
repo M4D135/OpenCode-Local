@@ -121,6 +121,10 @@ Les droits d'écriture et d'exécution restent ceux de la session Windows.
 
 def prepare_payload(base: Path, work: Path, pack: dict) -> Path:
     payload = work / "payload"
+    # A reused extraction can contain interrupted-copy files outside its verified
+    # manifest. They are not build inputs and must not enter the new manifest.
+    declared = {entry["path"] for entry in json.loads(
+        (base / "wad/support/payload-manifest.json").read_text(encoding="utf-8"))}
     if payload.exists():
         # Only this selected generated directory is replaced, never an installed app.
         shutil.rmtree(payload)
@@ -128,9 +132,14 @@ def prepare_payload(base: Path, work: Path, pack: dict) -> Path:
         relative = Path(directory).relative_to(base)
         if relative == Path("wad/model"):
             return names
-        if relative == Path("wad/support"):
-            return [name for name in names if name in {"Uninstall.exe", "payload-manifest.json"}]
-        return []
+        ignored = []
+        for name in names:
+            source = Path(directory) / name
+            if source.is_file() and (relative / name).as_posix() not in declared:
+                ignored.append(name)
+            elif relative == Path("wad/support") and name in {"Uninstall.exe", "payload-manifest.json"}:
+                ignored.append(name)
+        return ignored
     shutil.copytree(base, payload, ignore=ignore)
     (payload / "wad/model").mkdir(exist_ok=True)
     generated = work / "generated"
