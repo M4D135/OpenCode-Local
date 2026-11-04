@@ -231,6 +231,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cxx", default="g++")
     parser.add_argument("--windows-cxx", default="x86_64-w64-mingw32-g++")
+    parser.add_argument("--work-root", type=Path, default=ROOT / "build/signing",
+                        help="Pack build root containing <pack>/generated/pack_config.h")
     parser.add_argument("--report", type=Path, default=ROOT / "validation/assembler-new-profiles.json")
     args = parser.parse_args()
     report = {"source_sha256": hashlib.sha256(SOURCE.read_bytes()).hexdigest(),
@@ -244,7 +246,7 @@ def main():
             profile = compile_fixture(folder, count, payload, args.cxx)
             report["native_cases"].extend(exercise(folder, profile, payload))
         for pack in ("16go", "32go"):
-            header = ROOT / "build" / pack / "generated" / "pack_config.h"
+            header = args.work_root / pack / "generated" / "pack_config.h"
             if not header.is_file():
                 report["windows_compilation"].append({"pack": pack, "status": "header_missing"})
                 continue

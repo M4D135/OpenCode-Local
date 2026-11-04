@@ -80,7 +80,10 @@ jobs:
           --setup-only --sevenzip "$OPENCODE_SEVENZIP"
 
       - name: Exercise the assembler and compile the production path harness
+        id: fixtures
         run: |
+          rm -f -- validation/assembler-new-profiles.json validation/installer-paths.json
+          printf 'started=true\n' >> "$GITHUB_OUTPUT"
           python tools/test_signing.py
           python tools/test_assembler_profiles.py
           python tools/test_installer_paths.py --build-only
@@ -110,7 +113,7 @@ jobs:
           archive: true
 
       - name: Keep small Linux validation reports
-        if: always()
+        if: always() && steps.fixtures.outputs.started == 'true'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: unsigned-linux-reports-${{ github.run_id }}-${{ github.run_attempt }}
