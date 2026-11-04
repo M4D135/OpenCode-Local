@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "build": "Native Linux cross compilation; Windows execution not verified",
+  "compiler": "MinGW-w64 GCC 13 posix; NSIS 3.09",
+  "nsis_warning": "9000: Requested Setup.exe filename triggers the NSIS Windows compatibility-shim warning. Filename retained as requested.",
+  "assets": [
+    {
+      "name": "Setup.exe",
+      "size": 127193139,
+      "sha256": "2ab174a12a48a6d9ab8ba1fc26dbc695067226db495eeeedec187118ee36c736"
+    },
+    {
+      "name": "Setup-1.bin",
+      "size": 1500000000,
+      "sha256": "416e11f3cf0391279546e73fd7a3658c368ae4328f0a94d34b6d7d6d0394964f"
+    },
+    {
+      "name": "Setup-2.bin",
+      "size": 1240937888,
+      "sha256": "d4761367a069f853868471b7c11cd9a65c6112e5d9476b9c3ac2bd32bcebacfb"
+    },
+    {
+      "name": "LISEZ-MOI.txt",
+      "size": 4138,
+      "sha256": "e068fdc1618b56a4de48a39bd3b85383252d9873fcace85dd2199f04124a82ff"
+    }
+  ]
+}

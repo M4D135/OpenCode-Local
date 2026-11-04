@@ -1,0 +1,187 @@
+{
+  "engine": "llama.cpp b12089 Linux counterpart",
+  "model": "Qwen3.5-4B-Q4_K_M",
+  "context": 32768,
+  "platform": "Linux functional check, not Windows hardware qualification",
+  "startup_seconds": 6.03,
+  "models": {
+    "models": [
+      {
+        "name": "qwen3.5-4b",
+        "model": "qwen3.5-4b",
+        "modified_at": "",
+        "size": "",
+        "digest": "",
+        "type": "model",
+        "description": "",
+        "tags": [
+          ""
+        ],
+        "capabilities": [
+          "completion"
+        ],
+        "parameters": "",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "",
+          "families": [
+            ""
+          ],
+          "parameter_size": "",
+          "quantization_level": ""
+        }
+      }
+    ],
+    "object": "list",
+    "data": [
+      {
+        "id": "qwen3.5-4b",
+        "aliases": [
+          "qwen3.5-4b"
+        ],
+        "tags": [],
+        "object": "model",
+        "architecture": {
+          "input_modalities": [
+            "text"
+          ],
+          "output_modalities": [
+            "text"
+          ]
+        },
+        "created": 1793782583,
+        "owned_by": "llamacpp",
+        "meta": {
+          "vocab_type": 2,
+          "n_vocab": 248320,
+          "n_ctx": 32768,
+          "n_ctx_train": 262144,
+          "n_embd": 2560,
+          "n_params": 4205751296,
+          "size": 2729969664,
+          "ftype": "Q4_K - Medium"
+        }
+      }
+    ]
+  },
+  "text": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "LOCAL_OK"
+        }
+      }
+    ],
+    "created": 1793782584,
+    "model": "qwen3.5-4b",
+    "system_fingerprint": "b12089-9309bf1bc",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 3,
+      "prompt_tokens": 20,
+      "total_tokens": 23,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "id": "chatcmpl-PGF65uXTWcHErNRm8ZtP9E2CuKlu5VVP",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 20,
+      "prompt_ms": 893.886,
+      "prompt_per_token_ms": 44.6943,
+      "prompt_per_second": 22.374217741412217,
+      "predicted_n": 3,
+      "predicted_ms": 181.765,
+      "predicted_per_token_ms": 90.8825,
+      "predicted_per_second": 11.00321844139411
+    }
+  },
+  "tool_call": {
+    "choices": [
+      {
+        "finish_reason": "tool_calls",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "type": "function",
+              "function": {
+                "name": "read_file",
+                "arguments": "{\"path\":\"README.md\"}"
+              },
+              "id": "MjPZadFPX1Hj8x2xr34iJNpk1Cnu3bHf"
+            }
+          ]
+        }
+      }
+    ],
+    "created": 1793782592,
+    "model": "qwen3.5-4b",
+    "system_fingerprint": "b12089-9309bf1bc",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 26,
+      "prompt_tokens": 294,
+      "total_tokens": 320,
+      "prompt_tokens_details": {
+        "cached_tokens": 0
+      }
+    },
+    "id": "chatcmpl-SWuwngOUFt4hrBQhLaab62QZnG5Cx1By",
+    "timings": {
+      "cache_n": 0,
+      "prompt_n": 294,
+      "prompt_ms": 5328.799,
+      "prompt_per_token_ms": 18.125166666666665,
+      "prompt_per_second": 55.171906465227906,
+      "predicted_n": 26,
+      "predicted_ms": 2249.186,
+      "predicted_per_token_ms": 89.96744000000001,
+      "predicted_per_second": 11.115132318981177
+    }
+  },
+  "tool_result": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "message": {
+          "role": "assistant",
+          "content": "Le code de validation du projet est FENETRE_42."
+        }
+      }
+    ],
+    "created": 1793782595,
+    "model": "qwen3.5-4b",
+    "system_fingerprint": "b12089-9309bf1bc",
+    "object": "chat.completion",
+    "usage": {
+      "completion_tokens": 16,
+      "prompt_tokens": 352,
+      "total_tokens": 368,
+      "prompt_tokens_details": {
+        "cached_tokens": 319
+      }
+    },
+    "id": "chatcmpl-HCylsjImj0nz7Te2Ty3L5HkEqJ1eIZ3q",
+    "timings": {
+      "cache_n": 319,
+      "prompt_n": 33,
+      "prompt_ms": 1446.194,
+      "prompt_per_token_ms": 43.824060606060605,
+      "prompt_per_second": 22.818515358243776,
+      "predicted_n": 16,
+      "predicted_ms": 1344.523,
+      "predicted_per_token_ms": 89.63486666666667,
+      "predicted_per_second": 11.156372929284215
+    }
+  },
+  "ok": true
+}

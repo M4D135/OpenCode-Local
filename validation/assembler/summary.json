@@ -1,0 +1,28 @@
+{
+  "execution_platform": "Linux x86_64",
+  "common_source": "src/assemble_model.cpp",
+  "linux_binary": "build/assemble-model-linux",
+  "windows_binary": "build/AssembleModel.exe",
+  "windows_compilation": "PASS: x86_64-w64-mingw32-g++ -std=c++17 -O2 -Wall -Wextra -Wpedantic -static -static-libgcc -static-libstdc++ -municode; no warnings",
+  "windows_execution": "NOT RUN: Wine wineserver failed before application code because AF_UNIX socket creation is denied by the execution environment.",
+  "checks": {
+    "known_sha256_vectors_and_boundary_files": "PASS (independent Python hashlib comparison)",
+    "source_missing_truncated_or_same_as_destination": "PASS; existing files preserved",
+    "symlink_destination_ancestor": "PASS; rejected",
+    "original_parts_assembly": "PASS; independent full SHA-256 matched",
+    "existing_valid_model_reuse": "PASS; complete SHA-256 verification, no source files required",
+    "corrupt_parts_with_exact_sizes": "PASS; exit 7, existing destination preserved, temporary removed",
+    "windows_imports": "PASS; only Windows system DLLs"
+  },
+  "model_bytes": 2740937888,
+  "model_sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+  "temporary_file_pattern": "DEST_MODEL_PATH.partial.PID.ATTEMPT (ATTEMPT 0..99)",
+  "cleanup": "Only the temporary file exclusively created by this process is removed on normal failures. Abrupt termination/power loss can leave that file for manual inspection.",
+  "detailed_reports": [
+    "core-tests.json",
+    "assembly-original.json",
+    "reuse-existing.json",
+    "corruption-preservation.json",
+    "windows-imports.json"
+  ]
+}

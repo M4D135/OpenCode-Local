@@ -1,0 +1,45 @@
+{
+  "platform": "Linux counterpart of the packaged Windows llama-completion",
+  "base_flags_match_launcher": true,
+  "launcher_flags": [
+    "--model",
+    "/workspace/scratch/2cd47d086f4d/opencode-local/build/payload/wad/model/Qwen3.5-4B-Q4_K_M.gguf",
+    "--ctx-size",
+    "4096",
+    "--n-gpu-layers",
+    "0",
+    "--jinja",
+    "--conversation",
+    "--reasoning",
+    "off",
+    "--offline"
+  ],
+  "test_only_flags": [
+    "--single-turn",
+    "--prompt",
+    "Réponds uniquement par le mot Bonjour.",
+    "--n-predict",
+    "512",
+    "--no-display-prompt"
+  ],
+  "prompt": "Réponds uniquement par le mot Bonjour.",
+  "network_capture_performed": false,
+  "server_executable_launched_by_test": false,
+  "caveat": "llama-completion b12089 accepts --reasoning off but its conversation formatting path does not forward that setting; reasoning text can still be generated.",
+  "source": "https://github.com/ggml-org/llama.cpp/blob/b12089/tools/completion/completion.cpp",
+  "returncode": 0,
+  "duration_seconds": 34.82,
+  "final_answer": "Bonjour",
+  "reasoning_block_present": true,
+  "final_answer_complete": true,
+  "final_answer_matches": true,
+  "stdout_chars": 723,
+  "stderr_chars": 2514,
+  "ok": true,
+  "generated_tokens": 196,
+  "note": "The 512-token test cap was not reached: the process ended naturally after 196 generated tokens before the later 100-256-token guidance arrived. Prompt display was disabled; the final answer is the text following the generated </think> marker.",
+  "chat_template_kwargs_probe": {
+    "returncode": 1,
+    "stderr": "error: invalid argument: --chat-template-kwargs"
+  }
+}

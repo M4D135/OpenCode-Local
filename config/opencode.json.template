@@ -1,0 +1,82 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "local/qwen3.5-4b",
+  "small_model": "local/qwen3.5-4b",
+  "enabled_providers": ["local"],
+  "default_agent": "build",
+  "autoupdate": false,
+  "share": "disabled",
+  "snapshot": false,
+  "shell": "powershell.exe",
+  "lsp": false,
+  "formatter": false,
+  "plugin": [],
+  "mcp": {},
+  "experimental": {
+    "openTelemetry": false
+  },
+  "compaction": {
+    "auto": true,
+    "prune": true,
+    "reserved": 2048,
+    "preserve_recent_tokens": 2048,
+    "tail_turns": 2
+  },
+  "permission": {
+    "*": "ask",
+    "read": {
+      "*": "allow",
+      "*.env": "ask",
+      "*.env.*": "ask"
+    },
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "question": "allow",
+    "todowrite": "allow",
+    "edit": "ask",
+    "bash": "ask",
+    "task": "ask",
+    "external_directory": "ask",
+    "doom_loop": "ask",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "codesearch": "deny",
+    "lsp": "deny"
+  },
+  "provider": {
+    "local": {
+      "name": "Qwen local - hors ligne",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "{{BASE_URL}}",
+        "apiKey": "{{API_KEY}}",
+        "timeout": 900000,
+        "headerTimeout": 900000,
+        "chunkTimeout": 300000
+      },
+      "models": {
+        "qwen3.5-4b": {
+          "name": "Qwen3.5 4B - local Q4_K_M",
+          "family": "qwen",
+          "tool_call": true,
+          "reasoning": false,
+          "temperature": true,
+          "attachment": false,
+          "modalities": {
+            "input": ["text"],
+            "output": ["text"]
+          },
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "limit": {
+            "context": {{CONTEXT}},
+            "output": {{OUTPUT}}
+          }
+        }
+      }
+    }
+  }
+}

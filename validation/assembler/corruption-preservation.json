@@ -1,0 +1,10 @@
+{
+  "case": "exact_size_corrupt_parts_rejected_without_replacement",
+  "returncode": 7,
+  "stdout": "Assemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 10 %\nModele : 20 %\nModele : 30 %\nModele : 40 %\nModele : 50 %\nModele : 60 %\nModele : 70 %\nModele : 80 %\nModele : 90 %\nModele : 100 %\n",
+  "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
+  "seconds": 26.60033276899958,
+  "destination_preserved": true,
+  "remaining_temporary_files": [],
+  "passed": true
+}

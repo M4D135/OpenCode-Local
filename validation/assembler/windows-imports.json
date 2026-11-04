@@ -1,0 +1,19 @@
+{
+  "build/payload/OpenCodeLocal.exe": [
+    "bcrypt.dll",
+    "COMCTL32.dll",
+    "GDI32.dll",
+    "IPHLPAPI.DLL",
+    "KERNEL32.dll",
+    "msvcrt.dll",
+    "ole32.dll",
+    "SHELL32.dll",
+    "USER32.dll",
+    "WINHTTP.dll",
+    "WS2_32.dll"
+  ],
+  "build/AssembleModel.exe": [
+    "KERNEL32.dll",
+    "msvcrt.dll"
+  ]
+}

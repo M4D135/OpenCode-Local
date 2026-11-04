@@ -1,0 +1,917 @@
+{
+  "format": 1,
+  "opencode": "1.19.5",
+  "opentui": "0.4.5",
+  "parser_config": "https://github.com/anomalyco/opencode/blob/v1.19.5/packages/tui/src/parsers-config.ts",
+  "cache_algorithm": "OpenTUI0.4.5: basename URL for WASM, <filetype>-<abs signed32 JavaScript string hash(url)>.scm for queries",
+  "assets": [
+    {
+      "kind": "grammar",
+      "language": "python",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-python/releases/download/v0.23.6/tree-sitter-python.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-python/releases/download/v0.23.6/tree-sitter-python.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-python.wasm",
+      "size": 457796,
+      "sha256": "8c93692fb368e288a5824cee55773c9b3602804f513bda48c97661e52e9c2da2"
+    },
+    {
+      "kind": "query",
+      "language": "python",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-python/raw/refs/heads/master/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-python/26855eabccb19c6abf499fbc5b8dc7cc9ab8bc64/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/python-124e65af.scm",
+      "size": 1957,
+      "sha256": "a6708f209381618e2b398972c8f1ccd892f0c064eab35a2a3f911c3e22e79a7e"
+    },
+    {
+      "kind": "grammar",
+      "language": "rust",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-rust/releases/download/v0.24.0/tree-sitter-rust.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-rust/releases/download/v0.24.0/tree-sitter-rust.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-rust.wasm",
+      "size": 1111756,
+      "sha256": "44b8d1a2e307ee8933d7c0bcb6b0f30d56bc999999fd1d2d9608a7dcf6e8ce56"
+    },
+    {
+      "kind": "query",
+      "language": "rust",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/rust/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/rust/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/rust-58089472.scm",
+      "size": 8610,
+      "sha256": "c649a4785322ab72af84874b9dc03c7a4f5d9a05de45a85919a60770d7d5457d"
+    },
+    {
+      "kind": "grammar",
+      "language": "go",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-go/releases/download/v0.25.0/tree-sitter-go.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-go/releases/download/v0.25.0/tree-sitter-go.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-go.wasm",
+      "size": 217182,
+      "sha256": "9504573f352b20be7f2f1911754d710622aedc15afff16d5ed8fb5645681aee7"
+    },
+    {
+      "kind": "query",
+      "language": "go",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/go/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/go/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/go-2c6db0b6.scm",
+      "size": 3934,
+      "sha256": "c58a7336d4834ebfbb038002c6ab033f792cd1b8d3e7e1682bdaa982bee7f6b1"
+    },
+    {
+      "kind": "grammar",
+      "language": "cpp",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-cpp/releases/download/v0.23.4/tree-sitter-cpp.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-cpp/releases/download/v0.23.4/tree-sitter-cpp.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-cpp.wasm",
+      "size": 3434931,
+      "sha256": "174eb0deb75b2ec7881bcacda9f995648d8e683956e5c2267e69ab6dc503fcbf"
+    },
+    {
+      "kind": "query",
+      "language": "cpp",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/cpp/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/cpp/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/cpp-16b846db.scm",
+      "size": 4904,
+      "sha256": "69d1dbed8d49c498e93a75db6afedfb8769fa2fed455a64d588dc347281d642f"
+    },
+    {
+      "kind": "grammar",
+      "language": "csharp",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-c-sharp/releases/download/v0.23.1/tree-sitter-c_sharp.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-c-sharp/releases/download/v0.23.1/tree-sitter-c_sharp.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-c_sharp.wasm",
+      "size": 5926763,
+      "sha256": "d7fe0bf8e8b8d26b2b253f375e3c43386b332d23f7b7b3e15d49fff180fe46e3"
+    },
+    {
+      "kind": "query",
+      "language": "csharp",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/c_sharp/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/c_sharp/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/csharp-30f85cda.scm",
+      "size": 8302,
+      "sha256": "4b79059a52926e8cd08a1d80af70ba02acefb86bc8ed82315897fb104ed1a338"
+    },
+    {
+      "kind": "grammar",
+      "language": "bash",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-bash/releases/download/v0.25.0/tree-sitter-bash.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-bash/releases/download/v0.25.0/tree-sitter-bash.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-bash.wasm",
+      "size": 1380769,
+      "sha256": "364f0a2cd385c792239423026ef442dbd073d34c396b7bc9e5932426b8e4aa5d"
+    },
+    {
+      "kind": "query",
+      "language": "bash",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/bash/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/bash/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/bash-20eac162.scm",
+      "size": 5776,
+      "sha256": "77860b9f127ca82681e3691bba003e62d1d8dbced05e4fe96041d26fd8944656"
+    },
+    {
+      "kind": "grammar",
+      "language": "c",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-c/releases/download/v0.24.1/tree-sitter-c.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-c/releases/download/v0.24.1/tree-sitter-c.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-c.wasm",
+      "size": 625918,
+      "sha256": "c852c2a85ebf2beb636aa3b0ef7f7e70458684d74f6741b20dcb296885bed9f9"
+    },
+    {
+      "kind": "query",
+      "language": "c",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/c/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/c/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/c-4f47c6db.scm",
+      "size": 6332,
+      "sha256": "a99c4c0bf9d9b9f7de0124c529a4229fddada96d65bf5fb0c9d487266e15d483"
+    },
+    {
+      "kind": "grammar",
+      "language": "java",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-java/releases/download/v0.23.5/tree-sitter-java.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-java/releases/download/v0.23.5/tree-sitter-java.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-java.wasm",
+      "size": 414641,
+      "sha256": "4fdeac4ca6ca089f06c6f7e562abcac1733cd465728cc7031ebb73c2019122c4"
+    },
+    {
+      "kind": "query",
+      "language": "java",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/java/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/java/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/java-1368d590.scm",
+      "size": 4425,
+      "sha256": "c68c0e7e9ae36d94c9e5ab06556b34c5e8568d1ce1867043d92bbe4b3b4dcf2f"
+    },
+    {
+      "kind": "grammar",
+      "language": "kotlin",
+      "cache_key_url": "https://github.com/fwcd/tree-sitter-kotlin/releases/download/0.3.8/tree-sitter-kotlin.wasm",
+      "url": "https://github.com/fwcd/tree-sitter-kotlin/releases/download/0.3.8/tree-sitter-kotlin.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-kotlin.wasm",
+      "size": 4052625,
+      "sha256": "c624e7443b371c28adc5d81674e73067564c12555ebe3ed96a6c8db814b7602d"
+    },
+    {
+      "kind": "query",
+      "language": "kotlin",
+      "cache_key_url": "https://raw.githubusercontent.com/fwcd/tree-sitter-kotlin/0.3.8/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/fwcd/tree-sitter-kotlin/0.3.8/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/kotlin-31af5a5d.scm",
+      "size": 6312,
+      "sha256": "2d74bb308bc589c2dadd9a599613f750f51470a8974190e09e24ec4786bab987"
+    },
+    {
+      "kind": "grammar",
+      "language": "ruby",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-ruby/releases/download/v0.23.1/tree-sitter-ruby.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-ruby/releases/download/v0.23.1/tree-sitter-ruby.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-ruby.wasm",
+      "size": 2106352,
+      "sha256": "09a96427d7c72f0613ed470cd9812223fc4a91d6a9c025c0235cc6bd59ff96f4"
+    },
+    {
+      "kind": "query",
+      "language": "ruby",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/ruby/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/ruby/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/ruby-4b76fd28.scm",
+      "size": 4068,
+      "sha256": "1cc8fc205e4cce4fe9e0d63bb1be903e49ea0f2eda77ae9368898a31ff98bc18"
+    },
+    {
+      "kind": "grammar",
+      "language": "php",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-php/releases/download/v0.24.2/tree-sitter-php.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-php/releases/download/v0.24.2/tree-sitter-php.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-php.wasm",
+      "size": 1058041,
+      "sha256": "d4df6a6ff08c87c3ec4f9cbb785fe09998a0cb570e03f57d7b19b3acfb146aa7"
+    },
+    {
+      "kind": "query",
+      "language": "php",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-php/raw/refs/heads/master/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-php/58d5643086ae60e93a3746cca648363ee97c8761/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/php-46c1ae79.scm",
+      "size": 3207,
+      "sha256": "a2a7367659cff3b4be09961c8117d69a9b8703bfc266f8092e089b1760f197e9"
+    },
+    {
+      "kind": "grammar",
+      "language": "scala",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-scala/releases/download/v0.24.0/tree-sitter-scala.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-scala/releases/download/v0.24.0/tree-sitter-scala.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-scala.wasm",
+      "size": 3848689,
+      "sha256": "6cd77d9152bb634b1690d8e9ce8c0b23aa0d84c018e113260f7b11ce54446d7b"
+    },
+    {
+      "kind": "query",
+      "language": "scala",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/scala/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/scala/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/scala-45adf062.scm",
+      "size": 4858,
+      "sha256": "e9e89654a7df214f4c79c28af7bc50bdb5c6cc5abb9690e3e1ce19c35b797991"
+    },
+    {
+      "kind": "grammar",
+      "language": "html",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-html/releases/download/v0.23.2/tree-sitter-html.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-html/releases/download/v0.23.2/tree-sitter-html.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-html.wasm",
+      "size": 18385,
+      "sha256": "c48fcd82c7ea8bf943180088ba7f28c48b2bb5287874179168bf9d31e394cf85"
+    },
+    {
+      "kind": "query",
+      "language": "html",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-html/raw/refs/heads/master/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-html/73a3947324f6efddf9e17c0ea58d454843590cc0/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/html-3478e09e.scm",
+      "size": 197,
+      "sha256": "1ebb3811a8cdc054385b847a3aac6fbf7079faefd5b3dfab5bbad256cd5afdcf"
+    },
+    {
+      "kind": "grammar",
+      "language": "vue",
+      "cache_key_url": "https://github.com/anomalyco/tree-sitter-vue/releases/download/v0.1.2/tree-sitter-vue.wasm",
+      "url": "https://github.com/anomalyco/tree-sitter-vue/releases/download/v0.1.2/tree-sitter-vue.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-vue.wasm",
+      "size": 30682,
+      "sha256": "94d9292677797c4d0299009885dfca5453513f44b79405efbf9d7dd3e1a1b5a2"
+    },
+    {
+      "kind": "query",
+      "language": "vue",
+      "cache_key_url": "https://raw.githubusercontent.com/anomalyco/tree-sitter-vue/v0.1.2/queries/html_tags/highlights.scm",
+      "url": "https://raw.githubusercontent.com/anomalyco/tree-sitter-vue/v0.1.2/queries/html_tags/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/vue-679de9dd.scm",
+      "size": 1752,
+      "sha256": "2b64708e3cea1527adca4841247e28b90229c367722471c1d250e8925d1cc6a4"
+    },
+    {
+      "kind": "query",
+      "language": "vue",
+      "cache_key_url": "https://raw.githubusercontent.com/anomalyco/tree-sitter-vue/v0.1.2/queries/vue/highlights.scm",
+      "url": "https://raw.githubusercontent.com/anomalyco/tree-sitter-vue/v0.1.2/queries/vue/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/vue-a27c6dc.scm",
+      "size": 763,
+      "sha256": "43cae0c256b1236a051e856eb4dec18a157d70a00e9d41304549b858c534cefc"
+    },
+    {
+      "kind": "grammar",
+      "language": "hcl",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-hcl/releases/download/v1.2.0/tree-sitter-hcl.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-hcl/releases/download/v1.2.0/tree-sitter-hcl.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-hcl.wasm",
+      "size": 93854,
+      "sha256": "2f9acf63e7c263215f283e2cf0f4ebbb9bfa77f58e18fa42b91094be201372a7"
+    },
+    {
+      "kind": "query",
+      "language": "hcl",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/master/queries/hcl/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/hcl/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/hcl-17b97f7e.scm",
+      "size": 1531,
+      "sha256": "a4e75b096410d0e16da9492e465cda306026ccc7d452699012e3e4d669d88cb6"
+    },
+    {
+      "kind": "grammar",
+      "language": "json",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-json/releases/download/v0.24.8/tree-sitter-json.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-json/releases/download/v0.24.8/tree-sitter-json.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-json.wasm",
+      "size": 5596,
+      "sha256": "d2119fb98d5912719b13f9458574f8608d2d29dfbe45f6be1f860ea1fe2a2405"
+    },
+    {
+      "kind": "query",
+      "language": "json",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/json/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/json/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/json-256dee0a.scm",
+      "size": 412,
+      "sha256": "6ab09656820f0e8dac860c96dced341221284544c05308ee337727f5db937101"
+    },
+    {
+      "kind": "grammar",
+      "language": "yaml",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-yaml/releases/download/v0.7.2/tree-sitter-yaml.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-yaml/releases/download/v0.7.2/tree-sitter-yaml.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-yaml.wasm",
+      "size": 189197,
+      "sha256": "0a0e5ebcfeb0b2bf272d071396eeed107b2c4b2617b69d5959b13f78b357a4d6"
+    },
+    {
+      "kind": "query",
+      "language": "yaml",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/yaml/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/yaml/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/yaml-44fb595.scm",
+      "size": 1700,
+      "sha256": "13352b80d2ce28c3328ccb2f321e5144c3365ff6055078e00e7cff118d1488b5"
+    },
+    {
+      "kind": "grammar",
+      "language": "haskell",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-haskell/releases/download/v0.23.1/tree-sitter-haskell.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-haskell/releases/download/v0.23.1/tree-sitter-haskell.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-haskell.wasm",
+      "size": 3805902,
+      "sha256": "37a6b07b1a838d02ffb4f4c2a06863637a8efe48432d60a275f50f1d08f1092c"
+    },
+    {
+      "kind": "query",
+      "language": "haskell",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/haskell/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/haskell/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/haskell-43510cc.scm",
+      "size": 8730,
+      "sha256": "233575930c05febf2cfda861de1e26856c0245c7804fc352e49782bb4a5aeeb7"
+    },
+    {
+      "kind": "grammar",
+      "language": "css",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-css/releases/download/v0.25.0/tree-sitter-css.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-css/releases/download/v0.25.0/tree-sitter-css.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-css.wasm",
+      "size": 128668,
+      "sha256": "8a23977fe271357cce6f254ef88c9bebf3854602d8046605aef6a45c02135c59"
+    },
+    {
+      "kind": "query",
+      "language": "css",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/css/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/css/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/css-7ffaecc5.scm",
+      "size": 1177,
+      "sha256": "6641fed120530bfbce5682ab88b2a8d14d99bfcd971ac9f78cd91738b4b0578a"
+    },
+    {
+      "kind": "grammar",
+      "language": "julia",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-julia/releases/download/v0.23.1/tree-sitter-julia.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-julia/releases/download/v0.23.1/tree-sitter-julia.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-julia.wasm",
+      "size": 6223352,
+      "sha256": "e0f52c36eadf0299e46fccd6715c760d35eaa3f09721bec38633da551ac9e781"
+    },
+    {
+      "kind": "query",
+      "language": "julia",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/julia/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/julia/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/julia-173f63ef.scm",
+      "size": 6621,
+      "sha256": "aed65b7d7ca5b3202a6923e9b9cc502618bcd50fc5095caae51033f31e390b31"
+    },
+    {
+      "kind": "grammar",
+      "language": "lua",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-lua/releases/download/v0.5.0/tree-sitter-lua.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-lua/releases/download/v0.5.0/tree-sitter-lua.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-lua.wasm",
+      "size": 54603,
+      "sha256": "df08a1704e504c70b8dba4a3e6f8e0c99a4fb94e1b1693d2969f53141d09f0d4"
+    },
+    {
+      "kind": "query",
+      "language": "lua",
+      "cache_key_url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-lua/v0.5.0/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-lua/v0.5.0/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/lua-6f01dd8f.scm",
+      "size": 2919,
+      "sha256": "d2625fb712357f86386878602d18845f9f3e90fee81f02a5ecd87be6512918d1"
+    },
+    {
+      "kind": "grammar",
+      "language": "ocaml",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-ocaml/releases/download/v0.24.2/tree-sitter-ocaml.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-ocaml/releases/download/v0.24.2/tree-sitter-ocaml.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-ocaml.wasm",
+      "size": 5553934,
+      "sha256": "761a78a804931cfac1fa0c6238989b4b0e86cc70db461b1315d743de923f8246"
+    },
+    {
+      "kind": "query",
+      "language": "ocaml",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/ocaml/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/ocaml/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/ocaml-56eb0284.scm",
+      "size": 4067,
+      "sha256": "04bb46b159b760f27b2703eb545018ac7c7d035cbb0a8b4274098eaa653dd03a"
+    },
+    {
+      "kind": "grammar",
+      "language": "clojure",
+      "cache_key_url": "https://github.com/anomalyco/tree-sitter-clojure/releases/download/v0.0.1/tree-sitter-clojure.wasm",
+      "url": "https://github.com/anomalyco/tree-sitter-clojure/releases/download/v0.0.1/tree-sitter-clojure.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-clojure.wasm",
+      "size": 91957,
+      "sha256": "90f8866b74d04e1643ed73cce25720c732df2aaa38b45da9dcc773bae8181c27"
+    },
+    {
+      "kind": "query",
+      "language": "clojure",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/clojure/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/clojure/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/clojure-7bab6044.scm",
+      "size": 13722,
+      "sha256": "73c7916d54213dcd734de3ad5d890ddea08237074b65120472c86a733c032c76"
+    },
+    {
+      "kind": "grammar",
+      "language": "swift",
+      "cache_key_url": "https://github.com/alex-pinkus/tree-sitter-swift/releases/download/0.7.1/tree-sitter-swift.wasm",
+      "url": "https://github.com/alex-pinkus/tree-sitter-swift/releases/download/0.7.1/tree-sitter-swift.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-swift.wasm",
+      "size": 3316692,
+      "sha256": "e179468b0f3c30c29d8dd8e57c5a79e67812623046cc18fa593f8563795c0b77"
+    },
+    {
+      "kind": "query",
+      "language": "swift",
+      "cache_key_url": "https://raw.githubusercontent.com/alex-pinkus/tree-sitter-swift/main/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/alex-pinkus/tree-sitter-swift/9e3b87f66f1fd2f3b931376fd3723ab788e337c3/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/swift-5d830544.scm",
+      "size": 4978,
+      "sha256": "d596694dbd96e036cc5392cae707845e445740618983bfc9571c3ac897410dd0"
+    },
+    {
+      "kind": "grammar",
+      "language": "toml",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-toml/releases/download/v0.7.0/tree-sitter-toml.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-toml/releases/download/v0.7.0/tree-sitter-toml.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-toml.wasm",
+      "size": 24040,
+      "sha256": "1ac6a83826c35a68857f8325e00c78f6bcbef4eb6db3931a6cf3041f76e5e09f"
+    },
+    {
+      "kind": "query",
+      "language": "toml",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/master/queries/toml/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/toml/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/toml-2e131193.scm",
+      "size": 394,
+      "sha256": "059618709a4c7e6b287643a68282257e197c5a05cfb9d82b6ac517d32230cb12"
+    },
+    {
+      "kind": "grammar",
+      "language": "nix",
+      "cache_key_url": "https://github.com/ast-grep/ast-grep.github.io/raw/40b84530640aa83a0d34a20a2b0623d7b8e5ea97/website/public/parsers/tree-sitter-nix.wasm",
+      "url": "https://raw.githubusercontent.com/ast-grep/ast-grep.github.io/40b84530640aa83a0d34a20a2b0623d7b8e5ea97/website/public/parsers/tree-sitter-nix.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-nix.wasm",
+      "size": 79503,
+      "sha256": "10a66e15b62be1a59cd256abf4b48fdeac07e50c0a8e50ceb64296fcec019930"
+    },
+    {
+      "kind": "query",
+      "language": "nix",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/nix/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/nix/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/nix-33764d6b.scm",
+      "size": 6137,
+      "sha256": "56fd3a06df812415ea583b363624539d625dd7b2dfbc37522a1653eb07ac9fef"
+    },
+    {
+      "kind": "grammar",
+      "language": "diff",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-diff/releases/download/v0.1.0/tree-sitter-diff.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-diff/releases/download/v0.1.0/tree-sitter-diff.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-diff.wasm",
+      "size": 22125,
+      "sha256": "60409c8a17dd5a804e5119887c5b1322f0e780f1976e27d81a1e251dc92e2761"
+    },
+    {
+      "kind": "query",
+      "language": "diff",
+      "cache_key_url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-diff/2520c3f934b3179bb540d23e0ef45f75304b5fed/queries/highlights.scm",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-diff/2520c3f934b3179bb540d23e0ef45f75304b5fed/queries/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/diff-2c0b1d88.scm",
+      "size": 518,
+      "sha256": "fbdaad8c9c009216abe7ba005f613752e068819548d89723b9cda83bed27f8e5"
+    },
+    {
+      "kind": "grammar",
+      "language": "elixir",
+      "cache_key_url": "https://github.com/elixir-lang/tree-sitter-elixir/releases/download/v0.3.5/tree-sitter-elixir.wasm",
+      "url": "https://github.com/elixir-lang/tree-sitter-elixir/releases/download/v0.3.5/tree-sitter-elixir.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-elixir.wasm",
+      "size": 1436984,
+      "sha256": "1818ae0d7343f880abb0b7932c9a815f09896ca67b3e126096a2dd7677d1477b"
+    },
+    {
+      "kind": "query",
+      "language": "elixir",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/elixir/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/elixir/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/elixir-22d2aaed.scm",
+      "size": 3899,
+      "sha256": "a5ba25c44d681d11af4d611a8e229463f91219ced15a3ca240a6c215df1f869a"
+    },
+    {
+      "kind": "grammar",
+      "language": "fsharp",
+      "cache_key_url": "https://github.com/ionide/tree-sitter-fsharp/releases/download/0.3.0/tree-sitter-fsharp.wasm",
+      "url": "https://github.com/ionide/tree-sitter-fsharp/releases/download/0.3.0/tree-sitter-fsharp.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-fsharp.wasm",
+      "size": 11529765,
+      "sha256": "f7c54b09d3bcff0fd44dcd605d989eb2cdd107555cec09271eb085f1617a28d4"
+    },
+    {
+      "kind": "query",
+      "language": "fsharp",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/fsharp/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/fsharp/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/fsharp-24bd7912.scm",
+      "size": 5423,
+      "sha256": "a7002cfebe89a5aab612c3b9a73bd6b5aa89007c3b261a3582e7d5d4a5b989dc"
+    },
+    {
+      "kind": "grammar",
+      "language": "r",
+      "cache_key_url": "https://github.com/r-lib/tree-sitter-r/releases/download/v1.2.0/tree-sitter-r.wasm",
+      "url": "https://github.com/r-lib/tree-sitter-r/releases/download/v1.2.0/tree-sitter-r.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-r.wasm",
+      "size": 481163,
+      "sha256": "2a8f5acd1c53d91e0ec5c01a6830d8ac7f5a7f96f0ac4b3768c016c8e9d07711"
+    },
+    {
+      "kind": "query",
+      "language": "r",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/r/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/r/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/r-17bbc6ca.scm",
+      "size": 1739,
+      "sha256": "e9bdfbc6f0a1d47ca2d96d2aa85a28c35e71150e22f6a9e70b213ff02fe6433f"
+    },
+    {
+      "kind": "grammar",
+      "language": "make",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-make/releases/download/v1.1.1/tree-sitter-make.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-make/releases/download/v1.1.1/tree-sitter-make.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-make.wasm",
+      "size": 147061,
+      "sha256": "1254d1e5787be8bb944d55d1f6552b6b2b7908272ed498013bfdc07bd7d042dd"
+    },
+    {
+      "kind": "query",
+      "language": "make",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/make/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/make/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/make-749d17bc.scm",
+      "size": 2584,
+      "sha256": "49b859e9da027d79383ca896e60c4c141c9ee344a3dacfed29437a0c87593a47"
+    },
+    {
+      "kind": "grammar",
+      "language": "vim",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-vim/releases/download/v0.8.1/tree-sitter-vim.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-vim/releases/download/v0.8.1/tree-sitter-vim.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-vim.wasm",
+      "size": 1406535,
+      "sha256": "93cc332cbd093d163ba3d3b7ff223eacc023e6f5135088018a1c5e86ca627bec"
+    },
+    {
+      "kind": "query",
+      "language": "vim",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/vim/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/vim/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/vim-593f2a32.scm",
+      "size": 4443,
+      "sha256": "3ccb59deb5ed0d363a91433a2b7baaf25489b449c587a8d6decb40dcf129a16c"
+    },
+    {
+      "kind": "grammar",
+      "language": "xml",
+      "cache_key_url": "https://github.com/tree-sitter-grammars/tree-sitter-xml/releases/download/v0.7.0/tree-sitter-xml.wasm",
+      "url": "https://github.com/tree-sitter-grammars/tree-sitter-xml/releases/download/v0.7.0/tree-sitter-xml.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-xml.wasm",
+      "size": 47032,
+      "sha256": "9950327f8542a3d563fe4192aa05986a53e6fd6adca518cbb1a1699cbc8970ad"
+    },
+    {
+      "kind": "query",
+      "language": "xml",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/xml/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/xml/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/xml-6f05cbcf.scm",
+      "size": 2472,
+      "sha256": "a71142b97d01ef98027414d6598ac23536729daddfa9d979c45808c98c3c97fb"
+    },
+    {
+      "kind": "grammar",
+      "language": "agda",
+      "cache_key_url": "https://github.com/tree-sitter/tree-sitter-agda/releases/download/v1.3.3/tree-sitter-agda.wasm",
+      "url": "https://github.com/tree-sitter/tree-sitter-agda/releases/download/v1.3.3/tree-sitter-agda.wasm",
+      "path": "data/opentui/tree-sitter/languages/tree-sitter-agda.wasm",
+      "size": 2152563,
+      "sha256": "8d88926c064b19b756814b6633090e0a63674675e6663ff81b6cf16ec7c60d6e"
+    },
+    {
+      "kind": "query",
+      "language": "agda",
+      "cache_key_url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/refs/heads/master/queries/agda/highlights.scm",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/queries/agda/highlights.scm",
+      "path": "data/opentui/tree-sitter/queries/agda-381ae991.scm",
+      "size": 1003,
+      "sha256": "124f3246955696b0a7d33c750be29977efe256faf9702ed292b1c5680736cf6b"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-python",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-python/26855eabccb19c6abf499fbc5b8dc7cc9ab8bc64/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-python__LICENSE",
+      "size": 1080,
+      "sha256": "d724405ce238a22c0d35769c5a36b386ad5958192efe8bbb304fb2896254575f"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-rust",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-rust/v0.24.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-rust__LICENSE",
+      "size": 1080,
+      "sha256": "31d5b6f4243d5c7c6e1c4ebbbb9f6407bd1457a08bcc4f706521710341acba36"
+    },
+    {
+      "kind": "license",
+      "repository": "nvim-treesitter/nvim-treesitter",
+      "url": "https://raw.githubusercontent.com/nvim-treesitter/nvim-treesitter/cf12346a3414fa1b06af75c79faebe7f76df080a/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/nvim-treesitter__nvim-treesitter__LICENSE",
+      "size": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-go",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-go/v0.25.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-go__LICENSE",
+      "size": 1080,
+      "sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-cpp",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-cpp/v0.23.4/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-cpp__LICENSE",
+      "size": 1080,
+      "sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-c-sharp",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-c-sharp/v0.23.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-c-sharp__LICENSE",
+      "size": 1133,
+      "sha256": "778fb7d63b8c1844da315648c02f325c4713a6f4a5d19644fd413421422776d3"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-bash",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-bash/v0.25.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-bash__LICENSE",
+      "size": 1080,
+      "sha256": "49bf33cf78ef5897e4e161ce1517df7de1ae5042a65b6bcfd44401e0fc606559"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-c",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-c/v0.24.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-c__LICENSE",
+      "size": 1080,
+      "sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-java",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-java/v0.23.5/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-java__LICENSE",
+      "size": 1069,
+      "sha256": "52ed137b039cd9c46409bc22e89938af911c95b157feae2d040b51e6084369a7"
+    },
+    {
+      "kind": "license",
+      "repository": "fwcd/tree-sitter-kotlin",
+      "url": "https://raw.githubusercontent.com/fwcd/tree-sitter-kotlin/0.3.8/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/fwcd__tree-sitter-kotlin__LICENSE",
+      "size": 1071,
+      "sha256": "948495f61768f7de26bcc61113d8cd95f50bbc15adb678c28c941c6c8fcd5903"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-ruby",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-ruby/v0.23.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-ruby__LICENSE",
+      "size": 1075,
+      "sha256": "ee006f02a3d856df282e409be2a86e24a65bb573a98b9c28343771141351bb6b"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-php",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-php/58d5643086ae60e93a3746cca648363ee97c8761/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-php__LICENSE",
+      "size": 1166,
+      "sha256": "664764fabf40c0b318e06324a5a12379092a2df25b8cbf2415f71bc0bb352346"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-scala",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-scala/v0.24.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-scala__LICENSE",
+      "size": 1091,
+      "sha256": "1f95ed26e1f4074074c9c7083e61c0a9e4c3b9f435745044995f3beb4ed28575"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-html",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-html/73a3947324f6efddf9e17c0ea58d454843590cc0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-html__LICENSE",
+      "size": 1080,
+      "sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1"
+    },
+    {
+      "kind": "license",
+      "repository": "anomalyco/tree-sitter-vue",
+      "url": "https://raw.githubusercontent.com/anomalyco/tree-sitter-vue/v0.1.2/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/anomalyco__tree-sitter-vue__LICENSE",
+      "size": 1078,
+      "sha256": "91ebb180e4e2e34628c45e405584d0faac6863660b69e8139da96290e58c14dd"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-hcl",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-hcl/v1.2.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-hcl__LICENSE",
+      "size": 11357,
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-json",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-json/v0.24.8/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-json__LICENSE",
+      "size": 1080,
+      "sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-yaml",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-yaml/v0.7.2/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-yaml__LICENSE",
+      "size": 1105,
+      "sha256": "2d181298822a124f6d106118dcc69c8d4d26ac668559be29682c452e712b0947"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-haskell",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-haskell/v0.23.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-haskell__LICENSE",
+      "size": 1080,
+      "sha256": "2e0110e07abef7c2548b26ec9d6969775617ca539a0dc8dbeeb14d6452c711d1"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-css",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-css/v0.25.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-css__LICENSE",
+      "size": 1080,
+      "sha256": "c5cfb43042b6b72045f4ba997834d0a7786d2793d91680868b5815b39f14fc78"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-julia",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-julia/v0.23.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-julia__LICENSE",
+      "size": 1088,
+      "sha256": "74f800107f200f4e28da33e9c3f86230d37d8f4c0a4916f7111e800c395ee3a2"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-lua",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-lua/v0.5.0/LICENSE.md",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-lua__LICENSE.md",
+      "size": 1079,
+      "sha256": "9a32b02e4c917b1ce6b5e79d8ea81e25cefd7f27d89c7235f2afb262c06cf32e"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-ocaml",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-ocaml/v0.24.2/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-ocaml__LICENSE",
+      "size": 1094,
+      "sha256": "f977a20805dd6e275f14bc090a5f8e638401dad4df366841c1060f12c75b74ae"
+    },
+    {
+      "kind": "license",
+      "repository": "anomalyco/tree-sitter-clojure",
+      "url": "https://raw.githubusercontent.com/anomalyco/tree-sitter-clojure/v0.0.1/COPYING.txt",
+      "path": "data/opentui/tree-sitter/licenses/anomalyco__tree-sitter-clojure__COPYING.txt",
+      "size": 7048,
+      "sha256": "a2010f343487d3f7618affe54f789f5487602331c0a8d03f49e9a7c547cf0499"
+    },
+    {
+      "kind": "license",
+      "repository": "alex-pinkus/tree-sitter-swift",
+      "url": "https://raw.githubusercontent.com/alex-pinkus/tree-sitter-swift/9e3b87f66f1fd2f3b931376fd3723ab788e337c3/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/alex-pinkus__tree-sitter-swift__LICENSE",
+      "size": 1068,
+      "sha256": "3533cec129bb4bba015c0d61d86dd7c3b7e82110e4d2ff7837a01eff5bad5ccc"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-toml",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-toml/v0.7.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-toml__LICENSE",
+      "size": 1116,
+      "sha256": "b727eee929bee836e8102cecf749a795b199f291b58c885bcd81cae727ac5a46"
+    },
+    {
+      "kind": "license",
+      "repository": "ast-grep/ast-grep.github.io",
+      "url": "https://raw.githubusercontent.com/ast-grep/ast-grep.github.io/40b84530640aa83a0d34a20a2b0623d7b8e5ea97/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/ast-grep__ast-grep.github.io__LICENSE",
+      "size": 1077,
+      "sha256": "81471889c77b2161a3e4dcdb1b2e6ca382e485766132d92d5fe1d7497e7dd2d9"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-diff",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-diff/2520c3f934b3179bb540d23e0ef45f75304b5fed/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-diff__LICENSE",
+      "size": 1070,
+      "sha256": "bb98faf5a86e9458536a6c745e02b53775d01066f1e51dda4ae220a3c0b050f4"
+    },
+    {
+      "kind": "license",
+      "repository": "elixir-lang/tree-sitter-elixir",
+      "url": "https://raw.githubusercontent.com/elixir-lang/tree-sitter-elixir/v0.3.5/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/elixir-lang__tree-sitter-elixir__LICENSE",
+      "size": 10173,
+      "sha256": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9"
+    },
+    {
+      "kind": "license",
+      "repository": "ionide/tree-sitter-fsharp",
+      "url": "https://raw.githubusercontent.com/ionide/tree-sitter-fsharp/0.3.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/ionide__tree-sitter-fsharp__LICENSE",
+      "size": 1074,
+      "sha256": "f9352b63e87252b282b252bf27530027c8ca69829e0023f8b8b682a736f271fd"
+    },
+    {
+      "kind": "license",
+      "repository": "r-lib/tree-sitter-r",
+      "url": "https://raw.githubusercontent.com/r-lib/tree-sitter-r/v1.2.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/r-lib__tree-sitter-r__LICENSE",
+      "size": 1078,
+      "sha256": "de2e49529f03d573bc3fa229dc83acfe22c63a5ad1766b289563edfd45b72dea"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-make",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-make/v1.1.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-make__LICENSE",
+      "size": 1076,
+      "sha256": "28eecdb75b6de2d9020603531461444bf54db827ee2fb345a8fcf4dbee7c2ad1"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-vim",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-vim/v0.8.1/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-vim__LICENSE",
+      "size": 1073,
+      "sha256": "14eaaaa5c0cdb0eb86e85c55643c4cfa04593dbfbaef6a20f35337667b7278d7"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter-grammars/tree-sitter-xml",
+      "url": "https://raw.githubusercontent.com/tree-sitter-grammars/tree-sitter-xml/v0.7.0/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter-grammars__tree-sitter-xml__LICENSE",
+      "size": 1058,
+      "sha256": "3297073719030b7261afd78b7267931ccc03a27f7a65ca6fc644316180f71bf6"
+    },
+    {
+      "kind": "license",
+      "repository": "tree-sitter/tree-sitter-agda",
+      "url": "https://raw.githubusercontent.com/tree-sitter/tree-sitter-agda/v1.3.3/LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/tree-sitter__tree-sitter-agda__LICENSE",
+      "size": 1069,
+      "sha256": "ef120ea13e3e543234f3d9a193c99ea512872979802dc0cebaea404c1a47047c"
+    }
+  ],
+  "local_files": [
+    {
+      "source": "config/offline/OpenTUI-LICENSE",
+      "path": "data/opentui/tree-sitter/licenses/OpenTUI-LICENSE",
+      "sha256": "d9c397a5dc5ac77a2a08fc967ea06a65317a4b5b8de48f6f732ffcb21737e3d2"
+    }
+  ]
+}

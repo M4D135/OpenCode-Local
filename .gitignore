@@ -1,0 +1,11 @@
+/downloads/
+/tooldeps/
+/build/
+/dist/
+/qa/
+/opencode-integration.md
+__pycache__/
+*.pyc
+*.partial
+*.tmp
+/.venv/

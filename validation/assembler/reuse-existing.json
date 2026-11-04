@@ -1,0 +1,8 @@
+{
+  "case": "reuse_valid_model_without_source_parts",
+  "returncode": 0,
+  "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.\n",
+  "stderr": "",
+  "seconds": 12.62021395499869,
+  "passed": true
+}

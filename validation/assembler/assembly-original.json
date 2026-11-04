@@ -1,0 +1,10 @@
+{
+  "case": "assemble_original_parts",
+  "returncode": 0,
+  "stdout": "Assemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 10 %\nModele : 20 %\nModele : 30 %\nModele : 40 %\nModele : 50 %\nModele : 60 %\nModele : 70 %\nModele : 80 %\nModele : 90 %\nModele : 100 %\nModele installe : 2740937888 octets, SHA-256 confirme.\n",
+  "stderr": "",
+  "seconds": 15.638324334999197,
+  "bytes": 2740937888,
+  "independent_sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+  "passed": true
+}

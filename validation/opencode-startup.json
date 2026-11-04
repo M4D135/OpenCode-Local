@@ -1,0 +1,22 @@
+[
+  {
+    "command": [
+      "debug",
+      "config"
+    ],
+    "returncode": 0,
+    "seconds": 0.797,
+    "stdout_tail": "y\",\n    \"lsp\": \"deny\"\n  },\n  \"provider\": {\n    \"local\": {\n      \"name\": \"Qwen local - hors ligne\",\n      \"npm\": \"@ai-sdk/openai-compatible\",\n      \"options\": {\n        \"baseURL\": \"http://127.0.0.1:18745/v1\",\n        \"apiKey\": \"***\",\n        \"timeout\": 900000,\n        \"headerTimeout\": 900000,\n        \"chunkTimeout\": 300000\n      },\n      \"models\": {\n        \"qwen3.5-4b\": {\n          \"name\": \"Qwen3.5 4B - local Q4_K_M\",\n          \"family\": \"qwen\",\n          \"tool_call\": true,\n          \"reasoning\": false,\n          \"temperature\": true,\n          \"attachment\": false,\n          \"modalities\": {\n            \"input\": [\n              \"text\"\n            ],\n            \"output\": [\n              \"text\"\n            ]\n          },\n          \"cost\": {\n            \"input\": 0,\n            \"output\": 0\n          },\n          \"limit\": {\n            \"context\": 32768,\n            \"output\": 4096\n          }\n        }\n      }\n    }\n  },\n  \"agent\": {},\n  \"mode\": {},\n  \"command\": {},\n  \"username\": \"unknown\"\n}\n",
+    "stderr_tail": ""
+  },
+  {
+    "command": [
+      "models",
+      "local"
+    ],
+    "returncode": 0,
+    "seconds": 1.496,
+    "stdout_tail": "local/qwen3.5-4b\n",
+    "stderr_tail": ""
+  }
+]

@@ -1,0 +1,52 @@
+RUN x86_64-w64-mingw32-g++ -std=c++17 -O2 -Wall -Wextra -static -static-libgcc -static-libstdc++ -municode -mwindows /workspace/scratch/2cd47d086f4d/opencode-local/src/launcher.cpp -o /workspace/scratch/2cd47d086f4d/opencode-local/build/payload/OpenCodeLocal.exe -luser32 -lgdi32 -lcomctl32 -lcomdlg32 -lshell32 -lole32 -luuid -lwinhttp -lws2_32 -lbcrypt -liphlpapi
+RUN x86_64-w64-mingw32-g++ -std=c++17 -O2 -Wall -Wextra -static -static-libgcc -static-libstdc++ -municode /workspace/scratch/2cd47d086f4d/opencode-local/src/assemble_model.cpp -o /workspace/scratch/2cd47d086f4d/opencode-local/build/AssembleModel.exe
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python /workspace/scratch/2cd47d086f4d/opencode-local/tools/seed_offline.py --verify-only
+{
+  "opencode": "1.19.5",
+  "opentui": "0.4.5",
+  "package_lock_sha256": "3c28ee53427c67ae2b0f8d6e340de0fd5bd200f9aebf70bc9f7d82b95947ba52",
+  "grammar_lock_sha256": "a080d05f443c866595daa9ec53f7ec90ead97d30e565e5555ed0ab0da8d53797",
+  "dependencies": {
+    "required_packages": 23,
+    "optional_native_dependencies": "omitted"
+  },
+  "assets_verified": 104,
+  "assets_downloaded": 0,
+  "grammar_languages": 34,
+  "node_required_on_target": false
+}
+Manifest: 3810 files
+Model slices already verified
+RUN /opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python /workspace/scratch/2cd47d086f4d/opencode-local/installer/generate_payload_include.py --payload /workspace/scratch/2cd47d086f4d/opencode-local/build/payload --output /workspace/scratch/2cd47d086f4d/opencode-local/build/payload-files.nsh
+{"files": 3809, "non_model_bytes": 403809814, "output": "/workspace/scratch/2cd47d086f4d/opencode-local/build/payload-files.nsh", "model_embedded": false, "recursive_delete": false}
+RUN makensis -V3 -DPayloadDir=/workspace/scratch/2cd47d086f4d/opencode-local/build/payload -DHelperPath=/workspace/scratch/2cd47d086f4d/opencode-local/build/AssembleModel.exe -DOutputPath=/workspace/scratch/2cd47d086f4d/opencode-local/dist/Setup.exe /workspace/scratch/2cd47d086f4d/opencode-local/installer/OpenCodeLocal.nsi
+MakeNSIS v3.09-4 - Copyright 1999-2023 Contributors
+See the file COPYING for license details.
+Credits can be found in the Users Manual.
+
+Command line defined: "PayloadDir=/workspace/scratch/2cd47d086f4d/opencode-local/build/payload"
+Command line defined: "HelperPath=/workspace/scratch/2cd47d086f4d/opencode-local/build/AssembleModel.exe"
+Command line defined: "OutputPath=/workspace/scratch/2cd47d086f4d/opencode-local/dist/Setup.exe"
+Processing config: /etc/nsisconf.nsh
+Processing script file: "/workspace/scratch/2cd47d086f4d/opencode-local/installer/OpenCodeLocal.nsi" (UTF8)
+
+Processed 1 file, writing output (x86-unicode):
+
+Output: "/workspace/scratch/2cd47d086f4d/opencode-local/dist/Setup.exe"
+Install: 5 pages (320 bytes), 2 sections (1 required) (8240 bytes), 13236 instructions (370608 bytes), 8526 strings (1397934 bytes), 1 language table (318 bytes).
+Uninstall: 3 pages (256 bytes), 1 section (4120 bytes), 4553 instructions (127484 bytes), 4294 strings (698626 bytes), 1 language table (278 bytes).
+Datablock optimizer saved 169781 bytes (~0.1%).
+
+Using zlib compression.
+
+EXE header size:              116224 / 100352 bytes
+Install code:                 103446 / 1773788 bytes
+Install data:              126902194 / 406661121 bytes
+Uninstall code+data:           71271 / 77420 bytes
+CRC (0x6C60CC0E):                  4 / 4 bytes
+
+Total size:                127193139 / 408612685 bytes (31.1%)
+
+1 warning:
+  9000: Insecure filename "Setup.exe", Windows will unsafely load compatibility shims into the process.
+COMPLETE /workspace/scratch/2cd47d086f4d/opencode-local/dist
