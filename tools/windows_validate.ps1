@@ -112,22 +112,22 @@ function Invoke-External {
     finally { $process.Dispose(); $watch.Stop() }
 }
 
-function Invoke-Check([string]$Name, [scriptblock]$Body) {
+function Invoke-Check([string]$CheckName, [scriptblock]$Body) {
     try {
         $detail = & $Body
         if ($null -eq $detail -or $detail -isnot [Collections.IDictionary] -or -not $detail.Contains('passed')) {
             throw "The validation check did not produce an explicit pass/fail result."
         }
         $passed = [bool]$detail.passed
-        $script:Checks.Add([ordered]@{ name = $Name; passed = $passed; details = $detail })
+        $script:Checks.Add([ordered]@{ name = $CheckName; passed = $passed; details = $detail })
     }
     catch {
         $passed = $false
-        $script:Checks.Add([ordered]@{ name = $Name; passed = $false
+        $script:Checks.Add([ordered]@{ name = $CheckName; passed = $false
             error = $_.Exception.Message; position = $_.InvocationInfo.PositionMessage })
     }
     $label = if ($passed) { 'PASS ' } else { 'FAIL ' }
-    Write-Host ($label + $Name)
+    Write-Host ($label + $CheckName)
     return $passed
 }
 
