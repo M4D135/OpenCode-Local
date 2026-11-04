@@ -1,0 +1,32 @@
+{
+  "scope": "Actual installer path functions extracted into native NSIS harnesses",
+  "runtime": "blocked",
+  "runtime_blocker": "Wine startup refused by executor: wineserver: socket: Operation not permitted",
+  "cases": {
+    "missing_nested": true,
+    "default_location": true,
+    "documents_nested": true,
+    "existing_empty": true,
+    "existing_empty_trailing_separator": true,
+    "drive_root": false,
+    "documents_root": false,
+    "unowned_nonempty": false,
+    "personal_data": false
+  },
+  "artifacts": {
+    "baseline": {
+      "source_sha256": "c6a4ede20b03b10716a5977648c3421a225af21407f9560d1e410ff9733540d7",
+      "compile_passed": true,
+      "compiler_output": "",
+      "harness": "build/test-installer-paths/baseline.nsi",
+      "executable": "build/test-installer-paths/baseline.exe"
+    },
+    "current": {
+      "source_sha256": "9abed2f9ab1ceed8094de6d149b933acf2f988bef41efce045a3c5b99323dc0c",
+      "compile_passed": true,
+      "compiler_output": "",
+      "harness": "build/test-installer-paths/current.nsi",
+      "executable": "build/test-installer-paths/current.exe"
+    }
+  }
+}

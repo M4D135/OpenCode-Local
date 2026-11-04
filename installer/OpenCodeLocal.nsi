@@ -20,7 +20,7 @@ ManifestSupportedOS all
   !define OutputPath "../dist/Setup.exe"
 !endif
 !ifndef AppVersion
-  !define AppVersion "1.0.0"
+  !define AppVersion "1.0.1"
 !endif
 !define PRODUCT_NAME "OpenCode Local"
 !define PRODUCT_MARKER "OpenCodeLocal:{87D8D49F-3966-4D2F-B299-E47847637881}"
@@ -235,7 +235,29 @@ Function ValidateTarget
   StrCpy $Problem ""
   StrCpy $HasContent 0
   StrCmp $INSTDIR "" target_bad
-  GetFullPathName $INSTDIR "$INSTDIR"
+  ; NSIS GetFullPathName clears its output when the final folder does not
+  ; exist. A new installation folder is expected not to exist yet. Use the
+  ; Win32 path normalizer, with distinct input/output buffers, instead.
+  StrCpy $2 $INSTDIR
+  System::Call 'kernel32::GetFullPathNameW(w r2, i ${NSIS_MAX_STRLEN}, w .r1, p 0) i .r0'
+  ${If} $0 == 0
+    Goto target_bad
+  ${EndIf}
+  ${If} $0 >= ${NSIS_MAX_STRLEN}
+    StrCpy $Problem "Le chemin d’installation est trop long. Choisissez un dossier plus court."
+    Goto target_done
+  ${EndIf}
+  StrCpy $INSTDIR $1
+target_trim_separator:
+  StrLen $0 $INSTDIR
+  ${If} $0 <= 3
+    Goto target_bad
+  ${EndIf}
+  StrCpy $0 $INSTDIR 1 -1
+  StrCmp $0 "\" 0 target_normalized
+  StrCpy $INSTDIR $INSTDIR -1
+  Goto target_trim_separator
+target_normalized:
   StrLen $0 $INSTDIR
   ${If} $0 < 4
     Goto target_bad

@@ -1,0 +1,19 @@
+{
+  "version": "1.0.1",
+  "change": "Normalize new destination folders with Win32 GetFullPathNameW instead of NSIS GetFullPathName",
+  "payload_source": "Original published v1.0.0 Setup.exe",
+  "original_setup_sha256": "2ab174a12a48a6d9ab8ba1fc26dbc695067226db495eeeedec187118ee36c736",
+  "original_payload_manifest_files_verified": 3809,
+  "payload_files_changed": 0,
+  "external_model_parts_unchanged": true,
+  "nsis_compile": "passed",
+  "archive_integrity": "passed",
+  "zip_contains": [
+    "Setup.exe"
+  ],
+  "windows_installation": "not_run",
+  "sha256": {
+    "Setup.exe": "02508ece3357e5bd087e906512a4378c1671799e28cd58ca2dd7c1fc40b17218",
+    "Setup-corrige-1.0.1.zip": "14fea5829c9f2f869550da003f7c94a3b015e6dae48e7fe5c6cd0e98282fda9e"
+  }
+}
