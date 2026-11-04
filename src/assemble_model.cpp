@@ -26,25 +26,40 @@
 #include <cwctype>
 #include <filesystem>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <string>
 #include <system_error>
 #include <vector>
 
+#include "pack_config.h"
+
 namespace fs = std::filesystem;
 
 namespace {
 
-constexpr uint64_t kPart1Bytes = 1500000000ULL;
-constexpr uint64_t kPart2Bytes = 1240937888ULL;
-constexpr uint64_t kModelBytes = kPart1Bytes + kPart2Bytes;
-constexpr char kModelSha256[] = "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4";
+constexpr uint64_t kModelBytes = PackConfig::ModelBytes;
+constexpr auto& kModelSha256 = PackConfig::ModelSha256;
 constexpr size_t kBufferBytes = 4 * 1024 * 1024;
+
+constexpr bool ValidPartSizes() {
+    if (!kModelBytes || !PackConfig::PartCount ||
+        PackConfig::PartCount != sizeof(PackConfig::Parts) / sizeof(PackConfig::Parts[0])) return false;
+    uint64_t total = 0;
+    for (size_t i = 0; i < PackConfig::PartCount; ++i) {
+        const uint64_t bytes = PackConfig::Parts[i].bytes;
+        if (!bytes || bytes > kModelBytes - total) return false;
+        total += bytes;
+    }
+    return total == kModelBytes;
+}
+static_assert(ValidPartSizes(), "Pack parts must contain exactly the pinned model size");
+static_assert(sizeof(PackConfig::ModelSha256) == 65, "A pinned SHA-256 is required");
 
 // Stable exit codes consumed by Setup.exe:
 // 0 success (including reuse after a complete SHA-256 check)
 // 2 invalid arguments
-// 3 source files missing or wrong sizes
+// 3 source files missing, non-regular, or wrong sizes
 // 4 invalid / inaccessible destination or reparse point
 // 5 input read error
 // 6 output write / flush error (including insufficient space)
@@ -363,13 +378,19 @@ int Assemble(const fs::path& sourceDirectory, const fs::path& destinationInput) 
     const fs::path source = fs::absolute(sourceDirectory).lexically_normal();
     const fs::path destination = fs::absolute(destinationInput).lexically_normal();
     if (destination.filename().empty()) throw Failure(4, "Le chemin du modele de destination est invalide.");
-    if (SameFileOrPath(source / "Setup-1.bin", destination) ||
-        SameFileOrPath(source / "Setup-2.bin", destination))
-        throw Failure(4, "La destination ne peut pas remplacer une partie originale du modele.");
+    const fs::path completeSource = source / fs::u8path(PackConfig::ModelFile);
+    if (SameFileOrPath(completeSource, destination))
+        throw Failure(4, "La destination ne peut pas remplacer le fichier GGUF source.");
+    for (size_t i = 0; i < PackConfig::PartCount; ++i) {
+        if (SameFileOrPath(source / fs::u8path(PackConfig::Parts[i].name), destination))
+            throw Failure(4, "La destination ne peut pas remplacer une partie originale du modele.");
+    }
     RejectReparseAncestors(destination);
     std::error_code ec;
-    if (fs::exists(destination, ec)) {
-        if (ec || !fs::is_regular_file(destination)) throw Failure(4, "La destination n'est pas un fichier normal.");
+    const bool destinationExists = fs::exists(destination, ec);
+    if (ec) throw Failure(4, "Impossible de verifier le fichier de destination.");
+    if (destinationExists) {
+        if (!fs::is_regular_file(destination)) throw Failure(4, "La destination n'est pas un fichier normal.");
         if (fs::file_size(destination) == kModelBytes) {
             std::cout << "Verification du modele deja present..." << std::endl;
             if (HashFile(destination) == kModelSha256) {
@@ -379,26 +400,58 @@ int Assemble(const fs::path& sourceDirectory, const fs::path& destinationInput) 
             std::cout << "Le fichier existant est different. Il sera remplace uniquement apres verification du nouveau modele." << std::endl;
         }
     }
-    Reader first(source / "Setup-1.bin"), second(source / "Setup-2.bin");
-    if (first.size() != kPart1Bytes || second.size() != kPart2Bytes)
-        throw Failure(3, "Setup-1.bin ou Setup-2.bin est incomplet. Les deux parties originales doivent accompagner Setup.exe.");
+    // A complete, exactly named GGUF is an alternative to all split parts.
+    // Prefer it when present, but never hide an invalid full file by silently
+    // falling back to the parts. Keep the input handles open for the whole
+    // copy; on Windows they do not permit concurrent writes or deletions.
+    std::vector<std::unique_ptr<Reader>> inputs;
+    auto addInput = [&inputs](const fs::path& path, uint64_t expectedBytes) {
+        auto input = std::make_unique<Reader>(path);
+        if (input->size() != expectedBytes)
+            throw Failure(3, "Taille incorrecte pour " + path.filename().u8string() +
+                             ". Le fichier doit contenir " + std::to_string(expectedBytes) + " octets.");
+        inputs.push_back(std::move(input));
+    };
+    ec.clear();
+    const auto sourceStatus = fs::symlink_status(completeSource, ec);
+    if (ec && ec != std::errc::no_such_file_or_directory && ec != std::errc::not_a_directory)
+        throw Failure(3, "Impossible de verifier le fichier GGUF source.");
+    const bool completePresent = !ec && sourceStatus.type() != fs::file_type::not_found;
+    if (completePresent) {
+        addInput(completeSource, kModelBytes);
+        std::cout << "Source : fichier GGUF complet " << PackConfig::ModelFile << std::endl;
+    } else {
+        for (size_t i = 0; i < PackConfig::PartCount; ++i)
+            addInput(source / fs::u8path(PackConfig::Parts[i].name), PackConfig::Parts[i].bytes);
+        std::cout << "Source : " << PackConfig::PartCount << " parties du modele." << std::endl;
+    }
     RejectReparseAncestors(destination.parent_path());
     fs::create_directories(destination.parent_path(), ec);
     if (ec) throw Failure(4, "Impossible de creer le dossier du modele.");
     auto space = fs::space(destination.parent_path(), ec);
     if (!ec && space.available < kModelBytes + 16 * 1024 * 1024ULL)
-        throw Failure(6, "Espace disque insuffisant pour assembler le modele. Liberez au moins 2,8 Go.");
+        throw Failure(6, "Espace disque insuffisant pour preparer le modele. Il faut au moins " +
+                         std::to_string((kModelBytes + 1024 * 1024 - 1) / (1024 * 1024) + 16) + " Mio libres.");
     TemporaryOutput output(destination);
     Sha256 hash; std::vector<uint8_t> buffer(kBufferBytes);
     uint64_t total = 0;
+    std::array<uint8_t, 4> magic{};
+    size_t magicBytes = 0;
     int lastPercent = -10;
     std::cout << "Assemblage du modele hors ligne et verification SHA-256..." << std::endl;
-    for (Reader* input : {&first, &second}) {
+    for (const auto& input : inputs) {
         uint64_t readBytes = 0;
         while (readBytes < input->size()) {
             size_t wanted = static_cast<size_t>(std::min<uint64_t>(buffer.size(), input->size() - readBytes));
             size_t received = input->Read(buffer.data(), wanted);
             if (!received) throw Failure(5, "Une partie du modele s'est terminee avant la taille attendue.");
+            if (magicBytes < magic.size()) {
+                const size_t count = std::min(magic.size() - magicBytes, received);
+                std::copy_n(buffer.data(), count, magic.data() + magicBytes);
+                magicBytes += count;
+                if (magicBytes == magic.size() && std::memcmp(magic.data(), "GGUF", magic.size()) != 0)
+                    throw Failure(7, "La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes.");
+            }
             hash.Update(buffer.data(), received);
             output.Write(buffer.data(), received);
             readBytes += received; total += received;
@@ -411,10 +464,10 @@ int Assemble(const fs::path& sourceDirectory, const fs::path& destinationInput) 
         uint8_t extra = 0;
         if (input->Read(&extra, 1) != 0) throw Failure(5, "Une partie du modele a change de taille pendant la copie.");
     }
-    if (total != kModelBytes || hash.Hex() != kModelSha256)
+    if (magicBytes != magic.size() || total != kModelBytes || hash.Hex() != kModelSha256)
         throw Failure(7, "Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.");
     output.Publish(destination);
-    std::cout << "Modele installe : 2740937888 octets, SHA-256 confirme." << std::endl;
+    std::cout << "Modele installe : " << kModelBytes << " octets, SHA-256 confirme." << std::endl;
     return 0;
 }
 
@@ -430,8 +483,9 @@ int Run(const std::vector<fs::path>& arguments) {
             return 0;
         }
         if (arguments.size() != 3) {
-            std::cerr << "Usage : AssembleModel.exe DOSSIER_DES_PARTIES CHEMIN_DU_MODELE\n"
-                         "Les fichiers Setup-1.bin et Setup-2.bin doivent etre dans DOSSIER_DES_PARTIES.\n";
+            std::cerr << "Usage : AssembleModel.exe DOSSIER_SOURCE CHEMIN_DU_MODELE\n"
+                         "Le dossier source doit contenir " << PackConfig::ModelFile <<
+                         " ou les " << PackConfig::PartCount << " parties du modele de ce pack.\n";
             return 2;
         }
         return Assemble(arguments[1], arguments[2]);
@@ -459,3 +513,4 @@ int main(int count, char** values) {
     return Run(arguments);
 }
 #endif
+

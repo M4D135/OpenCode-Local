@@ -1,0 +1,45 @@
+#pragma code_page(65001)
+#include <winres.h>
+
+// Override these three macros for each generated pack. They describe our
+// launcher only and do not claim a signature or affiliation with a vendor.
+#ifndef PACK_DISPLAY_NAME
+#define PACK_DISPLAY_NAME "OpenCode Local"
+#endif
+#ifndef PACK_VERSION_STRING
+#define PACK_VERSION_STRING "1.1.0"
+#endif
+#ifndef PACK_VERSION_NUMBER
+#define PACK_VERSION_NUMBER 1,1,0,0
+#endif
+
+1 RT_MANIFEST "launcher.manifest"
+
+1 VERSIONINFO
+ FILEVERSION PACK_VERSION_NUMBER
+ PRODUCTVERSION PACK_VERSION_NUMBER
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+ FILEFLAGS 0x0L
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE VFT2_UNKNOWN
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040c04b0"
+        BEGIN
+            VALUE "CompanyName", "M4D135"
+            VALUE "FileDescription", PACK_DISPLAY_NAME
+            VALUE "FileVersion", PACK_VERSION_STRING
+            VALUE "InternalName", "OpenCodeLocal"
+            VALUE "LegalCopyright", "OpenCode Local — M4D135"
+            VALUE "OriginalFilename", "OpenCodeLocal.exe"
+            VALUE "ProductName", PACK_DISPLAY_NAME
+            VALUE "ProductVersion", PACK_VERSION_STRING
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x040c, 1200
+    END
+END

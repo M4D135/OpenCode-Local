@@ -19,22 +19,28 @@ ManifestSupportedOS all
 !ifndef OutputPath
   !define OutputPath "../dist/Setup.exe"
 !endif
-!ifndef AppVersion
-  !define AppVersion "1.0.1"
+!ifndef PackConfigPath
+  !define PackConfigPath "${PayloadDir}/../generated/pack-profile.nsh"
 !endif
-!define PRODUCT_NAME "OpenCode Local"
-!define PRODUCT_MARKER "OpenCodeLocal:{87D8D49F-3966-4D2F-B299-E47847637881}"
+!include "${PackConfigPath}"
+!ifndef AppVersion
+  !define AppVersion "${PACK_VERSION}"
+!endif
+!define PRODUCT_NAME "${PACK_DISPLAY_NAME}"
+!define PRODUCT_MARKER "${PACK_MARKER}"
+!define PROFILE_DIRECTORY "${PACK_PROFILE_NAME}"
+!define SHORTCUT_FOLDER "${PACK_SHORTCUT_NAME}"
 !define MARKER_PATH "wad\support\installation.id"
-!define MODEL_PATH "wad\model\Qwen3.5-4B-Q4_K_M.gguf"
-!define UNINSTALL_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\OpenCodeLocal_87D8D49F"
+!define MODEL_PATH "wad\model\${PACK_MODEL_FILENAME}"
+!define UNINSTALL_KEY "${PACK_UNINSTALL_KEY}"
 !include "${PayloadDir}/../payload-files.nsh"
 
 Name "${PRODUCT_NAME}"
 Caption "Installation de ${PRODUCT_NAME}"
 OutFile "${OutputPath}"
-InstallDir "$LOCALAPPDATA\Programs\OpenCodeLocal"
+InstallDir "$LOCALAPPDATA\Programs\${PACK_INSTALL_DIR}"
 InstallDirRegKey HKCU "${UNINSTALL_KEY}" "InstallLocation"
-BrandingText "OpenCode Local | Installation hors ligne"
+BrandingText "${PACK_DISPLAY_NAME} | Installation hors ligne"
 VIProductVersion "${AppVersion}.0"
 VIAddVersionKey /LANG=1036 "ProductName" "${PRODUCT_NAME}"
 VIAddVersionKey /LANG=1036 "ProductVersion" "${AppVersion}"
@@ -52,15 +58,15 @@ ShowUninstDetails show
 AutoCloseWindow false
 
 !define MUI_ABORTWARNING
-!define MUI_WELCOMEPAGE_TITLE "Bienvenue dans OpenCode Local"
-!define MUI_WELCOMEPAGE_TEXT "Votre assistant de code, directement sur votre PC.$\r$\n$\r$\nCe pack contient OpenCode, le modèle Qwen3.5-4B et son moteur. Aucun téléchargement n’est lancé par l’installation.$\r$\n$\r$\nGardez Setup.exe, Setup-1.bin et Setup-2.bin dans le même dossier.$\r$\n$\r$\nL’installation se fait dans votre session Windows. Vos projets, conversations et réglages restent séparés."
+!define MUI_WELCOMEPAGE_TITLE "Bienvenue dans ${PACK_DISPLAY_NAME}"
+!define MUI_WELCOMEPAGE_TEXT "Votre assistant de code, directement sur votre PC.$\r$\n$\r$\nPack pour ${PACK_RAM_GIB} Go de RAM : ${PACK_MODEL_LABEL}. Aucun téléchargement n’est lancé par l’installation.$\r$\n$\r$\nPlacez Setup.exe et le fichier GGUF du modèle (ou toutes ses parties .bin) dans le même dossier.$\r$\n$\r$\nL’installation se fait dans votre session Windows. Vos projets, conversations et réglages restent séparés."
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_COMPONENTS
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_TITLE "OpenCode Local est installé"
-!define MUI_FINISHPAGE_TEXT "Choisissez votre dossier de projet dans le lanceur, puis démarrez OpenCode.$\r$\n$\r$\nLe raccourci est disponible dans le menu Démarrer. Un mode de discussion directe est également inclus.$\r$\n$\r$\nConservez les trois fichiers du pack ensemble pour réinstaller hors ligne."
+!define MUI_FINISHPAGE_TEXT "Choisissez votre dossier de projet dans le lanceur, puis démarrez OpenCode.$\r$\n$\r$\nLe raccourci est disponible dans le menu Démarrer. Un mode de discussion directe est également inclus.$\r$\n$\r$\nConservez le setup et les fichiers du modèle ensemble pour réinstaller hors ligne."
 !define MUI_FINISHPAGE_RUN
 !define MUI_FINISHPAGE_RUN_FUNCTION LaunchApplication
 !define MUI_FINISHPAGE_RUN_TEXT "Ouvrir OpenCode Local"
@@ -189,13 +195,13 @@ FunctionEnd
 Function ${PREFIX}AcquireProfileLock
   Push $0
   StrCpy $Problem ""
-  Push "$LOCALAPPDATA\OpenCodeLocal"
+  Push "$LOCALAPPDATA\${PROFILE_DIRECTORY}"
   Call ${PREFIX}CheckAncestors
   StrCmp $Problem "" 0 acquire_done
   ClearErrors
-  CreateDirectory "$LOCALAPPDATA\OpenCodeLocal"
+  CreateDirectory "$LOCALAPPDATA\${PROFILE_DIRECTORY}"
   IfErrors acquire_failed
-  System::Call 'kernel32::CreateFileW(w "$LOCALAPPDATA\OpenCodeLocal\launcher.lock", i 0xC0000000, i 0, p 0, i 4, i 0x80, p 0) p .r0'
+  System::Call 'kernel32::CreateFileW(w "$LOCALAPPDATA\${PROFILE_DIRECTORY}\launcher.lock", i 0xC0000000, i 0, p 0, i 4, i 0x80, p 0) p .r0'
   StrCpy $ProfileLock $0
   StrCmp $0 "0" acquire_failed
   StrCmp $0 "-1" acquire_failed
@@ -276,7 +282,10 @@ target_normalized:
   StrCmp $INSTDIR "$TEMP" target_bad
   StrCpy $0 $INSTDIR
 target_profile_loop:
+  StrCmp $0 "$LOCALAPPDATA\${PROFILE_DIRECTORY}" target_bad
+  ; Neither pack may replace a directory inside the other pack's user data.
   StrCmp $0 "$LOCALAPPDATA\OpenCodeLocal" target_bad
+  StrCmp $0 "$LOCALAPPDATA\OpenCodeLocal32Go" target_bad
   ${GetParent} "$0" $1
   StrCmp $1 $0 target_ancestors
   StrCmp $1 "" target_ancestors
@@ -316,7 +325,7 @@ target_tree:
   Call CheckTree
   Goto target_done
 target_bad:
-  StrCpy $Problem "Choisissez un dossier local dédié au programme, par exemple $LOCALAPPDATA\Programs\OpenCodeLocal."
+  StrCpy $Problem "Choisissez un dossier local dédié au programme, par exemple $LOCALAPPDATA\Programs\${PACK_INSTALL_DIR}."
 target_done:
   Pop $2
   Pop $1
@@ -334,25 +343,31 @@ FunctionEnd
 Function ValidateDataParts
   Push $0
   Push $1
+  Push $2
   StrCpy $Problem ""
-  ClearErrors
-  FileOpen $0 "$EXEDIR\Setup-1.bin" r
-  IfErrors parts_missing
-  FileSeek $0 0 END $1
-  FileClose $0
-  StrCmp $1 "1500000000" 0 parts_bad
-  ClearErrors
-  FileOpen $0 "$EXEDIR\Setup-2.bin" r
-  IfErrors parts_missing
-  FileSeek $0 0 END $1
-  FileClose $0
-  StrCmp $1 "1240937888" parts_done parts_bad
+  ; A complete GGUF can exceed 4 GiB, so use the 64-bit Win32 size API.
+  ; If it is present but invalid, do not silently choose another model source.
+  IfFileExists "$EXEDIR\${PACK_MODEL_FILENAME}" whole_model parts_split
+whole_model:
+  System::Call 'kernel32::CreateFileW(w "$EXEDIR\${PACK_MODEL_FILENAME}", i 0x80000000, i 1, p 0, i 3, i 0x80, p 0) p .r0'
+  StrCmp $0 "0" parts_bad
+  StrCmp $0 "-1" parts_bad
+  StrCmp $0 "4294967295" parts_bad
+  System::Call 'kernel32::GetFileSizeEx(p r0, *l .r1) i .r2'
+  System::Call 'kernel32::CloseHandle(p r0)'
+  StrCmp $2 "0" parts_bad
+  System::Int64Op $1 = ${PACK_MODEL_BYTES}
+  Pop $2
+  StrCmp $2 "1" parts_done parts_bad
+parts_split:
+  !insertmacro ValidatePackParts
 parts_missing:
-  StrCpy $Problem "Il manque une partie du modèle. Placez Setup.exe, Setup-1.bin et Setup-2.bin dans le même dossier, puis relancez l’installation."
+  StrCpy $Problem "Le modèle de ce pack est incomplet. Placez ${PACK_MODEL_FILENAME}, ou ses ${PACK_PART_COUNT} fichiers .bin, dans le même dossier que Setup.exe."
   Goto parts_done
 parts_bad:
-  StrCpy $Problem "La taille d’un fichier Setup-*.bin est incorrecte. Récupérez les trois fichiers complets de la même version."
+  StrCpy $Problem "Un fichier du modèle est incomplet ou appartient à un autre pack. Utilisez les fichiers du pack ${PACK_RAM_GIB} Go."
 parts_done:
+  Pop $2
   Pop $1
   Pop $0
 FunctionEnd
@@ -366,10 +381,10 @@ Function CheckDiskSpace
   StrCpy $0 "$0\"
   System::Call 'kernel32::GetDiskFreeSpaceExW(w r0, *l .r1, p 0, p 0) i .r2'
   StrCmp $2 0 disk_unknown
-  System::Int64Op $1 < 5368709120
+  System::Int64Op $1 < ${PACK_DISK_REQUIRED_BYTES}
   Pop $2
   StrCmp $2 0 disk_done
-  StrCpy $Problem "L’installation demande au moins 5 Go libres sur le disque de destination, le temps de préparer et vérifier le pack."
+  StrCpy $Problem "L’installation demande au moins ${PACK_DISK_REQUIRED_GIB} Go libres sur le disque de destination, le temps de préparer et vérifier le pack."
   Goto disk_done
 disk_unknown:
   StrCpy $Problem "Impossible de vérifier l’espace libre sur le disque de destination. Choisissez un dossier local accessible."
@@ -421,9 +436,9 @@ Function .onGUIEnd
   Call ReleaseProfileLock
 FunctionEnd
 
-Section "OpenCode Local et modèle Qwen (obligatoire)" SEC_MAIN
+Section "${PACK_DISPLAY_NAME} et modèle Qwen (obligatoire)" SEC_MAIN
   SectionIn RO
-  AddSize 3200986
+  AddSize ${PACK_MODEL_EXTRA_KIB}
   Call ValidateTarget
   StrCmp $Problem "" +2
   Call InstallationFailure
@@ -452,15 +467,15 @@ Section "OpenCode Local et modèle Qwen (obligatoire)" SEC_MAIN
   CreateDirectory "$StageDir\wad\support"
   IfErrors stage_error
   SetOutPath "$StageDir\wad\support"
-  File /oname=installation.id "installation.id"
+  File /oname=installation.id "${PayloadDir}/wad/support/installation.id"
   StrCpy $StageCreated 1
   DetailPrint "Installation des composants inclus dans le pack..."
   ClearErrors
   !insertmacro InstallPayload "$StageDir"
   IfErrors extraction_error
   CreateDirectory "$StageDir\wad\model"
-  DetailPrint "Assemblage et vérification du modèle Qwen (2,74 Go)..."
-  nsExec::ExecToLog /TIMEOUT=600000 '"$PLUGINSDIR\AssembleModel.exe" "$EXEDIR" "$StageDir\${MODEL_PATH}"'
+  DetailPrint "Préparation et vérification du modèle ${PACK_MODEL_LABEL} (${PACK_MODEL_SIZE_TEXT})..."
+  nsExec::ExecToLog /TIMEOUT=3600000 '"$PLUGINSDIR\AssembleModel.exe" "$EXEDIR" "$StageDir\${MODEL_PATH}"'
   Pop $0
   StrCmp $0 "0" model_ready
   StrCpy $Problem "Le modèle n’a pas pu être assemblé ou sa vérification a échoué. Consultez les détails ci-dessus. L’ancienne installation n’a pas été remplacée."
@@ -505,10 +520,10 @@ commit_new:
   WriteRegStr HKCU "${UNINSTALL_KEY}" "QuietUninstallString" '"$INSTDIR\wad\support\Uninstall.exe" /S'
   WriteRegDWORD HKCU "${UNINSTALL_KEY}" "NoModify" 1
   WriteRegDWORD HKCU "${UNINSTALL_KEY}" "NoRepair" 1
-  CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
+  CreateDirectory "$SMPROGRAMS\${SHORTCUT_FOLDER}"
   SetOutPath "$INSTDIR"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\OpenCode Local.lnk" "$INSTDIR\OpenCodeLocal.exe" "" "$INSTDIR\OpenCodeLocal.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Désinstaller.lnk" "$INSTDIR\wad\support\Uninstall.exe"
+  CreateShortCut "$SMPROGRAMS\${SHORTCUT_FOLDER}\${SHORTCUT_FOLDER}.lnk" "$INSTDIR\OpenCodeLocal.exe" "" "$INSTDIR\OpenCodeLocal.exe"
+  CreateShortCut "$SMPROGRAMS\${SHORTCUT_FOLDER}\Désinstaller.lnk" "$INSTDIR\wad\support\Uninstall.exe"
   StrCmp $BackupDir "" install_complete
   Push $BackupDir
   Call ReadOwner
@@ -555,7 +570,7 @@ SectionEnd
 
 Section /o "Raccourci sur le Bureau" SEC_DESKTOP
   SetOutPath "$INSTDIR"
-  CreateShortCut "$DESKTOP\OpenCode Local.lnk" "$INSTDIR\OpenCodeLocal.exe" "" "$INSTDIR\OpenCodeLocal.exe"
+  CreateShortCut "$DESKTOP\${SHORTCUT_FOLDER}.lnk" "$INSTDIR\OpenCodeLocal.exe" "" "$INSTDIR\OpenCodeLocal.exe"
 SectionEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SEC_MAIN} "Le lanceur, OpenCode, le moteur local, le modèle Qwen et les dépendances hors ligne."
@@ -610,10 +625,10 @@ Section "Uninstall"
   SetOutPath "$TEMP"
   ReadRegStr $0 HKCU "${UNINSTALL_KEY}" "InstallLocation"
   StrCmp $0 $INSTDIR 0 un_files
-  Delete "$DESKTOP\OpenCode Local.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\OpenCode Local.lnk"
-  Delete "$SMPROGRAMS\${PRODUCT_NAME}\Désinstaller.lnk"
-  RMDir "$SMPROGRAMS\${PRODUCT_NAME}"
+  Delete "$DESKTOP\${SHORTCUT_FOLDER}.lnk"
+  Delete "$SMPROGRAMS\${SHORTCUT_FOLDER}\${SHORTCUT_FOLDER}.lnk"
+  Delete "$SMPROGRAMS\${SHORTCUT_FOLDER}\Désinstaller.lnk"
+  RMDir "$SMPROGRAMS\${SHORTCUT_FOLDER}"
   DeleteRegKey HKCU "${UNINSTALL_KEY}"
 un_files:
   !insertmacro RemovePayload "$INSTDIR"

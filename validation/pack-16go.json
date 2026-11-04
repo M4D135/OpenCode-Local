@@ -1,0 +1,53 @@
+{
+  "pack": "16go",
+  "version": "1.1.0",
+  "model": {
+    "filename": "Qwen3.5-4B-Q4_K_M.gguf",
+    "label": "Qwen3.5-4B Q4_K_M",
+    "alias": "qwen3.5-4b",
+    "bytes": 2740937888,
+    "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+    "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf",
+    "license": "Apache-2.0",
+    "repository": "unsloth/Qwen3.5-4B-GGUF",
+    "revision": "e87f176479d0855a907a41277aca2f8ee7a09523"
+  },
+  "profile": {
+    "pack": "16go",
+    "parts": 2,
+    "model_bytes": 2740937888,
+    "required_free_gib": 5,
+    "output": "/tmp/opencode-local-1.1-build/16go/generated"
+  },
+  "payload_entries": 3815,
+  "launcher_sha256": "c82d24514869c7897636ab1997b1b9fa527e2b70572b1244afda016c713de6ff",
+  "assembler_sha256": "e2d097c8ac264654ea0b251d602e87634337c9ac68d3230225b4099fd9a7dbe9",
+  "setup_sha256": "dd02ff9c74eac8550d8e575ef48bf16d2a0c1d8db61399f53b12550bcb240fb2",
+  "zip": "/workspace/scratch/2cd47d086f4d/opencode-local/dist/16go/Setup-16Go-1.1.0.zip",
+  "zip_bytes": 127444474,
+  "zip_sha256": "4d06ddafbda4307256ad070cca4f24d69da8296d4d6e6080c0c7ad52ca700813",
+  "zip_contains": [
+    "Setup.exe"
+  ],
+  "parts": [
+    {
+      "name": "Setup-1.bin",
+      "bytes": 1500000000,
+      "sha256": "416e11f3cf0391279546e73fd7a3658c368ae4328f0a94d34b6d7d6d0394964f"
+    },
+    {
+      "name": "Setup-2.bin",
+      "bytes": 1240937888,
+      "sha256": "d4761367a069f853868471b7c11cd9a65c6112e5d9476b9c3ac2bd32bcebacfb"
+    }
+  ],
+  "native_compilation": "passed",
+  "installer_archive_integrity": "passed",
+  "windows_execution": "not_run",
+  "tehtris_compatibility": "not_validated",
+  "configuration_contexts_validated": [
+    4096,
+    8192,
+    16384
+  ]
+}

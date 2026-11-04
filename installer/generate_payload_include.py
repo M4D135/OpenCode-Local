@@ -11,7 +11,7 @@ RESERVED = {"con", "prn", "aux", "nul"} | {f"{p}{i}" for p in ("com", "lpt") for
 def escape(value: str) -> str:
     return value.replace("$", "$$").replace('"', '$\\"')
 
-def generate(payload: Path, output: Path) -> dict:
+def generate(payload: Path, output: Path, model_filename: str = "Qwen3.5-4B-Q4_K_M.gguf") -> dict:
     payload = payload.resolve(strict=True)
     files = []
     seen = set()
@@ -61,7 +61,9 @@ def generate(payload: Path, output: Path) -> dict:
             previous = parent
         lines.append(f'  File "${{PayloadDir}}/{escape(str(path))}"')
     lines += ["!macroend", "", "!macro RemovePayload TARGET"]
-    removals = set(files) | {PurePosixPath(p) for p in ["wad/model/Qwen3.5-4B-Q4_K_M.gguf", "wad/support/installation.id", "wad/support/Uninstall.exe"]}
+    if not model_filename.endswith(".gguf") or any(c in model_filename for c in '/\\:"<>|?*'):
+        raise ValueError("Invalid model filename")
+    removals = set(files) | {PurePosixPath(p) for p in ["wad/model/" + model_filename, "wad/support/installation.id", "wad/support/Uninstall.exe"]}
     dirs = set()
     for path in sorted(removals, key=lambda p: str(p).casefold()):
         windows_path = str(path).replace("/", "\\")
@@ -79,8 +81,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--payload", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--model-filename", default="Qwen3.5-4B-Q4_K_M.gguf")
     args = parser.parse_args()
-    print(json.dumps(generate(args.payload, args.output), ensure_ascii=False))
+    print(json.dumps(generate(args.payload, args.output, args.model_filename), ensure_ascii=False))
 
 if __name__ == "__main__":
     main()

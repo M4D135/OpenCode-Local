@@ -1,0 +1,60 @@
+{
+  "model_sha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
+  "parts": [
+    {
+      "name": "Setup-32Go-01.bin",
+      "bytes": 1500000000,
+      "sha256": "5861236577e7535b74ddcf7e8d44b86a25e51542965f89b61188d83146752ceb"
+    },
+    {
+      "name": "Setup-32Go-02.bin",
+      "bytes": 1500000000,
+      "sha256": "7873040f48a901b9aeeeb99bfc7e478897770c3b2ba961ae771498462edc9a19"
+    },
+    {
+      "name": "Setup-32Go-03.bin",
+      "bytes": 1500000000,
+      "sha256": "c9a23222ff0ee6c967704966a72e71f9ca730a3a299274c02165662bd1e8547c"
+    },
+    {
+      "name": "Setup-32Go-04.bin",
+      "bytes": 1500000000,
+      "sha256": "e06f15372f17d54ccddbb8af5ccabcf6c030d7a938c1bc196f4c3a3b45175726"
+    },
+    {
+      "name": "Setup-32Go-05.bin",
+      "bytes": 1500000000,
+      "sha256": "18a40f3ec1b3ba696c875119566d121654c7b90463dd4af70c98cd4254d686e0"
+    },
+    {
+      "name": "Setup-32Go-06.bin",
+      "bytes": 1500000000,
+      "sha256": "f1ef5491d2826d2f4f14d308175b23ff99d8079c7361b00cb31126fddbbe6b6e"
+    },
+    {
+      "name": "Setup-32Go-07.bin",
+      "bytes": 1500000000,
+      "sha256": "ebaf488d4ae1209b201f6808c865ae98dfb25711f219effce3cd58f887258440"
+    },
+    {
+      "name": "Setup-32Go-08.bin",
+      "bytes": 1500000000,
+      "sha256": "d07919fe9f603fcd7444ad08faec22896dc97ad023af7d4c331031449684101c"
+    },
+    {
+      "name": "Setup-32Go-09.bin",
+      "bytes": 1500000000,
+      "sha256": "59529e9d28ab1fbba284c07e3bc10443887ad2f00d6ee4696d816fe462a24749"
+    },
+    {
+      "name": "Setup-32Go-10.bin",
+      "bytes": 1500000000,
+      "sha256": "ae16012f8d5d3232289fbbf0d13aff7eafaa865216f0162f037e64d31a5598e4"
+    },
+    {
+      "name": "Setup-32Go-11.bin",
+      "bytes": 1464440224,
+      "sha256": "1854418378aae98897d15141b0e7756d95c494fbfd8c1a070be4bfa4a6cf0b9d"
+    }
+  ]
+}

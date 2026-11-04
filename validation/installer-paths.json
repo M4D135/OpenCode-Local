@@ -1,7 +1,8 @@
 {
-  "scope": "Actual installer path functions extracted into native NSIS harnesses",
+  "scope": "Actual installer path functions with each generated production pack configuration",
+  "target": "x86-unicode",
   "runtime": "blocked",
-  "runtime_blocker": "Wine startup refused by executor: wineserver: socket: Operation not permitted",
+  "runtime_blocker": "Windows execution unavailable; prior Wine startup was blocked by wineserver: socket: Operation not permitted. No new runtime attempt.",
   "cases": {
     "missing_nested": true,
     "default_location": true,
@@ -11,22 +12,43 @@
     "drive_root": false,
     "documents_root": false,
     "unowned_nonempty": false,
-    "personal_data": false
+    "personal_data": false,
+    "other_pack_personal_data": false,
+    "owned_installation": true,
+    "other_pack_installation": false
   },
   "artifacts": {
-    "baseline": {
-      "source_sha256": "c6a4ede20b03b10716a5977648c3421a225af21407f9560d1e410ff9733540d7",
+    "current-16go": {
+      "source_sha256": "c533afb8f0a6ae57f245ca34197a188b8af7d2f0f74845e8b087433d83e935b6",
+      "pack": "16go",
+      "pack_config_sha256": "c3eda91ac02e4eee8cf4a728137d5938961f68135263c3fc702ae868de76c5c1",
+      "model_bytes": 2740937888,
+      "model_parts": 2,
+      "installation_marker": "OpenCodeLocal:{87D8D49F-3966-4D2F-B299-E47847637881}",
+      "profile_directory": "OpenCodeLocal",
+      "install_directory": "OpenCodeLocal",
       "compile_passed": true,
       "compiler_output": "",
-      "harness": "build/test-installer-paths/baseline.nsi",
-      "executable": "build/test-installer-paths/baseline.exe"
+      "harness": "build/test-installer-paths/current-16go.nsi",
+      "executable": "build/test-installer-paths/current-16go.exe"
     },
-    "current": {
-      "source_sha256": "9abed2f9ab1ceed8094de6d149b933acf2f988bef41efce045a3c5b99323dc0c",
+    "current-32go": {
+      "source_sha256": "c533afb8f0a6ae57f245ca34197a188b8af7d2f0f74845e8b087433d83e935b6",
+      "pack": "32go",
+      "pack_config_sha256": "fdf4db4a3fa1f9ef5deced3d22d0b283b238426618d48752753b657abfd63718",
+      "model_bytes": 16464440224,
+      "model_parts": 11,
+      "installation_marker": "OpenCodeLocal32Go:{49609C11-D113-4D39-93F5-920F94A53B28}",
+      "profile_directory": "OpenCodeLocal32Go",
+      "install_directory": "OpenCodeLocal32Go",
       "compile_passed": true,
       "compiler_output": "",
-      "harness": "build/test-installer-paths/current.nsi",
-      "executable": "build/test-installer-paths/current.exe"
+      "harness": "build/test-installer-paths/current-32go.nsi",
+      "executable": "build/test-installer-paths/current-32go.exe"
     }
-  }
+  },
+  "auxiliary_compile_only": [
+    "ValidateDataParts",
+    "CheckDiskSpace"
+  ]
 }

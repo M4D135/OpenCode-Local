@@ -181,20 +181,35 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--offline", action="store_true", help="Use the previously downloaded build cache")
     parser.add_argument("--prepared", action="store_true", help="Reuse an already prepared payload; compile and package it")
+    parser.add_argument("--pack", choices=("16go", "32go", "all"), default="all")
+    parser.add_argument("--base-payload", type=Path, help="Verified existing payload to reuse without downloads")
+    parser.add_argument("--work-root", type=Path, default=ROOT / "build/packs")
+    parser.add_argument("--output-root", type=Path, default=ROOT / "dist")
+    parser.add_argument("--setup-only", action="store_true", help="Build installer ZIPs; keep existing model files")
     args = parser.parse_args()
-    if not args.prepared:
+    from build_packs import build_pack, verify_base
+    from pack_profiles import load_pack
+    from fetch_payload import fetch
+    if args.base_payload:
+        base = args.base_payload.resolve(strict=True)
+    elif args.prepared:
+        base = PAYLOAD
+    else:
         stage(args.offline)
-    integration_files()
-    compile_native()
-    run([sys.executable, ROOT / "tools/seed_offline.py", "--verify-only"])
-    manifest()
-    split_model()
-    run([sys.executable, ROOT / "installer/generate_payload_include.py", "--payload", PAYLOAD, "--output", ROOT / "build/payload-files.nsh"])
-    run(["makensis", "-V3", f"-DPayloadDir={PAYLOAD}", f"-DHelperPath={ROOT / 'build/AssembleModel.exe'}", f"-DOutputPath={DIST / 'Setup.exe'}", ROOT / "installer/OpenCodeLocal.nsi"])
-    shutil.copyfile(ROOT / "docs/LISEZ-MOI.txt", DIST / "LISEZ-MOI.txt")
-    paths = [DIST / name for name in ("Setup.exe", "Setup-1.bin", "Setup-2.bin", "LISEZ-MOI.txt")]
-    (DIST / "SHA256SUMS.txt").write_text("".join(f"{sha256(path)}  {path.name}\n" for path in paths), encoding="ascii")
-    print("COMPLETE", DIST, flush=True)
+        integration_files()
+        run([sys.executable, ROOT / "tools/seed_offline.py", "--verify-only"])
+        manifest()
+        base = PAYLOAD
+    verify_base(base)
+    sevenzip = shutil.which("7z") or shutil.which("7zz")
+    for name in (("16go", "32go") if args.pack == "all" else (args.pack,)):
+        if not args.setup_only:
+            model = load_pack(name)["model"]
+            fetch({"file": model["filename"], "url": model["url"],
+                   "size": model["bytes"], "sha256": model["sha256"]}, args.offline)
+        build_pack(name, base, args.work_root, args.output_root, ROOT / "downloads",
+                   not args.setup_only, Path(sevenzip) if sevenzip else None)
+    print("COMPLETE", args.output_root, flush=True)
 
 
 if __name__ == "__main__":

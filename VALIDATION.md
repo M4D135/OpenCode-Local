@@ -1,4 +1,37 @@
-# Validation du pack 1.0.0
+# Validation des packs 1.1.0
+
+Contrôles réalisés le 4 novembre 2026. Les résultats distinguent compilation, tests natifs Linux et exécution Windows.
+
+| Contrôle | Résultat | Limite |
+| --- | --- | --- |
+| Profils 16/32 Go, modèle et identités distinctes | Générés depuis `config/packs.json` | RAM cible à confirmer sur les postes |
+| Lanceurs et assembleurs Windows x64 | Compilation avec `-Wall -Wextra -Werror` réussie | Exécution Windows non réalisée |
+| VERSIONINFO et manifeste `asInvoker` | Présents dans les deux lanceurs | Pas de signature Authenticode |
+| Installateurs NSIS et archives ZIP | Compilation et contrôle d’intégrité réussis | L’empreinte des assets est aussi contrôlée après publication |
+| Assembleur générique | 40 vérifications natives sur petits fichiers, 2 et 11 parties | Voir `validation/assembler-new-profiles.json` |
+| Fonctions de chemins/données NSIS | Compilation sur cible x86-unicode pour les deux profils | Runtime bloqué dans cet environnement ; aucun succès d’exécution revendiqué |
+| Modèle Qwen3.8-27B complet | Taille et SHA-256 vérifiés après téléchargement | Empreinte figée dans `config/packs.json` |
+| Tokenizer, chargement, template et génération 32 Go | Réussis avec llama.cpp b12089 Linux | Contexte réduit à 1 024 tokens et hôte limité à 8 Gio |
+| Appel d’outil 32 Go | `finish_reason=tool_calls`, fonction `done`, arguments `{}` | Pas de boucle complète d’exécution OpenCode ; le choix d’outil forcé par objet est non pris en charge par ce runtime |
+| Compatibilité TEHTRIS | Non validée | Une détection sur l’ancien lanceur reste à qualifier |
+
+Rapports : `validation/pack-16go.json`, `validation/pack-32go.json`, `validation/model-32go-parts.json`, `validation/model-32go-compatibility.json`, `validation/assembler-new-profiles.json` et `validation/installer-paths.json`.
+
+## Configuration testée pour le grand modèle
+
+Les essais natifs ont utilisé `--no-repack`, `--no-warmup`, quatre threads et un plafond de 3 Gio pour les allocations anonymes, avec des poids lus par mémoire mappée. Les commandes de production du pack 32 Go incluent `--no-repack`. Les temps mesurés avec 8 Gio disponibles ne prédisent pas le débit sur le PC de 32 Go. La consommation au contexte de production de 16 384 tokens reste à mesurer sur ce PC.
+
+Le choix forcé par nom sous forme d’objet `tool_choice` a été ignoré avec avertissement par le runtime ; le modèle a néanmoins choisi la fonction et le serveur l’a parsée. Le rapport ne prétend pas que ce format d’API est pris en charge.
+
+## Détection antivirus
+
+Les nouvelles ressources et le chargement de `dwmapi.dll` depuis System32 améliorent l’identification et le chargement des DLL. Ils ne constituent ni une signature Authenticode ni une preuve de faux positif. Les éléments à relever dans TEHTRIS sont décrits dans `docs/TEHTRIS.md`.
+
+---
+
+## Historique de la version 1.0.0
+
+# Résultats initiaux du pack 1.0.0
 
 Vérifications effectuées le 4 novembre 2026. Les rapports structurés conservés dans `validation/` correspondent aux essais ci-dessous.
 
@@ -49,3 +82,4 @@ La compilation complète émet l’avertissement NSIS 9000 sur le nom `Setup.exe
 - [Traitement des templates de chat](https://github.com/ggml-org/llama.cpp/blob/b12089/common/chat.cpp)
 
 Le pack possède des diagnostics locaux supplémentaires : `OpenCodeLocal.exe /diagnostic` écrit un rapport dans le profil utilisateur ; `/smoke-test` est destiné à la qualification Windows du moteur et d’une réponse locale.
+

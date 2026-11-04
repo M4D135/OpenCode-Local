@@ -32,6 +32,8 @@
 #include <filesystem>
 #include <fstream>
 #include <functional>
+#include <iomanip>
+#include <iterator>
 #include <map>
 #include <memory>
 #include <mutex>
@@ -41,22 +43,34 @@
 #include <thread>
 #include <vector>
 
+#include "pack_config.h"
+
 // Native Windows launcher. No scripts, elevation, downloaded runtime, or
 // external HTTP endpoint is needed. Only the owned localhost server is used.
 namespace fs = std::filesystem;
 
 namespace {
 
-constexpr wchar_t kProduct[] = L"OpenCode Local";
-constexpr wchar_t kVersion[] = L"1.0.0";
-constexpr wchar_t kClass[] = L"OpenCodeLocal.Main.1";
-constexpr wchar_t kModelFile[] = L"Qwen3.5-4B-Q4_K_M.gguf";
-constexpr wchar_t kAlias[] = L"qwen3.5-4b";
-constexpr uint64_t kModelBytes = 2740937888ULL;
+constexpr const wchar_t* kProduct = PackConfig::DisplayName;
+constexpr const wchar_t* kVersion = PackConfig::VersionW;
+constexpr const wchar_t* kClass = PackConfig::ProfileName;
+constexpr const wchar_t* kModelFile = PackConfig::ModelFileW;
+constexpr const wchar_t* kAlias = PackConfig::ModelAliasW;
+constexpr uint64_t kModelBytes = PackConfig::ModelBytes;
+constexpr bool kDisableRepack = kModelBytes > 8ULL * 1024 * 1024 * 1024;
 constexpr UINT WM_STATUS = WM_APP + 1;
 constexpr UINT WM_FINISHED = WM_APP + 2;
-constexpr int kDefaultContext = 32768;
-constexpr int kOutputTokens = 4096;
+constexpr int kDefaultContext = PackConfig::DefaultContext;
+constexpr int kOutputTokens = PackConfig::OutputTokens;
+constexpr size_t kContextCount = std::size(PackConfig::AllowedContexts);
+static_assert(kContextCount > 0, "At least one context size is required");
+
+constexpr bool IsAllowedContext(int context) {
+    for (int allowed : PackConfig::AllowedContexts)
+        if (context == allowed) return true;
+    return false;
+}
+static_assert(IsAllowedContext(kDefaultContext), "Default context must be offered by this pack");
 
 enum Control : int {
     ID_PROJECT = 101, ID_BROWSE, ID_START, ID_DIRECT, ID_STOP,
@@ -115,7 +129,7 @@ struct App {
     LayoutPaths paths;
     fs::path projectPath;
     std::wstring status = L"Prêt. Choisissez votre dossier de projet.";
-    std::wstring subtitle = L"Votre assistant de code, avec son modèle embarqué.";
+    std::wstring subtitle = std::wstring(PackConfig::ModelLabel) + L" — modèle et outils embarqués.";
     int dpi = 96;
     int selectedContext = kDefaultContext;
     bool dark = true, statusError = false, pendingClose = false;
@@ -197,7 +211,7 @@ void MakeDirectory(const fs::path& p) {
 LayoutPaths FindPaths() {
     LayoutPaths p;
     p.install = ExePath().parent_path();
-    p.profile = KnownFolder(FOLDERID_LocalAppData) / L"OpenCodeLocal";
+    p.profile = KnownFolder(FOLDERID_LocalAppData) / PackConfig::ProfileName;
     p.runtime = p.profile / L"runtime" / kVersion;
     p.config = p.runtime / L"config";
     p.cache = p.runtime / L"cache";
@@ -368,6 +382,9 @@ std::string RandomToken() {
 }
 
 void ValidateFiles(bool directOnly = false) {
+    if (Utf8(PackConfig::ModelFileW) != PackConfig::ModelFile ||
+        Utf8(PackConfig::ModelAliasW) != PackConfig::ModelAlias)
+        throw std::runtime_error("L’identité du modèle de ce pack est incohérente. Réinstallez le pack complet.");
     const std::vector<fs::path> files = directOnly
         ? std::vector<fs::path>{g.paths.completion, g.paths.model}
         : std::vector<fs::path>{g.paths.engine, g.paths.completion, g.paths.model,
@@ -383,8 +400,54 @@ void ValidateFiles(bool directOnly = false) {
         throw std::runtime_error("Le fichier du modèle est incomplet ou différent du modèle livré. Relancez Setup.exe.");
     std::ifstream model(g.paths.model, std::ios::binary);
     char header[8]{}; model.read(header, sizeof(header));
-    if (!model || std::string(header, header + 4) != "GGUF")
+    const uint32_t ggufVersion = static_cast<unsigned char>(header[4]) |
+        (static_cast<uint32_t>(static_cast<unsigned char>(header[5])) << 8) |
+        (static_cast<uint32_t>(static_cast<unsigned char>(header[6])) << 16) |
+        (static_cast<uint32_t>(static_cast<unsigned char>(header[7])) << 24);
+    if (!model || std::string(header, header + 4) != "GGUF" ||
+        (ggufVersion != 2 && ggufVersion != 3))
         throw std::runtime_error("Le modèle n'a pas un en-tête GGUF valide. Relancez Setup.exe.");
+}
+
+struct MemoryBudget {
+    uint64_t installedMB = 0;
+    uint64_t usableMB = 0;
+    uint64_t availableMB = 0;
+    bool physicalInventory = false;
+};
+
+MemoryBudget ReadMemoryBudget() {
+    MEMORYSTATUSEX memory{};
+    memory.dwLength = sizeof(memory);
+    if (!GlobalMemoryStatusEx(&memory)) Fail(L"Impossible de vérifier la mémoire disponible");
+    MemoryBudget budget;
+    budget.usableMB = memory.ullTotalPhys / (1024ULL * 1024);
+    budget.availableMB = memory.ullAvailPhys / (1024ULL * 1024);
+    ULONGLONG installedKB = 0;
+    budget.physicalInventory = GetPhysicallyInstalledSystemMemory(&installedKB) && installedKB > 0;
+    // Firmware and integrated graphics can reserve part of a 16/32 Go machine.
+    // Prefer installed RAM, falling back to usable RAM with the pack's margin.
+    budget.installedMB = budget.physicalInventory ? installedKB / 1024 : budget.usableMB;
+    return budget;
+}
+
+std::wstring MemoryGiB(uint64_t megabytes) {
+    std::wostringstream value;
+    value << std::fixed << std::setprecision(1) << static_cast<double>(megabytes) / 1024.0;
+    std::wstring text = value.str();
+    std::replace(text.begin(), text.end(), L'.', L',');
+    return text;
+}
+
+void CheckMemoryBudget() {
+    const MemoryBudget memory = ReadMemoryBudget();
+    if (memory.installedMB < static_cast<uint64_t>(PackConfig::MinInstalledMemoryMB))
+        throw std::runtime_error(Utf8(std::wstring(L"Mémoire insuffisante pour ") + kProduct +
+            L" : " + MemoryGiB(memory.installedMB) + L" Go détectés. Choisissez le pack adapté à ce PC."));
+    if (memory.availableMB < static_cast<uint64_t>(PackConfig::MinFreeMemoryMB))
+        throw std::runtime_error(Utf8(L"RAM libre : " + MemoryGiB(memory.availableMB) +
+            L" Go ; " + MemoryGiB(PackConfig::MinFreeMemoryMB) + L" Go nécessaires pour " + kProduct +
+            L". Fermez d’autres applications puis réessayez."));
 }
 
 void PrepareProfile() {
@@ -443,17 +506,25 @@ void PrepareProfile() {
                 if (++count % 150 == 0) Status(L"Préparation hors ligne : " + std::to_wstring(count) + L" fichiers…");
             }
         }
-        WriteAtomic(ready, "OpenCode Local 1.0.0\n");
+        WriteAtomic(ready, Utf8(std::wstring(kProduct) + L" " + kVersion) + "\n");
     }
 }
 
 std::string WriteConfig(unsigned short port, const std::string& token, int context) {
+    if (!IsAllowedContext(context))
+        throw std::runtime_error("La taille de contexte n’est pas proposée par ce pack.");
     auto config = ReadSmallFile(g.paths.configTemplate);
     const std::string base = "http://127.0.0.1:" + std::to_string(port) + "/v1";
     config = ReplaceAll(std::move(config), "{{BASE_URL}}", base);
     config = ReplaceAll(std::move(config), "{{API_KEY}}", token);
     config = ReplaceAll(std::move(config), "{{CONTEXT}}", std::to_string(context));
-    config = ReplaceAll(std::move(config), "{{OUTPUT}}", std::to_string(kOutputTokens));
+    // A short context must still leave room for the prompt and tools.
+    const int outputTokens = std::min(kOutputTokens, context / 2);
+    config = ReplaceAll(std::move(config), "{{OUTPUT}}", std::to_string(outputTokens));
+    config = ReplaceAll(std::move(config), "{{COMPACTION_RESERVED}}",
+                        std::to_string(std::min(1024, context / 8)));
+    config = ReplaceAll(std::move(config), "{{COMPACTION_PRESERVE}}",
+                        std::to_string(std::min(2048, context / 4)));
     // Resolve the Windows shell canonically so a project's own powershell.exe
     // cannot shadow the system executable through the working directory.
     wchar_t systemDirectory[MAX_PATH + 1]{};
@@ -637,7 +708,8 @@ struct HttpResponse { DWORD status = 0; std::string body; };
 
 HttpResponse LocalHttp(unsigned short port, const std::string& token, const wchar_t* method,
                        const wchar_t* path, const std::string& body = {}, int timeoutMs = 1500) {
-    InternetHandle session(WinHttpOpen(L"OpenCodeLocal/1.0", WINHTTP_ACCESS_TYPE_NO_PROXY,
+    const std::wstring userAgent = std::wstring(PackConfig::ProfileName) + L"/" + kVersion;
+    InternetHandle session(WinHttpOpen(userAgent.c_str(), WINHTTP_ACCESS_TYPE_NO_PROXY,
                                        WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0));
     if (!session.value) return {};
     WinHttpSetTimeouts(session.value, timeoutMs, timeoutMs, timeoutMs, timeoutMs);
@@ -682,10 +754,12 @@ void WaitForEngine(const Process& engine, unsigned short port, const std::string
             throw std::runtime_error("Le moteur s'est arrêté pendant son lancement. Consultez le journal moteur dans Journaux.");
         int seconds = static_cast<int>(std::chrono::duration_cast<std::chrono::seconds>(
                           std::chrono::steady_clock::now() - start).count());
-        if (seconds >= 180)
-            throw std::runtime_error("Le modèle n'est pas prêt après 180 secondes. Vérifiez la mémoire disponible et le journal moteur. Si les ports locaux sont bloqués, utilisez Discussion directe.");
+        if (seconds >= PackConfig::LoadTimeoutSeconds)
+            throw std::runtime_error("Le modèle n’est pas prêt après " +
+                std::to_string(PackConfig::LoadTimeoutSeconds) +
+                " secondes. Consultez le journal moteur. Si les ports locaux sont bloqués, utilisez Discussion directe.");
         if (seconds != lastSeconds) {
-            Status(L"Chargement de Qwen3.5-4B… " + std::to_wstring(seconds) + L" s");
+            Status(std::wstring(L"Chargement de ") + PackConfig::ModelLabel + L"… " + std::to_wstring(seconds) + L" s");
             lastSeconds = seconds;
         }
         // Never adopt an unrelated service which happens to use the same port.
@@ -693,7 +767,7 @@ void WaitForEngine(const Process& engine, unsigned short port, const std::string
             auto health = LocalHttp(port, token, L"GET", L"/health");
             if (health.status == 200) {
                 auto models = LocalHttp(port, token, L"GET", L"/v1/models");
-                if (models.status == 200 && models.body.find("qwen3.5-4b") != std::string::npos) return;
+                if (models.status == 200 && models.body.find(PackConfig::ModelAlias) != std::string::npos) return;
             }
         }
         for (int i = 0; i < 5; ++i) { CheckStop(); Sleep(100); }
@@ -708,6 +782,8 @@ Process StartEngine(HANDLE job, unsigned short port, const std::string& token, i
         L"--host", L"127.0.0.1", L"--port", std::to_wstring(port),
         L"--api-key", Wide(token)
     };
+    // Large CPU packs must not allocate repacked weights beside the mapped GGUF.
+    if constexpr (kDisableRepack) args.emplace_back(L"--no-repack");
     fs::path output = g.paths.logs / (L"moteur-" + TimeStamp() + L".log");
     Log(L"Démarrage du moteur CPU. Contexte=" + std::to_wstring(context) +
         L", adresse=127.0.0.1:" + std::to_wstring(port) + L", journal=" + output.filename().wstring());
@@ -730,14 +806,18 @@ void RunSession(bool direct, fs::path project, int context) {
     try {
         CheckStop();
         ValidateFiles(direct);
+        CheckMemoryBudget();
+        if (!IsAllowedContext(context))
+            throw std::runtime_error("La taille de contexte n’est pas proposée par ce pack.");
         if (!fs::is_directory(project)) throw std::runtime_error("Le dossier de projet n'existe plus.");
         MakeDirectory(g.paths.logs);
         job = CreateOwnedJob();
         SetJobForUi(job.value);
         if (direct) {
             Status(L"Ouverture de la discussion directe, sans serveur réseau…");
-            std::vector<std::wstring> args = { L"--model", g.paths.model.wstring(), L"--ctx-size", L"4096",
+            std::vector<std::wstring> args = { L"--model", g.paths.model.wstring(), L"--ctx-size", std::to_wstring(context),
                 L"--n-gpu-layers", L"0", L"--jinja", L"--conversation", L"--reasoning", L"off", L"--offline" };
+            if constexpr (kDisableRepack) args.emplace_back(L"--no-repack");
             auto chat = StartProcess(g.paths.completion, args, project, ChildEnvironment(), job.value, true);
             Status(L"Discussion ouverte dans sa console. Fermez-la pour terminer.");
             while (WaitForSingleObject(chat.handle.value, 250) == WAIT_TIMEOUT) CheckStop();
@@ -789,15 +869,21 @@ void RunSession(bool direct, fs::path project, int context) {
 
 std::wstring DiagnosticReport(bool* valid = nullptr) {
     std::wostringstream report;
-    report << L"OPENCODE LOCAL " << kVersion << L" — DIAGNOSTIC\r\n\r\n";
+    report << kProduct << L" " << kVersion << L" — DIAGNOSTIC\r\n\r\n";
     report << L"Date : " << TimeStamp() << L"\r\n";
     report << L"Application : " << g.paths.install.wstring() << L"\r\n";
     report << L"Données utilisateur : " << g.paths.profile.wstring() << L"\r\n";
     report << L"Journaux OpenCode : " << (g.paths.data / L"opencode" / L"log").wstring() << L"\r\n";
     report << L"Projet : " << g.projectPath.wstring() << L"\r\n\r\n";
-    MEMORYSTATUSEX memory{}; memory.dwLength = sizeof(memory); GlobalMemoryStatusEx(&memory);
-    report << L"RAM totale : " << (memory.ullTotalPhys / (1024 * 1024)) << L" Mo\r\n";
-    report << L"RAM disponible : " << (memory.ullAvailPhys / (1024 * 1024)) << L" Mo\r\n";
+    const MemoryBudget memory = ReadMemoryBudget();
+    report << L"RAM installée : " << memory.installedMB << L" Mo"
+           << (memory.physicalInventory ? L" (inventaire matériel)" : L" (mémoire utilisable, valeur de repli)") << L"\r\n";
+    report << L"RAM utilisable : " << memory.usableMB << L" Mo\r\n";
+    report << L"RAM disponible : " << memory.availableMB << L" Mo\r\n";
+    report << L"RAM libre requise par le pack : " << PackConfig::MinFreeMemoryMB << L" Mo\r\n";
+    report << L"Modèle : " << PackConfig::ModelLabel << L"\r\n";
+    report << L"Fichier du modèle : " << kModelFile << L"\r\n";
+    report << L"SHA-256 attendu du modèle : " << Wide(PackConfig::ModelSha256) << L"\r\n";
     SYSTEM_INFO system{}; GetNativeSystemInfo(&system);
     report << L"Processeurs logiques : " << system.dwNumberOfProcessors << L"\r\n";
     report << L"Architecture du système : " <<
@@ -808,7 +894,7 @@ std::wstring DiagnosticReport(bool* valid = nullptr) {
     const std::vector<std::pair<std::wstring, fs::path>> files = {
         {L"Moteur API", g.paths.engine}, {L"Discussion directe", g.paths.completion},
         {L"OpenCode", g.paths.opencode}, {L"Recherche de fichiers", g.paths.tools / L"rg.exe"},
-        {L"Modèle Qwen", g.paths.model}, {L"Configuration", g.paths.configTemplate}
+        {PackConfig::ModelLabel, g.paths.model}, {L"Configuration", g.paths.configTemplate}
     };
     for (const auto& entry : files) {
         std::error_code ec; auto bytes = fs::file_size(entry.second, ec);
@@ -820,6 +906,7 @@ std::wstring DiagnosticReport(bool* valid = nullptr) {
         report << L"\r\n";
     }
     try { ValidateFiles(); } catch (const std::exception& ex) { allValid = false; report << L"\r\n" << Wide(ex.what()) << L"\r\n"; }
+    try { CheckMemoryBudget(); } catch (const std::exception& ex) { allValid = false; report << L"\r\n" << Wide(ex.what()) << L"\r\n"; }
     report << L"\r\nPort de cette session : ";
     if (g.activePort.load()) report << L"127.0.0.1:" << g.activePort.load(); else report << L"aucun moteur API actif";
     report << L"\r\n\r\nLe mode OpenCode utilise uniquement un serveur local pour le modèle.\r\n"
@@ -842,7 +929,7 @@ void SaveSettings() {
 
 void LoadSettings() {
     try {
-        g.projectPath = KnownFolder(FOLDERID_Documents) / L"OpenCodeLocal";
+        g.projectPath = KnownFolder(FOLDERID_Documents) / PackConfig::ProfileName;
         MakeDirectory(g.projectPath);
     } catch (...) {
         g.projectPath = g.paths.profile / L"Projets";
@@ -858,9 +945,10 @@ void LoadSettings() {
             if (line.rfind("project=", 0) == 0) {
                 fs::path candidate(Wide(line.substr(8)));
                 if (candidate.is_absolute() && fs::is_directory(candidate)) g.projectPath = candidate;
-            } else if (line == "context=32768") g.selectedContext = 32768;
-            else if (line == "context=16384") g.selectedContext = 16384;
-            else if (line == "context=8192") g.selectedContext = 8192;
+            } else if (line.rfind("context=", 0) == 0) {
+                for (int context : PackConfig::AllowedContexts)
+                    if (line == "context=" + std::to_string(context)) g.selectedContext = context;
+            }
             else if (line == "dark=0") g.dark = false;
             else if (line == "dark=1") g.dark = true;
         }
@@ -885,7 +973,7 @@ template<typename T> T OptionalFunction(HMODULE module, const char* name) {
 }
 
 void SetDarkTitle(HWND window, bool dark) {
-    HMODULE dwm = LoadLibraryW(L"dwmapi.dll");
+    HMODULE dwm = LoadLibraryExW(L"dwmapi.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
     if (!dwm) return;
     auto fn = OptionalFunction<HRESULT(WINAPI*)(HWND, DWORD, LPCVOID, DWORD)>(dwm, "DwmSetWindowAttribute");
     BOOL value = dark;
@@ -952,17 +1040,17 @@ void PaintMain() {
     PAINTSTRUCT ps{}; HDC dc = BeginPaint(g.window, &ps);
     RECT client{}; GetClientRect(g.window, &client); FillRect(dc, &client, g.backgroundBrush);
     const int width = MulDiv(client.right, 96, g.dpi), height = MulDiv(client.bottom, 96, g.dpi);
-    DrawLabel(dc, L"OpenCode Local", 32, 23, width - 64, 43, g.titleFont, Foreground());
+    DrawLabel(dc, kProduct, 32, 23, width - 64, 43, g.titleFont, Foreground());
     DrawLabel(dc, g.subtitle, 33, 70, width - 66, 25, g.font, Muted());
     RoundedPanel(dc, 32, 120, width - 64, 250, Panel(), Border());
     DrawLabel(dc, L"DOSSIER DE PROJET", 53, 140, width - 106, 23, g.smallFont, Muted());
     DrawLabel(dc, L"Contexte du modèle", 53, 228, 143, 34, g.font, Foreground());
-    DrawLabel(dc, L"32k pour les outils ; 8k et 16k pour les essais légers", 391, 228,
+    DrawLabel(dc, std::to_wstring(kDefaultContext) + L" tokens conseillés pour ce pack", 391, 228,
               std::max(200, width - 446), 34, g.smallFont, Muted());
     RoundedPanel(dc, 32, 391, width - 64, 93, Panel(), Border());
     DrawLabel(dc, g.status, 53, 402, width - 106, 47, g.font,
               g.statusError ? RGB(235, 116, 104) : Foreground(), DT_LEFT | DT_WORDBREAK | DT_NOPREFIX);
-    DrawLabel(dc, L"Qwen3.5 · 4B · CPU  |  Modèle et outils embarqués", 33, height - 48,
+    DrawLabel(dc, std::wstring(PackConfig::ModelLabel) + L" · CPU  |  Modèle et outils embarqués", 33, height - 48,
               width - 66, 25, g.smallFont, Muted());
     EndPaint(g.window, &ps);
 }
@@ -1047,7 +1135,8 @@ void StartFromUi(bool direct) {
         g.statusError = true; InvalidateRect(g.window, nullptr, TRUE); return;
     }
     LRESULT contextIndex = SendMessageW(g.context, CB_GETCURSEL, 0, 0);
-    g.selectedContext = contextIndex == 2 ? 32768 : contextIndex == 1 ? 16384 : 8192;
+    g.selectedContext = contextIndex >= 0 && static_cast<size_t>(contextIndex) < kContextCount
+        ? PackConfig::AllowedContexts[contextIndex] : kDefaultContext;
     SaveSettings();
     if (g.worker.joinable()) g.worker.join();
     g.stopRequested = false; g.busy = true; g.statusError = false;
@@ -1079,10 +1168,13 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wp, LPARAM lp
         g.context = CreateWindowExW(0, L"COMBOBOX", L"", WS_CHILD | WS_VISIBLE | WS_TABSTOP |
             CBS_DROPDOWNLIST | CBS_OWNERDRAWFIXED | CBS_HASSTRINGS, 0, 0, 1, 1,
             window, reinterpret_cast<HMENU>(ID_CONTEXT), g.instance, nullptr);
-        SendMessageW(g.context, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"8 192 tokens"));
-        SendMessageW(g.context, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"16 384 tokens"));
-        SendMessageW(g.context, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(L"32 768 tokens"));
-        SendMessageW(g.context, CB_SETCURSEL, g.selectedContext == 32768 ? 2 : g.selectedContext == 16384 ? 1 : 0, 0);
+        size_t selectedIndex = 0;
+        for (size_t index = 0; index < kContextCount; ++index) {
+            const std::wstring label = std::to_wstring(PackConfig::AllowedContexts[index]) + L" tokens";
+            SendMessageW(g.context, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(label.c_str()));
+            if (PackConfig::AllowedContexts[index] == g.selectedContext) selectedIndex = index;
+        }
+        SendMessageW(g.context, CB_SETCURSEL, selectedIndex, 0);
         SendMessageW(g.context, CB_SETITEMHEIGHT, static_cast<WPARAM>(-1), S(28));
         SendMessageW(g.context, CB_SETITEMHEIGHT, 0, S(30));
         g.progress = CreateWindowExW(0, PROGRESS_CLASSW, L"", WS_CHILD | PBS_MARQUEE,
@@ -1191,13 +1283,15 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wp, LPARAM lp
 int SmokeTest() {
     Handle job;
     try {
-        ValidateFiles(); PrepareProfile();
+        ValidateFiles(); CheckMemoryBudget(); PrepareProfile();
         unsigned short port = ChoosePort(); std::string token = RandomToken();
-        WriteConfig(port, token, 4096);
+        const int context = *std::min_element(std::begin(PackConfig::AllowedContexts), std::end(PackConfig::AllowedContexts));
+        WriteConfig(port, token, context);
         job = CreateOwnedJob(); SetJobForUi(job.value);
-        auto engine = StartEngine(job.value, port, token, 4096);
+        auto engine = StartEngine(job.value, port, token, context);
         auto response = LocalHttp(port, token, L"POST", L"/v1/chat/completions",
-            "{\"model\":\"qwen3.5-4b\",\"messages\":[{\"role\":\"user\",\"content\":\"Respond only with the word OK.\"}],\"max_tokens\":16,\"temperature\":0,\"stream\":false}", 60000);
+            "{\"model\":\"" + JsonEscape(PackConfig::ModelAliasW) +
+            "\",\"messages\":[{\"role\":\"user\",\"content\":\"Respond only with the word OK.\"}],\"max_tokens\":16,\"temperature\":0,\"stream\":false}", 60000);
         SetJobForUi(nullptr); TerminateJobObject(job.value, 0);
         if (response.status != 200 || response.body.find("choices") == std::string::npos)
             throw std::runtime_error("Le test de génération local n'a pas retourné une réponse valide.");
@@ -1280,3 +1374,4 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show) {
     if (SUCCEEDED(com)) CoUninitialize();
     return result;
 }
+

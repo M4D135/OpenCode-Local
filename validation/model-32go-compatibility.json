@@ -1,0 +1,413 @@
+{
+  "schema_version": 1,
+  "checked_at_utc": "2026-11-04T16:03:43.980150+00:00",
+  "result": "native_linux_loader_template_generation_and_tool_call_passed",
+  "model": {
+    "filename": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+    "label": "Qwen3.8-27B UD-Q4_K_M",
+    "alias": "qwen3.8-27b",
+    "bytes": 16464440224,
+    "sha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
+    "url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_M.gguf",
+    "license": "Apache-2.0",
+    "repository": "unsloth/Qwen3.8-27B-GGUF",
+    "revision": "4ca720788d1e01f1bff70c033e0d0028fd02e502",
+    "integrity_note": "The pinned SHA-256 is recorded here; full-file integrity is verified by the separate download/build pipeline, not by the header checker."
+  },
+  "runtime": {
+    "build": "b12089",
+    "version": "0.8.0-dev",
+    "commit": "9309bf1bc",
+    "platform": "Linux",
+    "machine": "x86_64",
+    "archive_filename": "llama-b12089-bin-ubuntu-x64.tar.gz",
+    "archive_sha256": "f3cd7d5d34dee97be7137b749723ac10228055b85336fb56f1d5d0c80ebb737d"
+  },
+  "environment": {
+    "cgroup_memory_limit_bytes": 8589934592,
+    "cpu_quota": "800000 100000",
+    "generation_threads": 4,
+    "address_space_limit_gib": 22,
+    "anonymous_allocation_limit_gib": 3,
+    "model_mapping": "mmap with --no-repack; file pages may be reclaimed"
+  },
+  "header_check": {
+    "model": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+    "bytes": 16464440224,
+    "header": {
+      "gguf_version": 3,
+      "tensor_count": 866,
+      "metadata_count": 50,
+      "header_bytes": 10996621,
+      "tensor_type_counts": {
+        "14": 30,
+        "0": 360,
+        "12": 104,
+        "13": 131,
+        "23": 117,
+        "11": 7,
+        "8": 106,
+        "20": 7,
+        "21": 4
+      },
+      "metadata": {
+        "general.architecture": "qwen35",
+        "general.type": "model",
+        "general.sampling.top_k": 20,
+        "general.sampling.top_p": 0.949999988079071,
+        "general.sampling.temp": 1.0,
+        "general.name": "Qwen3.8-27B",
+        "general.basename": "Qwen3.8-27B",
+        "general.description": "Renewal of the beloved Qwen model, delivering unmatched intelligence density.",
+        "general.quantized_by": "Unsloth",
+        "general.size_label": "27B",
+        "general.license": "apache-2.0",
+        "general.repo_url": "https://huggingface.co/unsloth",
+        "general.base_model.count": 1,
+        "general.base_model.0.name": "Qwen3.8 27B",
+        "general.base_model.0.organization": "Qwen",
+        "general.base_model.0.repo_url": "https://huggingface.co/Qwen/Qwen3.8-27B",
+        "general.tags": [
+          "unsloth"
+        ],
+        "qwen35.block_count": 65,
+        "qwen35.context_length": 262144,
+        "qwen35.embedding_length": 5120,
+        "qwen35.feed_forward_length": 17408,
+        "qwen35.attention.head_count": 24,
+        "qwen35.attention.head_count_kv": 4,
+        "qwen35.rope.dimension_sections": [
+          11,
+          11,
+          10,
+          0
+        ],
+        "qwen35.rope.freq_base": 10000000.0,
+        "qwen35.attention.layer_norm_rms_epsilon": 9.999999974752427e-07,
+        "qwen35.attention.key_length": 256,
+        "qwen35.attention.value_length": 256,
+        "qwen35.nextn_predict_layers": 1,
+        "qwen35.ssm.conv_kernel": 4,
+        "qwen35.ssm.state_size": 128,
+        "qwen35.ssm.group_count": 16,
+        "qwen35.ssm.time_step_rank": 48,
+        "qwen35.ssm.inner_size": 6144,
+        "qwen35.full_attention_interval": 4,
+        "qwen35.rope.dimension_count": 64,
+        "tokenizer.ggml.eos_token_id": 248046,
+        "tokenizer.ggml.padding_token_id": 248055,
+        "tokenizer.ggml.bos_token_id": 248044,
+        "general.quantization_version": 2,
+        "general.file_type": 15
+      },
+      "chat_template": {
+        "bytes": 9993,
+        "sha256": "12827f24b742ea4e80cdc12dbcf9622227056b9f797252a3149263d4f9aaadce",
+        "markers": [
+          "<tool_call>",
+          "</tool_call>",
+          "<tool_response>",
+          "tool_calls",
+          "tools",
+          "enable_thinking",
+          "reasoning_effort"
+        ]
+      }
+    },
+    "tokenizer_check": {
+      "passed": true,
+      "exit_code": 0,
+      "elapsed_seconds": 0.48,
+      "token_ids": [
+        248045,
+        846,
+        198,
+        81911,
+        3396,
+        82,
+        10092,
+        13,
+        220,
+        248058,
+        4754,
+        591,
+        3147,
+        1877,
+        8934,
+        248059,
+        248046
+      ],
+      "stderr": "0.00.397.887 W llama_context: n_ctx_seq (512) > n_ctx_train (0) -- possible training context overflow",
+      "loads_weights": false
+    }
+  },
+  "native_smoke": {
+    "command": [
+      "/tmp/opencode-model-compat-runtime/llama-b12089/llama-server",
+      "-m",
+      "/tmp/opencode-local-1.1-cache/Qwen3.8-27B-UD-Q4_K_M.gguf",
+      "--alias",
+      "qwen3.8-27b",
+      "--ctx-size",
+      "1024",
+      "--batch-size",
+      "64",
+      "--ubatch-size",
+      "64",
+      "--threads",
+      "4",
+      "--threads-batch",
+      "4",
+      "--n-gpu-layers",
+      "0",
+      "--parallel",
+      "1",
+      "--no-repack",
+      "--no-warmup",
+      "--fit",
+      "off",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--offline",
+      "--no-webui",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "54089"
+    ],
+    "memory_limits": {
+      "address_space_gib": 22,
+      "data_gib": 3
+    },
+    "ready": true,
+    "requests": [
+      {
+        "endpoint": "/apply-template",
+        "status": "passed",
+        "response_keys": [
+          "prompt"
+        ],
+        "prompt_bytes": 1202,
+        "tool_definition_present": true,
+        "tool_markers_present": true,
+        "prompt_tail": "be specified\n- You may provide optional reasoning for your function call in natural language BEFORE the function call, but NOT after\n- If there is no function call available, answer the question like normal with your current knowledge and do not tell the user about function calls\n</IMPORTANT><|im_end|>\n<|im_start|>user\nLis le fichier exemple.txt.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+      },
+      {
+        "endpoint": "/v1/chat/completions",
+        "status": "passed",
+        "elapsed_seconds": 12.25,
+        "response": {
+          "choices": [
+            {
+              "finish_reason": "length",
+              "index": 0,
+              "message": {
+                "role": "assistant",
+                "content": "Great"
+              }
+            }
+          ],
+          "created": 1793807855,
+          "model": "qwen3.8-27b",
+          "system_fingerprint": "b12089-9309bf1bc",
+          "object": "chat.completion",
+          "usage": {
+            "completion_tokens": 1,
+            "prompt_tokens": 15,
+            "total_tokens": 16,
+            "prompt_tokens_details": {
+              "cached_tokens": 0
+            }
+          },
+          "id": "chatcmpl-aIlNzMmrte4Tmndl8WULcBYlUruZKMrP",
+          "timings": {
+            "cache_n": 0,
+            "prompt_n": 15,
+            "prompt_ms": 12243.825,
+            "prompt_per_token_ms": 816.255,
+            "prompt_per_second": 1.2251073500315466,
+            "predicted_n": 1,
+            "predicted_ms": 0.001,
+            "predicted_per_token_ms": 0.0,
+            "predicted_per_second": 0.0
+          }
+        }
+      }
+    ],
+    "ready_seconds": 17.01,
+    "process_exit_before_cleanup": null,
+    "elapsed_seconds": 29.42
+  },
+  "native_log_findings": {
+    "base_architecture_loaded": "qwen35",
+    "optional_mtp_layer": "blk.64 tensors reported unused and ignored; the 64 base transformer layers loaded",
+    "weights_repacking": "disabled",
+    "startup_warmup": "disabled",
+    "context_tokens": 1024,
+    "parallel_slots": 1,
+    "tool_template_rendered": true,
+    "reasoning_off_rendered": "Assistant prompt ends with an empty <think> block.",
+    "tool_call_generation_and_parsing": true,
+    "named_tool_choice_object": "The supplied object was ignored with a type warning; the model chose done() under the default choice mode."
+  },
+  "not_validated": [
+    "Windows execution and TEHTRIS policy acceptance",
+    "16,384-token production context or memory usage on a 32-GB computer",
+    "A complete tool execution and tool-result round trip through OpenCode",
+    "Interactive generation speed on a 32-GB target, coding quality, or stability during extended use",
+    "Named tool forcing: this runtime rejected the tool_choice object and used its default mode"
+  ],
+  "interpretation": "The pinned b12089 Linux runtime loaded this exact GGUF, rendered its tool-aware Jinja template, returned an ordinary completion, and generated a correctly parsed done() tool call with empty JSON arguments. The named tool_choice object was ignored by the runtime, so the successful tool call was generated under the default choice mode. This validates one native API tool-call case, not a complete OpenCode workflow or Windows deployment. Timing on the 8-GiB test host is not a throughput prediction for a 32-GB computer.",
+  "reproduce_safe_header_and_tokenizer_check": "python tools/check_model_compatibility.py /path/to/Qwen3.8-27B-UD-Q4_K_M.gguf --tokenizer /path/to/llama-tokenize",
+  "primary_sources": [
+    "https://huggingface.co/Qwen/Qwen3.8-27B",
+    "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/tree/4ca720788d1e01f1bff70c033e0d0028fd02e502",
+    "https://raw.githubusercontent.com/ggml-org/llama.cpp/9309bf1bc/tools/tokenize/tokenize.cpp",
+    "https://github.com/ggml-org/llama.cpp/blob/9309bf1bc/src/llama-model.cpp"
+  ],
+  "production_memory_recommendation": {
+    "flag": "--no-repack",
+    "paths": [
+      "llama-server",
+      "llama-completion/direct mode"
+    ],
+    "reason": "The exact b12089 model loader wraps mmap pages directly only for the default CPU buffer type. Extra buffer types such as CPU_REPACK allocate a separate backend buffer. The bounded compatibility tests used the default mmap path with repacking disabled.",
+    "limitation": "The 32-GB production memory peak was not measured. Disabling repacking may reduce CPU throughput.",
+    "source": "https://github.com/ggml-org/llama.cpp/blob/9309bf1bc/src/llama-model.cpp"
+  },
+  "tool_call_smoke": {
+    "command": [
+      "/tmp/opencode-model-compat-runtime/llama-b12089/llama-server",
+      "-m",
+      "/tmp/opencode-local-1.1-cache/Qwen3.8-27B-UD-Q4_K_M.gguf",
+      "--alias",
+      "qwen3.8-27b",
+      "--ctx-size",
+      "1024",
+      "--batch-size",
+      "64",
+      "--ubatch-size",
+      "64",
+      "--threads",
+      "4",
+      "--threads-batch",
+      "4",
+      "--n-gpu-layers",
+      "0",
+      "--parallel",
+      "1",
+      "--no-repack",
+      "--no-warmup",
+      "--fit",
+      "off",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--offline",
+      "--no-webui",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "41923",
+      "--api-key",
+      "<temporary-local-test-key>"
+    ],
+    "wall_timeout_seconds": 240,
+    "memory_limits": {
+      "address_space_gib": 22,
+      "data_gib": 3
+    },
+    "ready": true,
+    "request": {
+      "model": "qwen3.8-27b",
+      "messages": [
+        {
+          "role": "user",
+          "content": "Retourne done sans argument"
+        }
+      ],
+      "tools": [
+        {
+          "type": "function",
+          "function": {
+            "name": "done",
+            "description": "Finish the task",
+            "parameters": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": false
+            }
+          }
+        }
+      ],
+      "tool_choice": {
+        "type": "function",
+        "function": {
+          "name": "done"
+        }
+      },
+      "parallel_tool_calls": false,
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "max_tokens": 48,
+      "temperature": 0,
+      "stream": false
+    },
+    "ready_seconds": 9.77,
+    "response": {
+      "choices": [
+        {
+          "finish_reason": "tool_calls",
+          "index": 0,
+          "message": {
+            "role": "assistant",
+            "content": "",
+            "tool_calls": [
+              {
+                "type": "function",
+                "function": {
+                  "name": "done",
+                  "arguments": "{}"
+                },
+                "id": "KHrSVc3xCKiNeG0FQ70MRcAFrUyxvuU3"
+              }
+            ]
+          }
+        }
+      ],
+      "created": 1793808182,
+      "model": "qwen3.8-27b",
+      "system_fingerprint": "b12089-9309bf1bc",
+      "object": "chat.completion",
+      "usage": {
+        "completion_tokens": 14,
+        "prompt_tokens": 262,
+        "total_tokens": 276,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        }
+      },
+      "id": "chatcmpl-TOniWA5PXyz1YhptITwYB32V8gQ4TiQd",
+      "timings": {
+        "cache_n": 0,
+        "prompt_n": 262,
+        "prompt_ms": 61344.776,
+        "prompt_per_token_ms": 234.14036641221372,
+        "prompt_per_second": 4.270942321152171,
+        "predicted_n": 14,
+        "predicted_ms": 94445.431,
+        "predicted_per_token_ms": 7265.033153846153,
+        "predicted_per_second": 0.13764562099356611
+      }
+    },
+    "passed": true,
+    "request_seconds": 155.81,
+    "process_exit_before_cleanup": null,
+    "elapsed_seconds": 165.95,
+    "tool_choice_named_object_accepted": false,
+    "tool_choice_effective": "default (auto); the runtime warned that the named-choice object was not a string",
+    "tool_result_execution_tested": false
+  }
+}

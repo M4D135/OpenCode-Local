@@ -1,0 +1,451 @@
+{
+  "source_sha256": "7d714f7717d17255b177d6c108490c1b46ed786ba5b7c475375e2c4fcaea95ce",
+  "scope": "Small pinned fixtures using the production assembler source",
+  "windows_runtime": "not_run",
+  "native_cases": [
+    {
+      "parts": 2,
+      "case": "split_success",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0139,
+      "problems": [],
+      "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 2,
+      "case": "replace_existing_after_verification",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0168,
+      "problems": [],
+      "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 2,
+      "case": "missing_last_part",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0065,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code systeme 2"
+    },
+    {
+      "parts": 2,
+      "case": "truncated_last_part",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0067,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Taille incorrecte pour Setup-2.bin. Le fichier doit contenir 251057 octets."
+    },
+    {
+      "parts": 2,
+      "case": "oversized_part",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0057,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Taille incorrecte pour Setup-2.bin. Le fichier doit contenir 251057 octets."
+    },
+    {
+      "parts": 2,
+      "case": "corrupt_part_preserves_previous",
+      "passed": true,
+      "expected_exit": 7,
+      "exit": 7,
+      "duration_seconds": 0.012,
+      "problems": [],
+      "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %",
+      "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee."
+    },
+    {
+      "parts": 2,
+      "case": "full_gguf_only",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0104,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 2,
+      "case": "full_gguf_takes_priority",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0121,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 2,
+      "case": "corrupt_full_does_not_fall_back",
+      "passed": true,
+      "expected_exit": 7,
+      "exit": 7,
+      "duration_seconds": 0.0111,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %",
+      "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee."
+    },
+    {
+      "parts": 2,
+      "case": "truncated_full_does_not_fall_back",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0066,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Taille incorrecte pour fixture-2.gguf. Le fichier doit contenir 262168 octets."
+    },
+    {
+      "parts": 2,
+      "case": "compressed_source_is_rejected",
+      "passed": true,
+      "expected_exit": 7,
+      "exit": 7,
+      "duration_seconds": 0.0098,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...",
+      "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes."
+    },
+    {
+      "parts": 2,
+      "case": "quarantined_suffix_is_not_a_source",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0072,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code systeme 2"
+    },
+    {
+      "parts": 2,
+      "case": "destination_is_last_part",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0076,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : La destination ne peut pas remplacer une partie originale du modele."
+    },
+    {
+      "parts": 2,
+      "case": "destination_is_complete_source",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0063,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source."
+    },
+    {
+      "parts": 2,
+      "case": "destination_hardlinks_complete_source",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0065,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source."
+    },
+    {
+      "parts": 2,
+      "case": "destination_symlink",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0061,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : Le chemin de destination traverse un lien symbolique."
+    },
+    {
+      "parts": 2,
+      "case": "source_gguf_symlink",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0068,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code systeme 40"
+    },
+    {
+      "parts": 2,
+      "case": "verified_existing_reuse",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0091,
+      "problems": [],
+      "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.",
+      "stderr": ""
+    },
+    {
+      "parts": 2,
+      "case": "sha256_self_test",
+      "passed": true,
+      "exit": 0,
+      "stdout": "PASS SHA-256 : 4 vecteurs, blocs incrementaux et un million d'octets.",
+      "stderr": ""
+    },
+    {
+      "parts": 2,
+      "case": "hash_file_cli",
+      "passed": true,
+      "exit": 0,
+      "stdout": "4ae661d0684a4208d891200892c10329dcdc1f9bc7928a75baef9f1ac3a2d1b3",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "split_success",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0142,
+      "problems": [],
+      "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "replace_existing_after_verification",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0137,
+      "problems": [],
+      "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "missing_last_part",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0059,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code systeme 2"
+    },
+    {
+      "parts": 11,
+      "case": "truncated_last_part",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0055,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Taille incorrecte pour Setup-32Go-11.bin. Le fichier doit contenir 258113 octets."
+    },
+    {
+      "parts": 11,
+      "case": "oversized_part",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0062,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Taille incorrecte pour Setup-32Go-11.bin. Le fichier doit contenir 258113 octets."
+    },
+    {
+      "parts": 11,
+      "case": "corrupt_part_preserves_previous",
+      "passed": true,
+      "expected_exit": 7,
+      "exit": 7,
+      "duration_seconds": 0.0098,
+      "problems": [],
+      "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %",
+      "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee."
+    },
+    {
+      "parts": 11,
+      "case": "full_gguf_only",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0129,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "full_gguf_takes_priority",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0128,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "corrupt_full_does_not_fall_back",
+      "passed": true,
+      "expected_exit": 7,
+      "exit": 7,
+      "duration_seconds": 0.0113,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %",
+      "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee."
+    },
+    {
+      "parts": 11,
+      "case": "truncated_full_does_not_fall_back",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0181,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Taille incorrecte pour fixture-11.gguf. Le fichier doit contenir 262168 octets."
+    },
+    {
+      "parts": 11,
+      "case": "compressed_source_is_rejected",
+      "passed": true,
+      "expected_exit": 7,
+      "exit": 7,
+      "duration_seconds": 0.0098,
+      "problems": [],
+      "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...",
+      "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes."
+    },
+    {
+      "parts": 11,
+      "case": "quarantined_suffix_is_not_a_source",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0059,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code systeme 2"
+    },
+    {
+      "parts": 11,
+      "case": "destination_is_last_part",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0059,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : La destination ne peut pas remplacer une partie originale du modele."
+    },
+    {
+      "parts": 11,
+      "case": "destination_is_complete_source",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0067,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source."
+    },
+    {
+      "parts": 11,
+      "case": "destination_hardlinks_complete_source",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0062,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source."
+    },
+    {
+      "parts": 11,
+      "case": "destination_symlink",
+      "passed": true,
+      "expected_exit": 4,
+      "exit": 4,
+      "duration_seconds": 0.0063,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 4 : Le chemin de destination traverse un lien symbolique."
+    },
+    {
+      "parts": 11,
+      "case": "source_gguf_symlink",
+      "passed": true,
+      "expected_exit": 3,
+      "exit": 3,
+      "duration_seconds": 0.0069,
+      "problems": [],
+      "stdout": "",
+      "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code systeme 40"
+    },
+    {
+      "parts": 11,
+      "case": "verified_existing_reuse",
+      "passed": true,
+      "expected_exit": 0,
+      "exit": 0,
+      "duration_seconds": 0.0122,
+      "problems": [],
+      "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "sha256_self_test",
+      "passed": true,
+      "exit": 0,
+      "stdout": "PASS SHA-256 : 4 vecteurs, blocs incrementaux et un million d'octets.",
+      "stderr": ""
+    },
+    {
+      "parts": 11,
+      "case": "hash_file_cli",
+      "passed": true,
+      "exit": 0,
+      "stdout": "4ae661d0684a4208d891200892c10329dcdc1f9bc7928a75baef9f1ac3a2d1b3",
+      "stderr": ""
+    }
+  ],
+  "windows_compilation": [
+    {
+      "pack": "16go",
+      "passed": true,
+      "compiler_output": ""
+    },
+    {
+      "pack": "32go",
+      "passed": true,
+      "compiler_output": ""
+    }
+  ],
+  "fixture_model_bytes": 262168,
+  "passed": true,
+  "native_passed": 40,
+  "native_total": 40
+}
