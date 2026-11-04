@@ -1,0 +1,99 @@
+{
+  "run_id": 41922735490,
+  "commit": "46f462dfc6de7f9450d5cbf517a7cb6967d598c3",
+  "report_artifact_id": 13368760209,
+  "report_artifact_sha256": "eba08bd17c093a15de1374981d67ca6a434ad7debc8ff485222eda84d361e070",
+  "passed": true,
+  "platform": "Microsoft Windows NT 10.0.20348.0",
+  "powershell": "7.6.9",
+  "top_level_checks": {
+    "passed": 14,
+    "total": 14
+  },
+  "small_assembler_cases": {
+    "passed": 38,
+    "total": 38
+  },
+  "production_assembler_cases": {
+    "passed": 9,
+    "total": 9
+  },
+  "installer_path_cases": {
+    "passed": 30,
+    "total": 30
+  },
+  "installer_metadata_cases": {
+    "passed": 15,
+    "total": 15
+  },
+  "sparse_fixture_max_logical_bytes": 16464440225,
+  "sparse_fixture_max_allocated_bytes": 65536,
+  "production_installer_execution": false,
+  "model_loaded": false,
+  "model_or_ram_qualification": false,
+  "cleanup_notes": [],
+  "unsigned_native_statuses": {
+    "16go/native/OpenCodeLocal.exe": "NotSigned",
+    "16go/native/AssembleModel.exe": "NotSigned",
+    "16go/native/Uninstall.exe": "NotSigned",
+    "32go/native/OpenCodeLocal.exe": "NotSigned",
+    "32go/native/AssembleModel.exe": "NotSigned",
+    "32go/native/Uninstall.exe": "NotSigned"
+  },
+  "archives": [
+    {
+      "pack": "16go",
+      "entries": 3820,
+      "sha256": "b631ced9cb0a1ef1b6bfe23755b9809f44440b7b8ed78ad24532cf9273743861",
+      "embedded_exact_matches": 3
+    },
+    {
+      "pack": "32go",
+      "entries": 3820,
+      "sha256": "b56796ea96b72dad26d767351d17461900e4e065ee24aaa51125682687dc7c4a",
+      "embedded_exact_matches": 3
+    }
+  ],
+  "production_exact_size_cases": [
+    {
+      "pack": "16go",
+      "case": "full_exact_size_invalid_magic",
+      "size_accepted": true,
+      "invalid_magic_checked": true,
+      "disk_space_guard_hit": false,
+      "passed": true,
+      "exit_code": 7
+    },
+    {
+      "pack": "32go",
+      "case": "full_exact_size_invalid_magic",
+      "size_accepted": true,
+      "invalid_magic_checked": true,
+      "disk_space_guard_hit": false,
+      "passed": true,
+      "exit_code": 7
+    }
+  ],
+  "new_directory_cases": [
+    {
+      "pack": "16go",
+      "case": "missing_nested",
+      "passed": true,
+      "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-a1demhhm\\current-16go\\paths\\new\\nested\\OpenCodeLocal"
+    },
+    {
+      "pack": "32go",
+      "case": "missing_nested",
+      "passed": true,
+      "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-a1demhhm\\current-32go\\paths\\new\\nested\\OpenCodeLocal"
+    }
+  ],
+  "run_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/41922735490",
+  "run_conclusion": "success",
+  "run_attempt": 1,
+  "runner": "windows-2022",
+  "published_reports": [
+    "windows-unsigned-1.1.1.json",
+    "finalize-unsigned-1.1.1.json"
+  ]
+}

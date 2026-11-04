@@ -1,0 +1,56 @@
+{
+  "source_inputs_sha256": "67ceb8f4b06fb5823f77edcd4ff4d2424b1ec4d8d1858000d9768b6c868a5d55",
+  "frozen_source_commit": "250501f551f661ef3db2edec3142a8c1d8a3ca31",
+  "test_checkout_commit": "250501f551f661ef3db2edec3142a8c1d8a3ca31",
+  "signing": "unsigned",
+  "packs": [
+    {
+      "pack": "16go",
+      "version": "1.1.1",
+      "setup_bytes": 127267665,
+      "setup_sha256": "94cf519157cf912bf37268209f6285af4887d22bd50ad09f5fa667a58190538d",
+      "zip_bytes": 127267781,
+      "zip_sha256": "80fc20eb9ddf6865387e0f396e685d0a5dae8619a9804a4d7c641816cdc881fa",
+      "zip_contains": [
+        "Setup.exe"
+      ],
+      "payload_files_verified": 3813,
+      "native_extracted_hashes": {
+        "OpenCodeLocal.exe": "ffad8c8054993caedbd262437f26f12bd1b945e0e6b8770dae84cada72dcc014",
+        "AssembleModel.exe": "b1faea1c1b560cfa64315a09d843a0ff131303fb20c3f9517e7b6f2e4217a699",
+        "Uninstall.exe": "668e91fead67b6c365c4f06a53f8ef79b5ac37a8cc0641addf3e325b6532e327"
+      },
+      "external_model_metadata_verified": true,
+      "embedded_models": 0,
+      "archive_integrity": "passed",
+      "full_extraction": "passed",
+      "windows_execution": "not_run"
+    },
+    {
+      "pack": "32go",
+      "version": "1.1.1",
+      "setup_bytes": 127269124,
+      "setup_sha256": "cd04e2bf694c91737be084ef5f6ce284f40e18e3bd1d9ee73db9cc5b0fa47f0c",
+      "zip_bytes": 127269240,
+      "zip_sha256": "0522720fe3c3a33b624e8724dd91e4bed855cfc338d8e5fb399dbb6a05272bbf",
+      "zip_contains": [
+        "Setup.exe"
+      ],
+      "payload_files_verified": 3813,
+      "native_extracted_hashes": {
+        "OpenCodeLocal.exe": "f5ae06871b5a62ab610f3a59c4c785dd14177398d7a8ab85b1cefccae9e9f4bf",
+        "AssembleModel.exe": "0772db498c3af6e4c90a88b332043db7b739f86d9415f7ca897832027e4577d1",
+        "Uninstall.exe": "d84255c032bbd297959223cbece0690ff5478371c5ef684cb36623e34e079bcf"
+      },
+      "external_model_metadata_verified": true,
+      "embedded_models": 0,
+      "archive_integrity": "passed",
+      "full_extraction": "passed",
+      "windows_execution": "not_run"
+    }
+  ],
+  "test_scope": "Local unsigned packaging and full extraction checks; no Windows execution or real certificate",
+  "source_checkout_dirty": true,
+  "source_note": "The local checkout was based on 250501f with the manifest-copy fix applied. Those builder changes were published in f3631c16efb46288d2695c13001d04138e5644d1. The input hash records the exact tested source bytes.",
+  "published_builder_revision": "f3631c16efb46288d2695c13001d04138e5644d1"
+}

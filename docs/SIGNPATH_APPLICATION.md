@@ -43,10 +43,13 @@ affiliated with the upstream OpenCode, llama.cpp or Qwen projects.
 This is a new project, first published on 4 November 2026. It does not yet have
 independent media coverage or an established user community. Its public source,
 tagged releases, model provenance, checksums and validation reports are available
-at https://github.com/M4D135/OpenCode-Local . An endpoint security detection on an
-early unsigned launcher is openly documented in docs/TEHTRIS.md; the cause has
-not been classified as a false positive. We request an eligibility review and
-do not claim an established reputation.
+at https://github.com/M4D135/OpenCode-Local . The unsigned build and Windows
+component validation passed in
+https://github.com/M4D135/OpenCode-Local/actions/runs/41922735490 ; this was not a
+complete installation with production models. An endpoint security detection
+on an early unsigned launcher is openly documented in docs/TEHTRIS.md; the cause
+has not been classified as a false positive. We request an eligibility review
+and do not claim an established reputation.
 
 Do not use the popularity of upstream OpenCode or Qwen as this project's own
 reputation. The Foundation may decline a new project or request more evidence.

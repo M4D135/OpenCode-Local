@@ -1,0 +1,121 @@
+{
+  "schema_version": 1,
+  "phase": "finalize",
+  "signing": "unsigned",
+  "packs": [
+    {
+      "pack": "16go",
+      "version": "1.1.1",
+      "source_commit": "46f462dfc6de7f9450d5cbf517a7cb6967d598c3",
+      "source_inputs_sha256": "ad7859b39e0453b0e0e26d2fa371802abc9f0cd5acecc8fe544d2f44340c4219",
+      "signing": "unsigned",
+      "model": {
+        "filename": "Qwen3.5-4B-Q4_K_M.gguf",
+        "label": "Qwen3.5-4B Q4_K_M",
+        "alias": "qwen3.5-4b",
+        "bytes": 2740937888,
+        "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
+        "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf",
+        "license": "Apache-2.0",
+        "repository": "unsloth/Qwen3.5-4B-GGUF",
+        "revision": "e87f176479d0855a907a41277aca2f8ee7a09523"
+      },
+      "zip": "D:\\a\\OpenCode-Local\\OpenCode-Local\\dist\\16go\\Setup-16Go-1.1.1.zip",
+      "zip_contains": [
+        "Setup.exe"
+      ],
+      "zip_bytes": 127270325,
+      "zip_sha256": "15715dc736186dbc0ecf05ecdfebfa4d2bafc978f943921842b066f6e63f41fb",
+      "setup": {
+        "sha256": "b631ced9cb0a1ef1b6bfe23755b9809f44440b7b8ed78ad24532cf9273743861",
+        "bytes": 127270209,
+        "signature": {
+          "status": "unsigned"
+        }
+      },
+      "native_validation": {
+        "16go/OpenCodeLocal.exe": {
+          "sha256": "ffad8c8054993caedbd262437f26f12bd1b945e0e6b8770dae84cada72dcc014",
+          "bytes": 3486856,
+          "signature": {
+            "status": "unsigned"
+          }
+        },
+        "16go/AssembleModel.exe": {
+          "sha256": "b1faea1c1b560cfa64315a09d843a0ff131303fb20c3f9517e7b6f2e4217a699",
+          "bytes": 2738636,
+          "signature": {
+            "status": "unsigned"
+          }
+        },
+        "16go/Uninstall.exe": {
+          "sha256": "32ba3aecf620584103c777ecd4e4180b3fef34428e0be5622b576d369b09f148",
+          "bytes": 179746,
+          "signature": {
+            "status": "unsigned"
+          }
+        }
+      },
+      "parts": [],
+      "model_downloads": false,
+      "tehtris_compatibility": "not_validated"
+    },
+    {
+      "pack": "32go",
+      "version": "1.1.1",
+      "source_commit": "46f462dfc6de7f9450d5cbf517a7cb6967d598c3",
+      "source_inputs_sha256": "ad7859b39e0453b0e0e26d2fa371802abc9f0cd5acecc8fe544d2f44340c4219",
+      "signing": "unsigned",
+      "model": {
+        "filename": "Qwen3.8-27B-UD-Q4_K_M.gguf",
+        "label": "Qwen3.8-27B UD-Q4_K_M",
+        "alias": "qwen3.8-27b",
+        "bytes": 16464440224,
+        "sha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
+        "url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_M.gguf",
+        "license": "Apache-2.0",
+        "repository": "unsloth/Qwen3.8-27B-GGUF",
+        "revision": "4ca720788d1e01f1bff70c033e0d0028fd02e502"
+      },
+      "zip": "D:\\a\\OpenCode-Local\\OpenCode-Local\\dist\\32go\\Setup-32Go-1.1.1.zip",
+      "zip_contains": [
+        "Setup.exe"
+      ],
+      "zip_bytes": 127271754,
+      "zip_sha256": "122e683fe5d634d71659427fd7c2361b0e67e1414296fbfd1ec8a425050c371d",
+      "setup": {
+        "sha256": "b56796ea96b72dad26d767351d17461900e4e065ee24aaa51125682687dc7c4a",
+        "bytes": 127271638,
+        "signature": {
+          "status": "unsigned"
+        }
+      },
+      "native_validation": {
+        "32go/OpenCodeLocal.exe": {
+          "sha256": "f5ae06871b5a62ab610f3a59c4c785dd14177398d7a8ab85b1cefccae9e9f4bf",
+          "bytes": 3488630,
+          "signature": {
+            "status": "unsigned"
+          }
+        },
+        "32go/AssembleModel.exe": {
+          "sha256": "0772db498c3af6e4c90a88b332043db7b739f86d9415f7ca897832027e4577d1",
+          "bytes": 2739148,
+          "signature": {
+            "status": "unsigned"
+          }
+        },
+        "32go/Uninstall.exe": {
+          "sha256": "616312e73bd905ad6489d4105b5aa37ecade96dfefbfdbc515b42c9b6e6086dc",
+          "bytes": 179757,
+          "signature": {
+            "status": "unsigned"
+          }
+        }
+      },
+      "parts": [],
+      "model_downloads": false,
+      "tehtris_compatibility": "not_validated"
+    }
+  ]
+}
