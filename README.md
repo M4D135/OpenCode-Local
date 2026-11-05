@@ -1,10 +1,20 @@
 # OpenCode Local — pack unique MoE léger
 
 Un assistant de code local pour Windows x64, avec **OpenCode**, un moteur CPU
-et **Qwen3.6-35B-A3B UD-IQ2_XXS**. La version **1.2.1** corrige le lanceur et
+et **Qwen3.6-35B-A3B UD-IQ2_XXS**. La version **1.2.1** corrige des défauts du lanceur et
 permet de réparer une installation existante en conservant le même modèle.
 Le pack unique reste réglé pour un PC de 32 Gio disposant d'environ 20 Gio de
 RAM libres avant lancement.
+
+## Blocage TEHTRIS toujours signalé
+
+**Le blocage du poste signalé n'est pas résolu.** Après la diffusion de 1.2.1,
+de nouvelles notifications montrent la quarantaine d'`AssembleModel.exe`
+depuis le dossier temporaire du setup, puis un nouvel arrêt et une quarantaine
+d'`OpenCodeLocal.exe`. Les photos ne donnent pas la règle de détection, la
+version ou le SHA-256 des fichiers bloqués. Les tests fonctionnels réussis ne
+constituent donc pas une solution vérifiée à ce blocage. Voir le
+[signalement et la revue ciblée](docs/TEHTRIS.md).
 
 ## Télécharger et installer hors ligne
 

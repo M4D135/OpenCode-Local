@@ -506,7 +506,7 @@ def publish_launcher_update(api: GitHub, source: str, run_id: int, dist: Path,
     else:
         release = api.call("/releases", "POST", {"tag_name": "v" + value["version"],
             "target_commitish": source,
-            "name": f'OpenCode Local {value["version"]} — corrections du lanceur',
+            "name": f'OpenCode Local {value["version"]} — maintenance du programme',
             "body": notes, "draft": True, "prerelease": False})
     assets = []
 

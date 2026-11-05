@@ -1,6 +1,6 @@
 # Validation du pack unique MoE
 
-## Version 1.2.1 — lanceur et installateur corrigés
+## Version 1.2.1 — résultats fonctionnels du lanceur et de l'installateur
 
 La [release 1.2.1](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.1)
 est publiée pour le commit `c0f8d868bcdfdaf8462389c0d09f600767cdd1fa`.
@@ -8,6 +8,14 @@ Le [run de construction et de validation Windows 42019072638](https://github.com
 et le [run de publication 42019473800](https://github.com/M4D135/OpenCode-Local/actions/runs/42019473800)
 ont réussi le 5 novembre 2026. Le modèle, les composants amont figés et les
 réglages mémoire restent ceux de 1.2.0. Les exécutables sont **non signés**.
+
+**Nouveau signalement après diffusion : le blocage du poste utilisateur
+persiste.** Les photos montrent une quarantaine d'`AssembleModel.exe` dans
+le dossier temporaire du setup et un nouvel arrêt/quarantaine du lanceur.
+L'identité exacte des fichiers bloqués et la règle TEHTRIS restent inconnues.
+Les résultats ci-dessous concernent les contrôles exécutés sur les runners ;
+ils ne qualifient pas l'acceptation de ce pack sur le poste signalé. La
+[revue du nouveau signalement](docs/TEHTRIS.md) conserve cette distinction.
 
 ### Contrôles exécutés sur cette version
 

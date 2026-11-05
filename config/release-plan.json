@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
   "repository": "M4D135/OpenCode-Local",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "pack": "moe",
   "signing": "unsigned",
-  "request": "Publish the launcher reliability and integrity fixes after new Windows validation, reusing the unchanged model from 1.2.0 without downloading or uploading its weights. Preserve the model source release.",
+  "request": "Publish the transactional setup guard after fresh Windows validation, reusing the unchanged model from 1.2.0 without downloading or uploading its weights. Preserve the model source release. This maintenance does not resolve the reported TEHTRIS detections.",
   "requested_on": "2026-11-05",
   "remove_releases_after_verified_publication": [],
   "remove_obsolete_actions_artifacts": [],

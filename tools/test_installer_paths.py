@@ -2,7 +2,7 @@
 """Run the production NSIS path and model-size functions in isolated harnesses.
 
 The source functions and generated production profiles are copied unchanged.
-The executable harnesses never install a payload, write registry entries or
+The executable harnesses never install the application, write registry entries or
 start a model. Sparse fixtures exercise actual 64-bit model lengths while
 allocating only a few kilobytes. --build-only reports compilation separately
 and never claims Windows runtime validation.
@@ -17,6 +17,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import struct
 import sys
 import tempfile
 
@@ -166,6 +167,95 @@ SectionEnd
 '''
 
 
+def prepared_model_gate(source: str) -> tuple[str, dict]:
+    """Copy the real post-helper gate and verify it precedes replacement."""
+    section = re.search(r'^Section .* SEC_MAIN\n(.*?)^SectionEnd', source,
+                        re.MULTILINE | re.DOTALL)
+    if not section:
+        raise ValueError("Production installation section not found")
+    main = section.group(1)
+    match = re.search(
+        r'^  nsExec::ExecToLog [^\n]*AssembleModel\.exe[^\n]*\n'
+        r'(?P<gate>  Pop \$0\n  StrCmp \$0 "0" model_ready\n'
+        r'  StrCpy \$Problem [^\n]*\n  Call InstallationFailure\n'
+        r'model_ready:\n  Call ValidatePreparedModel\n'
+        r'  StrCmp \$Problem "" \+2\n  Call InstallationFailure\n)',
+        main, re.MULTILINE)
+    if not match:
+        raise ValueError("Production helper result must enter the prepared-model guard")
+    replacements = ('Rename "$INSTDIR" "$BackupDir"', 'RMDir "$INSTDIR"',
+                    'Rename "$StageDir" "$INSTDIR"')
+    positions = [main.index(instruction) for instruction in replacements]
+    if match.end() >= min(positions):
+        raise ValueError("Prepared-model guard runs after the old installation is modified")
+    return match.group("gate"), {
+        "passed": True,
+        "production_gate_copied_unchanged": True,
+        "before_old_installation_rename_or_removal": True,
+        "before_staged_installation_publish": True,
+    }
+
+
+def exit_zero_harness(executable: Path) -> str:
+    # A real subprocess supplies exit 0 through nsExec. It deliberately does
+    # not produce a model, just as an interrupted helper need not publish one.
+    return f'''Target x86-unicode
+Unicode true
+RequestExecutionLevel user
+SilentInstall silent
+AutoCloseWindow true
+Name "Test-only zero-exit helper"
+OutFile "{nsis_escape(str(executable))}"
+Section
+  SetErrorLevel 0
+SectionEnd
+'''
+
+
+def prepared_model_harness(source: str, executable: Path, config: Path) -> str:
+    gate, _ = prepared_model_gate(source)
+    functions = "\n\n".join(nsis_function(source, name) for name in (
+        "${PREFIX}CheckAncestors", "ValidatePreparedModel"))
+    # Failure reporting replaces the full installer's dialog/cleanup only.
+    # The production gate and file validation are copied without modification.
+    # Both actual renames below are confined to this fixture's directory.
+    return shared_header(source, executable, config) + r'''
+Var StageDir
+Var BackupDir
+''' + functions + r'''
+Function InstallationFailure
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "allowed" "0"
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "problem" "$Problem"
+  SetErrorLevel 1
+  Quit
+FunctionEnd
+Section
+  StrCpy $INSTDIR "$EXEDIR\installed"
+  StrCpy $StageDir "$EXEDIR\stage"
+  StrCpy $BackupDir "$EXEDIR\previous"
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "commit_started" "0"
+  nsExec::ExecToLog /TIMEOUT=30000 '"$EXEDIR\ExitZeroHelper.exe"'
+  Pop $R8
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "helper_exit" "$R8"
+  Push $R8
+''' + gate + r'''
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "allowed" "1"
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "commit_started" "1"
+  ClearErrors
+  Rename "$INSTDIR" "$BackupDir"
+  IfErrors fixture_commit_error
+  Rename "$StageDir" "$INSTDIR"
+  IfErrors fixture_commit_error
+  SetErrorLevel 0
+  Goto fixture_done
+fixture_commit_error:
+  WriteINIStr "$EXEDIR\prepared.ini" "result" "problem" "Fixture rename failed"
+  SetErrorLevel 2
+fixture_done:
+SectionEnd
+'''
+
+
 def read_ini(path: Path) -> configparser.ConfigParser:
     raw = path.read_bytes()
     encoding = "utf-16" if raw.startswith((b"\xff\xfe", b"\xfe\xff")) else "cp1252"
@@ -268,6 +358,144 @@ def exercise_metadata(folder: Path, exe: Path, pack: dict, wine: str | None) -> 
     return rows
 
 
+def fixture_junction(link: Path, target: Path) -> None:
+    """Create a directory reparse fixture without the symlink privilege."""
+    if os.name != "nt":
+        link.symlink_to(target, target_is_directory=True)
+        return
+    import ctypes
+    from ctypes import wintypes
+    link.mkdir()
+    printable = str(target.resolve()).encode("utf-16le")
+    substitute = ("\\??\\" + str(target.resolve())).encode("utf-16le")
+    names = substitute + b"\0\0" + printable + b"\0\0"
+    buffer = struct.pack("<IHHHHHH", 0xA0000003, len(names) + 8, 0,
+                         0, len(substitute), len(substitute) + 2, len(printable)) + names
+    kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+    create = kernel.CreateFileW
+    create.argtypes = (wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD, wintypes.LPVOID,
+                       wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE)
+    create.restype = wintypes.HANDLE
+    ioctl = kernel.DeviceIoControl
+    ioctl.argtypes = (wintypes.HANDLE, wintypes.DWORD, wintypes.LPVOID, wintypes.DWORD,
+                      wintypes.LPVOID, wintypes.DWORD, ctypes.POINTER(wintypes.DWORD),
+                      wintypes.LPVOID)
+    ioctl.restype = wintypes.BOOL
+    close = kernel.CloseHandle
+    close.argtypes = (wintypes.HANDLE,)
+    close.restype = wintypes.BOOL
+    handle = create(str(link), 0x40000000, 0, None, 3, 0x02200000, None)
+    if handle == wintypes.HANDLE(-1).value:
+        raise ctypes.WinError(ctypes.get_last_error())
+    try:
+        data = ctypes.create_string_buffer(buffer)
+        returned = wintypes.DWORD()
+        if not ioctl(handle, 0x000900A4, data, len(buffer), None, 0,
+                     ctypes.byref(returned), None):
+            raise ctypes.WinError(ctypes.get_last_error())
+    finally:
+        close(handle)
+
+
+def exercise_prepared_model(folder: Path, exe: Path, helper: Path,
+                            pack: dict, wine: str | None) -> list[dict]:
+    whole = pack["model"]["bytes"]
+    specs = [
+        ("exit_zero_without_final_model", None, "missing", False),
+        ("exit_zero_with_partial_only", whole, "partial", False),
+        ("exit_zero_with_truncated_model", whole - 1, "file", False),
+        ("exit_zero_with_oversized_model", whole + 1, "file", False),
+        ("exit_zero_with_directory_as_model", None, "directory", False),
+        ("exit_zero_with_reparse_parent", whole, "reparse_parent", False),
+        ("exit_zero_with_reparse_final_path", None, "reparse_final", False),
+        ("exit_zero_with_exact_size_file", whole, "file", True),
+    ]
+    if whole > 2**32:
+        specs.append(("exit_zero_with_low_32_bits_only", whole % 2**32, "file", False))
+    previous = {
+        "OpenCodeLocal.exe": b"Previous executable fixture; never execute.\n",
+        "wad/model/" + pack["model"]["filename"]: b"Previous model fixture; never load.\n",
+        "wad/support/installation.id": (pack["installation_marker"] + "\n").encode(),
+    }
+
+    def previous_unchanged(root: Path) -> bool:
+        if not root.is_dir():
+            return False
+        actual = {path.relative_to(root).as_posix() for path in root.rglob("*") if path.is_file()}
+        if actual != set(previous):
+            return False
+        # Check small expected sizes before reading, even if a broken guard
+        # incorrectly published one of the multi-gigabyte sparse fixtures.
+        return all((root / name).stat().st_size == len(data) and
+                   (root / name).read_bytes() == data for name, data in previous.items())
+
+    rows = []
+    for name, size, kind, expected in specs:
+        case = folder / name
+        case.mkdir()
+        runner = case / "PreparedModelHarness.exe"
+        shutil.copyfile(exe, runner)
+        shutil.copyfile(helper, case / "ExitZeroHelper.exe")
+        for relative, data in previous.items():
+            target = case / "installed" / relative
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+        model = case / "stage/wad/model" / pack["model"]["filename"]
+        model.parent.mkdir(parents=True)
+        files, junctions = [], []
+        try:
+            if kind == "file":
+                files.append(sparse_file(model, size))
+            elif kind == "partial":
+                files.append(sparse_file(model.with_name(model.name + ".partial.123.0"), size))
+            elif kind == "directory":
+                model.mkdir()
+            elif kind in {"reparse_parent", "reparse_final"}:
+                redirected = case / "redirected-model"
+                redirected.mkdir()
+                link = model.parent if kind == "reparse_parent" else model
+                if kind == "reparse_parent":
+                    files.append(sparse_file(redirected / model.name, size))
+                    link.rmdir()
+                fixture_junction(link, redirected)
+                junctions.append(link)
+            result = execute(runner, wine)
+            row = {"case": name, "expected_allowed": expected, "execution": result,
+                   "fixtures": files, "passed": False, "sha256_validation_claimed": False}
+            ini = case / "prepared.ini"
+            if ini.is_file():
+                values = read_ini(ini)
+                actual = values.getboolean("result", "allowed")
+                commit_started = values.getboolean("result", "commit_started")
+                helper_exit = values.get("result", "helper_exit")
+                old_untouched = previous_unchanged(case / "installed") and not (case / "previous").exists()
+                backup_preserved = previous_unchanged(case / "previous")
+                published = case / "installed/wad/model" / model.name
+                commit_ok = (backup_preserved and published.is_file() and
+                             published.stat().st_size == whole) if expected else old_untouched
+                row.update(actual_allowed=actual, helper_exit=helper_exit,
+                           commit_started=commit_started, old_installation_untouched=old_untouched,
+                           old_installation_preserved_in_backup=backup_preserved,
+                           problem=values.get("result", "problem", fallback=""),
+                           passed=actual == expected and commit_started == expected and commit_ok and
+                           helper_exit == "0" and result["exit_code"] == (0 if expected else 1))
+            else:
+                row["problem"] = "Harness produced no result file"
+            rows.append(row)
+        finally:
+            # Never let recursive cleanup traverse a fixture junction.
+            for link in reversed(junctions):
+                if not os.path.lexists(link):
+                    # Also clean up safely if a broken gate published staging.
+                    link = case / "installed" / link.relative_to(case / "stage")
+                if os.name == "nt":
+                    link.rmdir()
+                else:
+                    link.unlink()
+            shutil.rmtree(case)  # Exclusively created inside TemporaryDirectory.
+    return rows
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=ROOT / "installer/OpenCodeLocal.nsi")
@@ -305,15 +533,28 @@ def main() -> int:
                 prepare_paths(fixture, pack, other)
                 path_exe = folder / "PathHarness.exe"
                 data_exe = folder / "MetadataHarness.exe"
+                prepared_exe = folder / "PreparedModelHarness.exe"
+                zero_exe = folder / "ExitZeroHelper.exe"
                 texts = [path_harness(source, path_exe, config, fixture, work.name),
                          metadata_harness(source, data_exe, config)]
+                executables = [path_exe, data_exe]
+                has_prepared_guard = "Function ValidatePreparedModel\n" in source
+                if not has_prepared_guard and label.startswith("current-"):
+                    raise ValueError("Production prepared-model guard is missing")
+                placement = None
+                if has_prepared_guard:
+                    _, placement = prepared_model_gate(source)
+                    texts.extend((prepared_model_harness(source, prepared_exe, config),
+                                  exit_zero_harness(zero_exe)))
+                    executables.extend((prepared_exe, zero_exe))
                 compiled = [compile_harness(text, exe.with_suffix(".nsi"), args.makensis)
-                            for text, exe in zip(texts, (path_exe, data_exe))]
+                            for text, exe in zip(texts, executables)]
                 artifact = {"pack": name, "source_sha256": hashlib.sha256(source.encode()).hexdigest(),
                             "pack_config_sha256": hashlib.sha256(config.read_bytes()).hexdigest(),
                             "model_bytes": pack["model"]["bytes"], "model_parts": len(pack["parts"]),
                             "installation_marker": pack["installation_marker"],
                             "profile_directory": pack["profile_name"],
+                            "prepared_model_guard_placement": placement,
                             "compile_passed": all(row["exit_code"] == 0 for row in compiled),
                             "compilation": compiled, "runtime_passed": False}
                 report["artifacts"][label] = artifact
@@ -340,8 +581,11 @@ def main() -> int:
                                  "passed": actual == expected and normalized_ok})
                 artifact["path_results"] = rows
                 artifact["metadata_results"] = exercise_metadata(folder, data_exe, pack, args.wine)
+                artifact["prepared_model_results"] = (exercise_prepared_model(
+                    folder, prepared_exe, zero_exe, pack, args.wine) if has_prepared_guard else [])
                 artifact["runtime_passed"] = execution["exit_code"] == 0 and all(
-                    row["passed"] for row in rows + artifact["metadata_results"])
+                    row["passed"] for row in rows + artifact["metadata_results"] +
+                    artifact["prepared_model_results"])
                 report["runtime"] = "executed"
         current = [value for name, value in report["artifacts"].items() if name.startswith("current-")]
         report["compilation_passed"] = bool(current) and all(row["compile_passed"] for row in current)

@@ -10,6 +10,11 @@ acceptance. The integration prepares a verifiable signing pipeline and a
 SignPath Foundation application. Preparing the integration is not acceptance
 by the Foundation, certificate issuance or a completed signing operation.
 
+The 1.2.2 installer maintenance also uses unsigned validation and distribution.
+New reports after 1.2.1 show quarantine of the model assembler and another
+launcher termination/quarantine. The reported endpoint remains blocked; the
+installer guard in 1.2.2 is not a fix or acceptance claim for that detection.
+
 The last confirmed application state on 4 November 2026 was prepared, not
 submitted. This source update does not assert a later submission or acceptance. No signing certificate or SignPath API credential has been
 provided to this repository. Only a release whose signature verification

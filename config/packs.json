@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "app_version": "1.2.1",
+  "app_version": "1.2.2",
   "slice_bytes": 1500000000,
   "packs": {
     "moe": {

@@ -407,6 +407,57 @@ parts_done:
   Pop $0
 FunctionEnd
 
+; A successful helper exit is not proof that its final file was published.
+; Check the exact staged path before touching the previous installation.
+; This is a publication/size guard; AssembleModel still verifies SHA-256.
+Function ValidatePreparedModel
+  Push $0
+  Push $1
+  Push $2
+  Push $3
+  StrCpy $Problem ""
+  Push "$StageDir\${MODEL_PATH}"
+  Call CheckAncestors
+  StrCmp $Problem "" 0 prepared_done
+  ; Open the final object itself, without following a final reparse point.
+  ; Share reads only while checking its attributes and complete 64-bit size.
+  System::Call 'kernel32::CreateFileW(w "$StageDir\${MODEL_PATH}", i 0x80000000, i 1, p 0, i 3, i 0x00200080, p 0) p .r0'
+  StrCmp $0 "0" prepared_bad
+  StrCmp $0 "-1" prepared_bad
+  StrCmp $0 "4294967295" prepared_bad
+  System::Call 'kernel32::GetFileType(p r0) i .r1'
+  StrCmp $1 "1" 0 prepared_close_bad
+  ; FILE_ATTRIBUTE_TAG_INFO contains two DWORDs. Read attributes from the
+  ; same handle used for the size check, not from a second path lookup.
+  System::Alloc 8
+  Pop $3
+  StrCmp $3 "0" prepared_close_bad
+  System::Call 'kernel32::GetFileInformationByHandleEx(p r0, i 9, p r3, i 8) i .r2'
+  StrCmp $2 "0" prepared_free_bad
+  System::Call '*$3(i .r1, i)'
+  System::Free $3
+  ; FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_REPARSE_POINT
+  IntOp $2 $1 & 0x410
+  StrCmp $2 "0" 0 prepared_close_bad
+  System::Call 'kernel32::GetFileSizeEx(p r0, *l .r1) i .r2'
+  System::Call 'kernel32::CloseHandle(p r0)'
+  StrCmp $2 "0" prepared_bad
+  System::Int64Op $1 = ${PACK_MODEL_BYTES}
+  Pop $2
+  StrCmp $2 "1" prepared_done prepared_bad
+prepared_free_bad:
+  System::Free $3
+prepared_close_bad:
+  System::Call 'kernel32::CloseHandle(p r0)'
+prepared_bad:
+  StrCpy $Problem "Le fichier final du modèle est absent, inaccessible ou incomplet après sa préparation. L’ancienne installation n’a pas été remplacée."
+prepared_done:
+  Pop $3
+  Pop $2
+  Pop $1
+  Pop $0
+FunctionEnd
+
 Function CheckDiskSpace
   Push $0
   Push $1
@@ -523,6 +574,9 @@ Section "${PACK_DISPLAY_NAME} et modèle Qwen (obligatoire)" SEC_MAIN
   StrCpy $Problem "Le modèle n’a pas pu être assemblé ou sa vérification a échoué. Consultez les détails ci-dessus. L’ancienne installation n’a pas été remplacée."
   Call InstallationFailure
 model_ready:
+  Call ValidatePreparedModel
+  StrCmp $Problem "" +2
+  Call InstallationFailure
   ClearErrors
 !ifdef ImportedUninstallerPath
   SetOutPath "$StageDir\wad\support"

@@ -1,4 +1,76 @@
-# Détection du lanceur par TEHTRIS
+# Détection du lanceur et de l'assembleur par TEHTRIS
+
+## Signalement après diffusion de 1.2.1 — blocage persistant
+
+Deux nouvelles photos reçues le 5 novembre 2026 montrent une quarantaine
+d'`AssembleModel.exe` dans le dossier temporaire du setup, puis un nouvel
+arrêt et une quarantaine d'`OpenCodeLocal.exe`. **Le problème utilisateur
+n'est pas résolu par les corrections et validations précédentes.** Les images
+n'indiquent pas le numéro de version, le SHA-256 ou la règle de détection.
+L'alerte ne permet donc ni d'attribuer une cause précise ni d'établir un faux
+positif. Les photos, chemins nominatifs et autres données personnelles ne
+sont pas publiés dans ce dépôt.
+
+### Revue ciblée des sources
+
+La revue a porté sur les sources publiées au commit
+`6273464b27f1bbdf37c6acdc5b1b3d54bde4bebe`, sans modification du logiciel ni
+de la protection du poste.
+
+- Le code [`src/assemble_model.cpp`](../src/assemble_model.cpp) est identique
+  entre v1.2.0 et v1.2.1. Il lit le GGUF complet ou les parties attendues,
+  contrôle les tailles, copie par blocs et vérifie le SHA-256 avant publication.
+  Ce code ne démarre aucun processus et ne comporte pas d'accès réseau ou de
+  manipulation de l'antivirus.
+- Le setup extrait cet outil sous `$PLUGINSDIR` et l'appelle avec le dossier
+  source et une destination de préparation. Seul le retour `0` autorise la
+  suite ; un échec de lancement, un délai dépassé ou un code non nul mène à
+  l'échec de l'installation avant les renommages de l'ancienne installation.
+  Cette vérification porte sur le script ; elle ne prouve pas l'état final du
+  disque du poste photographié.
+- Aucun lien causal avec la détection TEHTRIS n'a été établi. Ni le dossier
+  temporaire, ni l'absence de signature, ni la présence d'un modèle ne sont
+  désignés comme cause sur la seule base de ces notifications.
+
+L'identité **attendue** de l'assembleur 1.2.1, tirée du
+[rapport Windows](../validation/windows-unsigned-1.2.1.json), est de
+**2 738 636 octets**, SHA-256
+`ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306`.
+Ce n'est pas une empreinte relevée sur le fichier bloqué.
+
+### Limites de fiabilité relevées séparément
+
+La lecture du code a également relevé deux cas non couverts par les tests
+actuels. Un arrêt forcé pendant la copie peut laisser un fichier `.partial`
+dans la préparation : son nettoyage dépend du destructeur de l'assembleur,
+et la liste de suppression du setup ne contient pas ces temporaires. De plus,
+`TemporaryOutput::Publish` ferme son handle exclusif avant le renommage par
+chemin ; un autre processus possédant déjà un accès en écriture au même
+dossier peut intervenir dans cet intervalle. Ces scénarios n'ont pas été
+reproduits lors de cette revue en lecture seule et ne sont pas présentés
+comme causes de la détection. Aucun correctif antivirus n'est déduit de ces
+observations.
+
+**Statut : blocage persistant sur le poste signalé ; cause non établie.**
+Les binaires publiés et les preuves historiques de validation sont conservés
+avec leur identité. Aucune nouvelle acceptation TEHTRIS n'est revendiquée.
+
+## Maintenance 1.2.2 — garde du setup avant remplacement
+
+Un autre défaut d'intégration a été identifié : le setup 1.2.1 traite le code
+de retour `0` de l'assembleur comme une autorisation de poursuivre, sans
+recontrôler la présence du GGUF final. Une terminaison externe retournant `0`
+avant la publication du modèle peut donc permettre de continuer avec une
+préparation incomplète. Rien dans les photos n'établit que TEHTRIS a utilisé
+ce code de sortie ou que ce scénario s'est produit sur le poste signalé.
+
+La maintenance 1.2.2 ajoute un contrôle du modèle préparé avant tout renommage
+de l'installation existante : présence, type ordinaire, absence de reparse
+point et taille exacte sur 64 bits. Le SHA-256 du contenu reste vérifié par
+l'assembleur. Les tests doivent reproduire le code de retour réussi sans
+sortie et vérifier que les anciens fichiers restent intacts. Les résultats
+Windows effectifs sont consignés dans [VALIDATION.md](../VALIDATION.md) après
+exécution. **Cette garde ne résout pas les détections TEHTRIS signalées.**
 
 ## Correctif 1.2.1 — publié après validation Windows
 

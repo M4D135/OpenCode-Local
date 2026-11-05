@@ -88,7 +88,7 @@ INSTALLATION HORS LIGNE
 3. Lancer Setup.exe et choisir le dossier du programme.
 4. Ouvrir le raccourci « {pack["shortcut_name"]} ».
 
-MISE À JOUR DEPUIS 1.2.0
+MISE À JOUR DEPUIS 1.2.0 OU 1.2.1
 Conserver l'installation existante et choisir son même dossier dans le setup.
 Si aucun GGUF et aucune partie .bin ne sont présents à côté de Setup.exe,
 l'installateur réutilise le modèle de cette installation, après vérification
@@ -122,10 +122,13 @@ Ce pack utilise son propre profil. Les données des anciennes versions sont
 conservées ; leur suppression locale n'est pas automatique.
 
 PROTECTION DU POSTE
-{signature}Un blocage TEHTRIS a été signalé le 5 novembre 2026 avec un pack
-présenté comme 1.2.0. Le hash du fichier bloqué et la règle détaillée restent
-inconnus. Les corrections du logiciel ne constituent pas une validation
-d'acceptation par TEHTRIS ; la cause de cette détection reste à qualifier.
+{signature}Le blocage TEHTRIS du poste signalé n'est pas résolu.
+Après diffusion de 1.2.1, de nouvelles notifications montrent la quarantaine
+d'AssembleModel.exe et un nouvel arrêt/quarantaine d'OpenCodeLocal.exe.
+Les versions, hashes des fichiers bloqués et la règle détaillée restent inconnus.
+La garde du setup 1.2.2 protège l'installation existante si le modèle préparé
+est absent ou invalide en type/taille. Elle ne résout pas la détection antivirus.
+Une exécution sans alerte ne peut pas être garantie par ces corrections.
 Consulter wad\\docs\\TEHTRIS.md et les empreintes du pack pour l'analyse.
 Ce pack ne modifie pas l'antivirus, le pare-feu ou leurs exclusions.
 
