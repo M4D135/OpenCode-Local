@@ -7,7 +7,7 @@ Le modèle **Qwen3.6-35B-A3B UD-IQ2_XXS reste identique à celui de la version
 ### Mettre à jour une installation 1.2.0
 
 1. Fermer les sessions OpenCode Local encore ouvertes et conserver le dossier installé.
-2. Télécharger **Setup.zip** et en extraire `Setup.exe` : le ZIP contient uniquement cet exécutable.
+2. Télécharger **Setup.zip** et l'extraire dans un nouveau dossier : le ZIP contient uniquement `Setup.exe`.
 3. Lancer le setup et choisir **le même dossier d’installation**.
 
 Si aucun fichier GGUF ni aucune partie `.bin` n’est présent à côté du setup,

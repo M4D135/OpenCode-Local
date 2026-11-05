@@ -1,0 +1,387 @@
+{
+  "schema_version": 1,
+  "version": "1.2.1",
+  "pack": "moe",
+  "retrieved_utc": "2026-11-05T11:32:45.095138+00:00",
+  "scope": "Fresh unsigned Windows native/installer checks and launcher runtime regressions. No model inference, production installation, target-PC RAM measurement or TEHTRIS qualification.",
+  "repository": "M4D135/OpenCode-Local",
+  "artifact": {
+    "id": 13411525252,
+    "name": "unsigned-windows-reports-42019072638-1",
+    "size_in_bytes": 11819,
+    "url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13411525252",
+    "archive_download_url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13411525252/zip",
+    "expired": false,
+    "created_at": "2026-11-05T11:30:07Z",
+    "expires_at": "2026-11-06T11:30:06Z",
+    "updated_at": "2026-11-05T11:30:07Z",
+    "digest": "sha256:29be302fad62599af445bd24628b9e26dc7058d978de3e5e37ca9faffe08fb4d",
+    "workflow_run": {
+      "id": 42019072638,
+      "repository_id": 1445408791,
+      "head_repository_id": 1445408791,
+      "head_branch": "main",
+      "head_sha": "c0f8d868bcdfdaf8462389c0d09f600767cdd1fa"
+    }
+  },
+  "workflow": {
+    "id": 42019072638,
+    "name": "Build and Windows validation (unsigned)",
+    "path": ".github/workflows/validate-unsigned.yml",
+    "head_branch": "main",
+    "head_sha": "c0f8d868bcdfdaf8462389c0d09f600767cdd1fa",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "run_number": 10,
+    "run_attempt": 1,
+    "created_at": "2026-11-05T11:27:12Z",
+    "updated_at": "2026-11-05T11:30:12Z",
+    "run_started_at": "2026-11-05T11:27:12Z",
+    "html_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/42019072638"
+  },
+  "jobs": [
+    {
+      "id": 127216949500,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42019072638,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Check out this workflow's source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Select Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Check artifact restrictions and pinned actions",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Install local build tools",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Prepare only pinned upstream dependencies, without models",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Compile our three MoE pack executables from source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Assemble the unsigned installer and check its archive",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Exercise the assembler and compile the production path harness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Bound the transfer and record its origin",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Transfer unsigned candidates for Windows validation",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Keep small Linux validation reports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Post Select Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23
+        },
+        {
+          "name": "Post Check out this workflow's source",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 24
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 25
+        }
+      ]
+    },
+    {
+      "id": 127217642899,
+      "name": "windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 42019072638,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Preserve source bytes across Linux and Windows",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Check out the identical source commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Select Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Download this run's exact unsigned artifact",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Check executables, installer contents, and small Windows fixtures",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Verify final ZIP packaging locally, without duplicating uploads",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Record the unsigned result",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Keep Windows validation reports",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Post Select Python",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Post Check out the identical source commit",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        }
+      ]
+    }
+  ],
+  "artifact_zip_sha256_verified": true,
+  "artifact_zip_crc_verified": true,
+  "candidate_bundle_downloaded_for_this_summary": false,
+  "model_weights_downloaded_for_this_summary": false,
+  "saved_reports": {
+    "windows-unsigned-1.2.1.json": {
+      "archive_path": "validation/windows-unsigned.json",
+      "bytes": 107150,
+      "sha256": "a8ddb0469b811e4248964b9a927321174b00074779f44aeedb9eaf7bddb5f49f",
+      "source_encoding": "UTF-8 (strict)",
+      "utf8_bom_removed": false,
+      "checked_in_encoding": "UTF-8",
+      "checked_in_line_endings": "LF",
+      "bytes_checked_in_utf8_lf": 104946,
+      "sha256_checked_in_utf8_lf": "105166e5edbe64e9c0c085a1cc253483580cd9e080a965a568e9b9a37b6cbeb6",
+      "json_value_unchanged": true
+    },
+    "finalize-unsigned-1.2.1.json": {
+      "archive_path": "signing/finalize-manifest.json",
+      "bytes": 2267,
+      "sha256": "f596dff614847cd1f9355f13938f64a5db6b67cdcb8c63af61662d08397f8e20",
+      "source_encoding": "UTF-8 (strict)",
+      "utf8_bom_removed": false,
+      "checked_in_encoding": "UTF-8",
+      "checked_in_line_endings": "LF",
+      "bytes_checked_in_utf8_lf": 2203,
+      "sha256_checked_in_utf8_lf": "c153f87c6ac910baa29c71efcae83c67d5401b2999cb8d3223ad92206a5798ff",
+      "json_value_unchanged": true
+    }
+  },
+  "platform": "Microsoft Windows NT 10.0.20348.0",
+  "powershell": "7.6.9",
+  "source_file_sha256_verified": {
+    "src/launcher.cpp": "c7cdb4331032143978bfe6b5641a9fa8d04cba5d39706b8da720b1902d9fc161",
+    "src/launcher.manifest": "a5b77d9cfd919b6bf5c6aba791ac5a5f4cfa986c78ede8e76d5c5a5bde5e1d8c",
+    "config/packs.json": "9d95d8323d2c332ff51a103c5b484367ddff25122677a732397391dd032a673d"
+  },
+  "checks": {
+    "top_level": {
+      "total": 9,
+      "passed": 9
+    },
+    "nested_success_flags": {
+      "total": 153,
+      "passed": 153,
+      "note": "Includes aggregate and nested flags; not a count of independent test cases."
+    },
+    "launcher": {
+      "launcher_http_ui_tests": {
+        "runtime_executed": true,
+        "total": 7,
+        "passed": 7,
+        "check_names": [
+          "complete_http_body",
+          "truncated_http_body_rejected",
+          "oversized_declared_body_rejected",
+          "body_without_content_length",
+          "redirect_not_followed",
+          "logs_error_does_not_escape_window_action",
+          "fixture_cleanup"
+        ]
+      },
+      "launcher_process_tests": {
+        "runtime_executed": true,
+        "total": 12,
+        "passed": 12,
+        "check_names": [
+          "only_stdin_and_log_handles_are_inherited",
+          "child_is_in_job_and_closing_job_terminates_it",
+          "request_stop_terminates_the_owned_child",
+          "cancellation_before_creation_starts_no_process",
+          "cancellation_after_creation_terminates_suspended_child",
+          "missing_executable_fails_without_a_child",
+          "missing_working_directory_fails_without_a_child",
+          "creation_failure_during_stop_is_reported_as_cancelled",
+          "invalid_job_fails_before_creation",
+          "negative_control_former_gap_leaves_a_suspended_orphan",
+          "parent_exit_at_creation_leaves_no_orphan",
+          "fixture_cleanup"
+        ]
+      },
+      "launcher_profile_tests": {
+        "runtime_executed": true,
+        "total": 11,
+        "passed": 11,
+        "check_names": [
+          "initial_seed",
+          "long_source_and_destination_paths",
+          "missing_dependency_after_ready",
+          "same_size_corruption_after_ready",
+          "preserve_unlisted_user_data",
+          "reject_destination_junction",
+          "reject_private_profile_root_junction",
+          "reject_seed_root_junction",
+          "allow_redirected_ancestor_above_private_profile",
+          "cancellation_invalidates_ready",
+          "isolated_runtime_overrides"
+        ]
+      }
+    },
+    "assembler": {
+      "small_fixture_cases": 38,
+      "production_executable_cases": 5,
+      "passed": true
+    },
+    "installer": {
+      "path_cases": 16,
+      "model_metadata_cases": 17,
+      "installed_model_reuse_case_passed": true,
+      "passed": true
+    },
+    "native_executables": {
+      "OpenCodeLocal.exe": {
+        "bytes": 3506302,
+        "sha256": "02602af8d7cddf695928c05c8c3582fbcf22c6474ec44e53ed21bd71430c4388",
+        "product_version": "1.2.1",
+        "authenticode": "NotSigned",
+        "exact_setup_payload_match": true
+      },
+      "AssembleModel.exe": {
+        "bytes": 2738636,
+        "sha256": "ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306",
+        "product_version": "1.2.1",
+        "authenticode": "NotSigned",
+        "exact_setup_payload_match": true
+      },
+      "Uninstall.exe": {
+        "bytes": 179806,
+        "sha256": "980c12f0b977420e9a719da546bf7ef5805102ccb1adf0d3ceefdb56192fc89e",
+        "product_version": "1.2.1",
+        "authenticode": "NotSigned",
+        "exact_setup_payload_match": true
+      }
+    },
+    "setup": {
+      "bytes": 127290805,
+      "sha256": "eec8c3aed8a3f67b84c1e4beafae4157c27b9930991892a7f0b3561f4d8c6cd9",
+      "authenticode": "NotSigned",
+      "archive_entries": 3822,
+      "exact_embedded_native_matches": 3
+    },
+    "windows_finalize_zip": {
+      "bytes": 127290921,
+      "sha256": "77bba895ec607c423031801762b81c037e3e7507623ad5ae6cd91632ec961fd7",
+      "contains": [
+        "Setup.exe"
+      ],
+      "scope": "ZIP constructed and checked in the Windows validation job. This is not a claim that the separately constructed public release ZIP has identical bytes.",
+      "downloaded_for_this_summary": false
+    }
+  },
+  "limits": {
+    "model_downloaded": false,
+    "model_loaded": false,
+    "production_installation_executed": false,
+    "model_or_ram_qualification": false,
+    "endpoint_protection_changed": false,
+    "tehtris_compatibility": "not_validated",
+    "public_release_verification_included": false
+  }
+}

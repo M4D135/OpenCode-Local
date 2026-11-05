@@ -1,25 +1,49 @@
 # OpenCode Local — pack unique MoE léger
 
 Un assistant de code local pour Windows x64, avec **OpenCode**, un moteur CPU
-et **Qwen3.6-35B-A3B UD-IQ2_XXS**. La version 1.2.0 remplace les deux anciens
-packs 16/32 Go par un seul pack, réglé pour un PC de 32 Gio disposant d'environ
-20 Gio de RAM libres avant lancement.
+et **Qwen3.6-35B-A3B UD-IQ2_XXS**. La version **1.2.1** corrige le lanceur et
+permet de réparer une installation existante en conservant le même modèle.
+Le pack unique reste réglé pour un PC de 32 Gio disposant d'environ 20 Gio de
+RAM libres avant lancement.
 
 ## Télécharger et installer hors ligne
 
-La [release 1.2.0](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0)
-est publiée après validation Windows et exécution réelle du modèle.
-[Télécharger directement Setup.zip — 127,3 Mo](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Setup.zip).
+La [release 1.2.1](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.1)
+est publiée après de nouveaux tests Windows du lanceur et de l'installateur.
+[Télécharger directement Setup.zip — 127,3 Mo](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/Setup.zip).
 
-1. Télécharger **Setup.zip** et les **huit fichiers Modele-MoE-01.bin à Modele-MoE-08.bin** de la même release.
-2. Extraire `Setup.exe` du ZIP : **il contient uniquement cet exécutable**.
-3. Placer `Setup.exe` et les huit `.bin` dans le même dossier, puis lancer le setup.
-4. Ouvrir **OpenCode Local MoE**, choisir le projet et cliquer sur **Ouvrir OpenCode**.
+### Réparer ou mettre à jour une installation 1.2.0
+
+1. Fermer les sessions OpenCode Local et conserver le dossier installé.
+2. Télécharger **Setup.zip** et l'extraire dans un nouveau dossier : **le ZIP contient uniquement `Setup.exe`**.
+3. Lancer ce setup et choisir **le même dossier d'installation qu'avant**.
+
+Sans modèle externe à côté du setup, l'installateur réutilise celui du dossier
+choisi. L'ancien `OpenCodeLocal.exe` n'a pas besoin d'être présent : le marqueur
+d'installation et le modèle doivent être intacts. Le modèle est recopié et son
+SHA-256 complet vérifié avant remplacement de l'ancienne installation. Les
+projets, réglages et conversations restent dans leur dossier de données séparé.
+**Aucun nouveau téléchargement du modèle n'est nécessaire dans ce cas.**
+
+### Première installation
+
+Télécharger le nouveau **Setup.zip** et les **huit fichiers Modele-MoE-01.bin
+à Modele-MoE-08.bin** de la [release 1.2.0 conservée pour le modèle](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0).
+Placer les huit parties à côté de `Setup.exe`, puis lancer le setup. Ouvrir
+ensuite **OpenCode Local MoE**, choisir le projet et cliquer sur **Ouvrir OpenCode**.
 
 Le modèle GGUF complet peut remplacer les huit parties. Les anciens fichiers
 `Setup-*.bin` appartiennent à d'autres modèles et ne sont pas réutilisables.
 L'installateur vérifie les tailles et le SHA-256 complet du modèle avant de
-l'utiliser. Aucun téléchargement n'est lancé sur le poste cible.
+l'utiliser. Si des fichiers du modèle sont présents à côté du setup, ils
+doivent être complets et valides ; aucun repli silencieux n'est effectué vers
+le modèle installé. Aucun téléchargement n'est lancé sur le poste cible.
+
+Les corrections 1.2.1 portent sur la durée de vie des attributs Windows de
+création, la propriété et l'arrêt des processus, la réparation des fichiers du
+cache hors ligne, le dossier de chargement du moteur et le traitement des
+erreurs HTTP et de l'interface. Voir les [notes de version](docs/RELEASE-1.2.1.md)
+et les [résultats vérifiés](VALIDATION.md).
 
 ## Mémoire et CPU
 
@@ -44,9 +68,11 @@ et des applications ouvertes. Le contrôle de démarrage vérifie une estimation
 avec réserve, sans imposer de plafond système. La quantification IQ2 peut réduire
 la qualité du modèle ; les scores du modèle original ne sont pas ceux de ce pack.
 
-Les résultats mesurés sont fournis dans les rapports `VALIDATION-MODELE.json`
-et `VALIDATION-WINDOWS.json` de la release. Une mesure Linux ne constitue pas
-une qualification de toutes les configurations Windows.
+Les résultats mesurés du modèle restent ceux de `VALIDATION-MODELE.json` de
+la release **1.2.0**. Le rapport `VALIDATION-WINDOWS.json` de **1.2.1** couvre
+les nouveaux exécutables. Aucune nouvelle inférence ni mesure RAM du modèle
+n'est revendiquée pour 1.2.1. Une mesure Linux ne constitue pas une qualification
+de toutes les configurations Windows.
 
 L'essai complet sur le runner Linux à quatre threads a mesuré **10,97 Gio de
 RSS combiné moteur/OpenCode**, sans swap observé pour ces processus. Génération,
@@ -75,7 +101,7 @@ réseau de la session Windows.
 
 ## Code signing policy
 
-**La distribution 1.2.0 est explicitement non signée.** La chaîne est préparée
+**La distribution 1.2.1 est explicitement non signée.** La chaîne est préparée
 pour une signature SignPath en deux étapes, mais aucun certificat n'a été fourni.
 La demande au programme gratuit SignPath Foundation est préparée ; elle n'est
 pas présentée comme acceptée.
@@ -86,7 +112,9 @@ et le [dossier de candidature](docs/SIGNPATH_APPLICATION.md).
 présenté comme 1.2.0 : arrêt et quarantaine de `OpenCodeLocal.exe` après la
 première saisie « salut ». Le SHA-256 du fichier bloqué et la règle de détection
 ne sont pas disponibles ; la cause reste à qualifier. Les validations de
-construction et du modèle ne prouvent pas l’acceptation par l’EDR. Le
+construction et du modèle ne prouvent pas l’acceptation par l’EDR. Les défauts
+corrigés dans 1.2.1 ne sont pas établis comme cause de cette détection, et
+**l'acceptation de 1.2.1 par TEHTRIS reste non vérifiée**. Le
 [dossier TEHTRIS](docs/TEHTRIS.md) distingue l’identité attendue du lanceur,
 l’historique et les éléments à recueillir. Aucune protection du poste n’est modifiée.
 
@@ -95,8 +123,11 @@ l’historique et les éléments à recueillir. Aucune protection du poste n’e
 [Instructions de construction](BUILD.md) · [Rapports et limites](VALIDATION.md)
 · [Modèle et sources](docs/MODELES.md) · [Licences tierces](THIRD_PARTY.md)
 
-Le workflow de publication attend les tests Windows, vérifie l'inférence et les
-appels d'outils, puis transfère le modèle par parties. Après publication vérifiée,
+Une publication complète attend les tests Windows, vérifie l'inférence et les
+appels d'outils, puis transfère le modèle par parties. La mise à jour 1.2.1 exige
+de nouveaux contrôles Windows et vérifie les métadonnées du modèle inchangé
+déjà publié, sans télécharger ni dupliquer ses poids. La release 1.2.0 est
+conservée comme source de ces huit fichiers. Après publication vérifiée de 1.2.0,
 les anciennes releases 1.0.0, 1.0.1 et 1.1.0 ont été supprimées : **19,84 Go de
 fichiers**, plus **769 Mo d'anciens artefacts Actions**. Leurs tags et l'historique
 du code sont conservés.

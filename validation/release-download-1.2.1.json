@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "version": "1.2.1",
+  "source_commit": "c0f8d868bcdfdaf8462389c0d09f600767cdd1fa",
+  "publication_run": {
+    "id": 42019473800,
+    "url": "https://github.com/M4D135/OpenCode-Local/actions/runs/42019473800",
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "c0f8d868bcdfdaf8462389c0d09f600767cdd1fa"
+  },
+  "release": {
+    "id": 435118848,
+    "url": "https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.1",
+    "draft": false,
+    "prerelease": false,
+    "published_at": "2026-11-05T11:30:51Z"
+  },
+  "public_asset_metadata": [
+    {
+      "id": 713179042,
+      "name": "LISEZ-MOI.txt",
+      "bytes": 3614,
+      "sha256": "c416a8fe290855bc081eea04f7aca3f0fef48e44ed0f2a472de0ef464bcadf65",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/LISEZ-MOI.txt"
+    },
+    {
+      "id": 713179119,
+      "name": "MANIFEST-DISTRIBUTION.json",
+      "bytes": 5293,
+      "sha256": "62ed965aafcf87ffcc73482a6fe65c85d2b3076717e8cf59fec4a2716e2141d5",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/MANIFEST-DISTRIBUTION.json"
+    },
+    {
+      "id": 713179006,
+      "name": "MODELE.json",
+      "bytes": 2881,
+      "sha256": "70655a6edc0652b390b75fb82d3f3c142bdbb4a62a0e3cc527b54dccb47c2160",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/MODELE.json"
+    },
+    {
+      "id": 713178819,
+      "name": "Setup.zip",
+      "bytes": 127290921,
+      "sha256": "ee9cf430f4314a0f048601237d5abe9dcf87b90334cf3fe082b2840ef3977b88",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/Setup.zip"
+    },
+    {
+      "id": 713179091,
+      "name": "SHA256SUMS.txt",
+      "bytes": 580,
+      "sha256": "3028ea5349a74899b76b9b4e5b2697fa8ace9a294ddca749c42be28e393e76c6",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/SHA256SUMS.txt"
+    },
+    {
+      "id": 713179066,
+      "name": "SIGNATURES.json",
+      "bytes": 5213,
+      "sha256": "46bd0a2e54f086ee09148af4b5609d4786abc5a84f9ec61684e60ce699041013",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/SIGNATURES.json"
+    },
+    {
+      "id": 713178980,
+      "name": "VALIDATION-WINDOWS.json",
+      "bytes": 107150,
+      "sha256": "a8ddb0469b811e4248964b9a927321174b00074779f44aeedb9eaf7bddb5f49f",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/VALIDATION-WINDOWS.json"
+    }
+  ],
+  "download_verification": {
+    "downloaded_from": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/",
+    "zip_bytes": 127290921,
+    "zip_sha256": "ee9cf430f4314a0f048601237d5abe9dcf87b90334cf3fe082b2840ef3977b88",
+    "members": [
+      "Setup.exe"
+    ],
+    "crc_check_passed": true,
+    "setup_bytes": 127290805,
+    "setup_sha256": "eec8c3aed8a3f67b84c1e4beafae4157c27b9930991892a7f0b3561f4d8c6cd9",
+    "exact_windows_setup_match": true,
+    "windows_report_sha256": "a8ddb0469b811e4248964b9a927321174b00074779f44aeedb9eaf7bddb5f49f",
+    "source_commit": "c0f8d868bcdfdaf8462389c0d09f600767cdd1fa",
+    "checksums_checked_for_downloaded_files": true
+  },
+  "zip_packaging_note": "The release ZIP was finalized again on Linux. Its SHA-256 differs from the Windows-job ZIP; the single embedded Setup.exe is byte-identical to the Windows-validated installer."
+}

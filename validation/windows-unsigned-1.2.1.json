@@ -1,0 +1,2205 @@
+{
+  "schema_version": 1,
+  "phase": "All",
+  "packs": [
+    "moe"
+  ],
+  "passed": true,
+  "source_commit": "c0f8d868bcdfdaf8462389c0d09f600767cdd1fa",
+  "app_version": "1.2.1",
+  "started_utc": "2026-11-05T11:29:16.2465918Z",
+  "finished_utc": "2026-11-05T11:30:03.1683593Z",
+  "platform": "Microsoft Windows NT 10.0.20348.0",
+  "powershell": "7.6.9",
+  "native_root": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native",
+  "setup_root": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup",
+  "build_root": "D:\\a\\OpenCode-Local\\OpenCode-Local\\build\\signing",
+  "signature_policy": "Signature optional; exact observed status reported; invalid signatures fail",
+  "expected_publisher": "",
+  "expected_signer_sha256": "",
+  "signtool": null,
+  "model_downloaded": false,
+  "model_loaded": false,
+  "production_installation_executed": false,
+  "model_or_ram_qualification": false,
+  "checks": [
+    {
+      "name": "moe/native/OpenCodeLocal.exe",
+      "passed": true,
+      "details": {
+        "path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\OpenCodeLocal.exe",
+        "sha256": "02602af8d7cddf695928c05c8c3582fbcf22c6474ec44e53ed21bd71430c4388",
+        "metadata": {
+          "machine": "0x8664",
+          "architecture": "x64",
+          "optional_header": "PE32+",
+          "subsystem": 2,
+          "sections": 20,
+          "characteristics": 38,
+          "file_version": "1.2.1",
+          "product_version": "1.2.1",
+          "product_name": "OpenCode Local",
+          "original_filename": "OpenCodeLocal.exe",
+          "file_description": "OpenCode Local - MoE léger",
+          "company_name": "M4D135",
+          "certificate_table_bytes": 0,
+          "file_bytes": 3506302
+        },
+        "authenticode": {
+          "required": false,
+          "status": "NotSigned",
+          "status_message": "The file D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\OpenCodeLocal.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+          "signature_type": "None",
+          "publisher": null,
+          "signer_certificate_sha256": null,
+          "timestamp_present": false,
+          "timestamp_subject": null,
+          "signtool": null,
+          "passed": true,
+          "problems": []
+        },
+        "problems": [],
+        "passed": true
+      }
+    },
+    {
+      "name": "moe/native/AssembleModel.exe",
+      "passed": true,
+      "details": {
+        "path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\AssembleModel.exe",
+        "sha256": "ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306",
+        "metadata": {
+          "machine": "0x8664",
+          "architecture": "x64",
+          "optional_header": "PE32+",
+          "subsystem": 3,
+          "sections": 20,
+          "characteristics": 38,
+          "file_version": "1.2.1",
+          "product_version": "1.2.1",
+          "product_name": "OpenCode Local",
+          "original_filename": "AssembleModel.exe",
+          "file_description": "Assemblage et vérification du modèle OpenCode Local",
+          "company_name": "M4D135",
+          "certificate_table_bytes": 0,
+          "file_bytes": 2738636
+        },
+        "authenticode": {
+          "required": false,
+          "status": "NotSigned",
+          "status_message": "The file D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\AssembleModel.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+          "signature_type": "None",
+          "publisher": null,
+          "signer_certificate_sha256": null,
+          "timestamp_present": false,
+          "timestamp_subject": null,
+          "signtool": null,
+          "passed": true,
+          "problems": []
+        },
+        "problems": [],
+        "passed": true
+      }
+    },
+    {
+      "name": "moe/native/Uninstall.exe",
+      "passed": true,
+      "details": {
+        "path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\Uninstall.exe",
+        "sha256": "980c12f0b977420e9a719da546bf7ef5805102ccb1adf0d3ceefdb56192fc89e",
+        "metadata": {
+          "machine": "0x014C",
+          "architecture": "x86",
+          "optional_header": "PE32",
+          "subsystem": 2,
+          "sections": 7,
+          "characteristics": 783,
+          "file_version": "1.2.1.0",
+          "product_version": "1.2.1",
+          "product_name": "OpenCode Local",
+          "original_filename": "Uninstall.exe",
+          "file_description": "Désinstallation de OpenCode Local",
+          "company_name": "M4D135",
+          "certificate_table_bytes": 0,
+          "file_bytes": 179806
+        },
+        "authenticode": {
+          "required": false,
+          "status": "NotSigned",
+          "status_message": "The file D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\Uninstall.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+          "signature_type": "None",
+          "publisher": null,
+          "signer_certificate_sha256": null,
+          "timestamp_present": false,
+          "timestamp_subject": null,
+          "signtool": null,
+          "passed": true,
+          "problems": []
+        },
+        "problems": [],
+        "passed": true
+      }
+    },
+    {
+      "name": "moe/launcher-diagnostic",
+      "passed": true,
+      "details": {
+        "passed": true,
+        "execution": {
+          "exit_code": 2,
+          "timed_out": false,
+          "stdout": "",
+          "stderr": "",
+          "seconds": 0.058,
+          "peak_working_set_bytes": null
+        },
+        "diagnostic": "OpenCode Local — MoE léger 1.2.1 — DIAGNOSTIC\r\n\r\nDate : 20261105-112916-675\r\nApplication : C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\launcher-only\r\nDonnées utilisateur : C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\r\nJournaux OpenCode : C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\\data\\opencode\\log\r\nProjet : C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE\r\n\r\nRAM installée : 16384 Mo (inventaire matériel)\r\nRAM utilisable : 16378 Mo\r\nRAM disponible : 13792 Mo\r\nSession estimée (tous les experts, contexte, moteur et OpenCode) : 13075 Mo\r\nMarge visée pour les autres logiciels : 6144 Mo\r\nRAM disponible demandée au démarrage, marge incluse : 19219 Mo\r\nCe budget est une estimation ; la consommation dépend de la session et des autres applications.\r\nModèle : Qwen3.6-35B-A3B UD-IQ2_XXS\r\nFichier du modèle : Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf\r\nSHA-256 attendu du modèle : 2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef\r\nProcesseurs logiques : 4\r\nCœurs physiques : 2\r\nThreads de calcul / préremplissage : 2 / 2\r\nArchitecture du système : x64\r\nContexte OpenCode : 8192 tokens\r\nRéponse maximale par tour : 2048 tokens\r\nPoids : mémoire mappée ; repacking désactivé\r\nCache KV K/V : bf16 / bf16\r\nFlash Attention : activée\r\nBatch / micro-batch : 256 / 64\r\nServeur : une séquence ; cache de prompts RAM désactivé ; quatre checkpoints récurrents\r\nDiscussion directe : une séquence, sans cache de prompts serveur\r\n\r\n[ERREUR] Moteur API\r\n[ERREUR] Discussion directe\r\n[ERREUR] OpenCode\r\n[ERREUR] Recherche de fichiers\r\n[ERREUR] Qwen3.6-35B-A3B UD-IQ2_XXS\r\n[ERREUR] Configuration\r\n\r\nFichier requis absent ou vide : C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\launcher-only\\wad\\engine\\llama-server.exe. Relancez Setup.exe depuis le pack complet.\r\n\r\nMémoire insuffisante pour OpenCode Local — MoE léger : 16,0 Go détectés, 23,0 Go installés nécessaires.\r\n\r\nPort de cette session : aucun moteur API actif\r\n\r\nLe mode OpenCode utilise uniquement un serveur local pour le modèle.\r\nLe mode Discussion directe ne lance aucun serveur HTTP.\r\nAucune règle de pare-feu, aucun service Windows et aucun réglage système\r\nne sont modifiés par le lanceur.\r\n\r\nCe contrôle vérifie la présence et le format des fichiers ; l'installateur\r\nréalise la vérification SHA-256 du contenu livré.\r\n",
+        "expected_exit": 2,
+        "outcome": "Incomplete-package diagnostic; model intentionally absent",
+        "model_loaded": false,
+        "model_or_memory_qualified": false,
+        "directories_created_by_launcher": [
+          "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE",
+          "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE"
+        ],
+        "cleanup": "Only the new diagnostic file and empty new directories are removed"
+      }
+    },
+    {
+      "name": "launcher/runtime-regressions",
+      "passed": true,
+      "details": {
+        "passed": true,
+        "execution": {
+          "exit_code": 0,
+          "timed_out": false,
+          "stdout": "Launcher fixtures (Windows runtime): PASS; D:\\a\\OpenCode-Local\\OpenCode-Local\\validation\\windows-unsigned.launcher.json\r\n",
+          "stderr": "",
+          "seconds": 26.864,
+          "peak_working_set_bytes": null
+        },
+        "report_path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\validation\\windows-unsigned.launcher.json",
+        "results": {
+          "schema_version": 1,
+          "platform": "win32",
+          "build_only": false,
+          "runtime_executed": true,
+          "model_downloaded": false,
+          "model_loaded": false,
+          "endpoint_protection_changed": false,
+          "antivirus_qualification": false,
+          "pack": "moe",
+          "launcher_source_sha256": "c7cdb4331032143978bfe6b5641a9fa8d04cba5d39706b8da720b1902d9fc161",
+          "production_manifest_input_sha256": "a5b77d9cfd919b6bf5c6aba791ac5a5f4cfa986c78ede8e76d5c5a5bde5e1d8c",
+          "windows_long_paths_setting": {
+            "value": 1,
+            "enabled": true,
+            "changed": false
+          },
+          "pack_config_source_sha256": "9d95d8323d2c332ff51a103c5b484367ddff25122677a732397391dd032a673d",
+          "checks": [
+            {
+              "name": "launcher_http_ui_tests",
+              "source_sha256": "9ef2b7edd5b07743b53b443fccd7a827a956d683bb6b1c95a9abb506427bdfb2",
+              "compilation": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "launcher_http_ui_tests.cpp\n",
+                "stderr": "",
+                "seconds": 16.266
+              },
+              "runtime_executed": true,
+              "passed": true,
+              "problems": [],
+              "executable_sha256": "205a877050748ce5d6abab940d72f22f265c5de56491694361161cac6e3ddfce",
+              "execution": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "{\"passed\":true,\"checks\":[{\"name\":\"complete_http_body\",\"passed\":true},{\"name\":\"truncated_http_body_rejected\",\"passed\":true},{\"name\":\"oversized_declared_body_rejected\",\"passed\":true},{\"name\":\"body_without_content_length\",\"passed\":true},{\"name\":\"redirect_not_followed\",\"passed\":true},{\"name\":\"logs_error_does_not_escape_window_action\",\"passed\":true},{\"name\":\"fixture_cleanup\",\"passed\":true}]}\n",
+                "stderr": "",
+                "seconds": 0.046
+              },
+              "results": {
+                "passed": true,
+                "checks": [
+                  {
+                    "name": "complete_http_body",
+                    "passed": true
+                  },
+                  {
+                    "name": "truncated_http_body_rejected",
+                    "passed": true
+                  },
+                  {
+                    "name": "oversized_declared_body_rejected",
+                    "passed": true
+                  },
+                  {
+                    "name": "body_without_content_length",
+                    "passed": true
+                  },
+                  {
+                    "name": "redirect_not_followed",
+                    "passed": true
+                  },
+                  {
+                    "name": "logs_error_does_not_escape_window_action",
+                    "passed": true
+                  },
+                  {
+                    "name": "fixture_cleanup",
+                    "passed": true
+                  }
+                ]
+              }
+            },
+            {
+              "name": "launcher_process_tests",
+              "source_sha256": "50ab8a532a122e60cf9e13521a688b3a83a91fc1d8422f4858691185b241c85a",
+              "compilation": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "launcher_process_tests.cpp\n",
+                "stderr": "",
+                "seconds": 3.672
+              },
+              "runtime_executed": true,
+              "passed": true,
+              "problems": [],
+              "executable_sha256": "9fac42b0bf1686256ef504dcf659291982a703f94f4540c8e63bb49e88a4e776",
+              "execution": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "{\"passed\":true,\"checks\":[{\"name\":\"only_stdin_and_log_handles_are_inherited\",\"passed\":true,\"detail\":\"\"},{\"name\":\"child_is_in_job_and_closing_job_terminates_it\",\"passed\":true,\"detail\":\"\"},{\"name\":\"request_stop_terminates_the_owned_child\",\"passed\":true,\"detail\":\"\"},{\"name\":\"cancellation_before_creation_starts_no_process\",\"passed\":true,\"detail\":\"\"},{\"name\":\"cancellation_after_creation_terminates_suspended_child\",\"passed\":true,\"detail\":\"\"},{\"name\":\"missing_executable_fails_without_a_child\",\"passed\":true,\"detail\":\"\"},{\"name\":\"missing_working_directory_fails_without_a_child\",\"passed\":true,\"detail\":\"\"},{\"name\":\"creation_failure_during_stop_is_reported_as_cancelled\",\"passed\":true,\"detail\":\"\"},{\"name\":\"invalid_job_fails_before_creation\",\"passed\":true,\"detail\":\"\"},{\"name\":\"negative_control_former_gap_leaves_a_suspended_orphan\",\"passed\":true,\"detail\":\"\"},{\"name\":\"parent_exit_at_creation_leaves_no_orphan\",\"passed\":true,\"detail\":\"\"},{\"name\":\"fixture_cleanup\",\"passed\":true,\"detail\":\"\"}]}\n",
+                "stderr": "",
+                "seconds": 0.422
+              },
+              "results": {
+                "passed": true,
+                "checks": [
+                  {
+                    "name": "only_stdin_and_log_handles_are_inherited",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "child_is_in_job_and_closing_job_terminates_it",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "request_stop_terminates_the_owned_child",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "cancellation_before_creation_starts_no_process",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "cancellation_after_creation_terminates_suspended_child",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "missing_executable_fails_without_a_child",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "missing_working_directory_fails_without_a_child",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "creation_failure_during_stop_is_reported_as_cancelled",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "invalid_job_fails_before_creation",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "negative_control_former_gap_leaves_a_suspended_orphan",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "parent_exit_at_creation_leaves_no_orphan",
+                    "passed": true,
+                    "detail": ""
+                  },
+                  {
+                    "name": "fixture_cleanup",
+                    "passed": true,
+                    "detail": ""
+                  }
+                ]
+              }
+            },
+            {
+              "name": "launcher_profile_tests",
+              "source_sha256": "41b19fe576df7b3a6726010c1640df4c77919f3425ace5245267d39b69d18095",
+              "compilation": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "launcher_profile_tests.cpp\n",
+                "stderr": "",
+                "seconds": 3.75
+              },
+              "runtime_executed": true,
+              "passed": true,
+              "problems": [],
+              "executable_sha256": "f970068787ec1b0188ec8311462618907740aed6212eadf9d30d609e53c14e7f",
+              "execution": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "{\"passed\":true,\"checks\":[{\"name\":\"initial_seed\",\"passed\":true},{\"name\":\"long_source_and_destination_paths\",\"passed\":true},{\"name\":\"missing_dependency_after_ready\",\"passed\":true},{\"name\":\"same_size_corruption_after_ready\",\"passed\":true},{\"name\":\"preserve_unlisted_user_data\",\"passed\":true},{\"name\":\"reject_destination_junction\",\"passed\":true},{\"name\":\"reject_private_profile_root_junction\",\"passed\":true},{\"name\":\"reject_seed_root_junction\",\"passed\":true},{\"name\":\"allow_redirected_ancestor_above_private_profile\",\"passed\":true},{\"name\":\"cancellation_invalidates_ready\",\"passed\":true},{\"name\":\"isolated_runtime_overrides\",\"passed\":true}]}\n",
+                "stderr": "",
+                "seconds": 0.828
+              },
+              "results": {
+                "passed": true,
+                "checks": [
+                  {
+                    "name": "initial_seed",
+                    "passed": true
+                  },
+                  {
+                    "name": "long_source_and_destination_paths",
+                    "passed": true
+                  },
+                  {
+                    "name": "missing_dependency_after_ready",
+                    "passed": true
+                  },
+                  {
+                    "name": "same_size_corruption_after_ready",
+                    "passed": true
+                  },
+                  {
+                    "name": "preserve_unlisted_user_data",
+                    "passed": true
+                  },
+                  {
+                    "name": "reject_destination_junction",
+                    "passed": true
+                  },
+                  {
+                    "name": "reject_private_profile_root_junction",
+                    "passed": true
+                  },
+                  {
+                    "name": "reject_seed_root_junction",
+                    "passed": true
+                  },
+                  {
+                    "name": "allow_redirected_ancestor_above_private_profile",
+                    "passed": true
+                  },
+                  {
+                    "name": "cancellation_invalidates_ready",
+                    "passed": true
+                  },
+                  {
+                    "name": "isolated_runtime_overrides",
+                    "passed": true
+                  }
+                ]
+              }
+            }
+          ],
+          "passed": true,
+          "app_version": "1.2.1",
+          "compiler": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe",
+          "production_header_sha256": "011fd12482c055b2afacf04b0b115deea4f9909de85dc0e4dfb307414aa6db84"
+        }
+      }
+    },
+    {
+      "name": "assembler/real-fixtures-and-production-metadata",
+      "passed": true,
+      "details": {
+        "passed": true,
+        "execution": {
+          "exit_code": 0,
+          "timed_out": false,
+          "stdout": "{\"passed\": true, \"platform\": \"win32\", \"small_cases\": 38, \"production_cases\": 5, \"production_pe_execution\": \"executed\", \"error\": null}\r\n",
+          "stderr": "",
+          "seconds": 4.566,
+          "peak_working_set_bytes": null
+        },
+        "report_path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\validation\\windows-unsigned.assembler.json",
+        "results": {
+          "schema_version": 1,
+          "platform": "win32",
+          "source_sha256": "7d714f7717d17255b177d6c108490c1b46ed786ba5b7c475375e2c4fcaea95ce",
+          "production_config_sha256": "9d95d8323d2c332ff51a103c5b484367ddff25122677a732397391dd032a673d",
+          "model_loaded": false,
+          "fixture_model_bytes": 262168,
+          "small_fixtures": [
+            {
+              "parts": 2,
+              "compilation": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "assemble_model.cpp\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-hftuthbs\\fixture-2\\assemble_model.cpp(46): warning C4127: conditional expression is constant\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-hftuthbs\\fixture-2\\assemble_model.cpp(46): note: consider using 'if constexpr' statement instead\n",
+                "stderr": "",
+                "seconds": 1.641
+              },
+              "test_header_sha256": "cbf7ecf55984d8f726b2744d7a65d68ceca53330a3cf0879629f2dcb8bc58184",
+              "cases": [
+                {
+                  "case": "split_success",
+                  "parts": 2,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.046
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "replace_existing_after_verification",
+                  "parts": 2,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.031
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "spaces_and_unicode_paths",
+                  "parts": 2,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.047
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "missing_last_part",
+                  "parts": 2,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "truncated_last_part",
+                  "parts": 2,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Setup-2.bin. Le fichier doit contenir 251057 octets.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "oversized_last_part",
+                  "parts": 2,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Setup-2.bin. Le fichier doit contenir 251057 octets.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "corrupt_part_preserves_previous",
+                  "parts": 2,
+                  "expected_exit": 7,
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\n",
+                    "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "full_gguf_only",
+                  "parts": 2,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.047
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "full_gguf_takes_priority",
+                  "parts": 2,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "corrupt_full_does_not_fall_back",
+                  "parts": 2,
+                  "expected_exit": 7,
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\n",
+                    "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "truncated_full_does_not_fall_back",
+                  "parts": 2,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour fixture-2.gguf. Le fichier doit contenir 262168 octets.\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "archive_magic_is_rejected",
+                  "parts": 2,
+                  "expected_exit": 7,
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\n",
+                    "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "quarantined_suffix_is_not_a_source",
+                  "parts": 2,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "destination_is_part",
+                  "parts": 2,
+                  "expected_exit": 4,
+                  "execution": {
+                    "exit_code": 4,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 4 : La destination ne peut pas remplacer une partie originale du modele.\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "destination_is_complete_source",
+                  "parts": 2,
+                  "expected_exit": 4,
+                  "execution": {
+                    "exit_code": 4,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source.\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "destination_hardlinks_source",
+                  "parts": 2,
+                  "expected_exit": 4,
+                  "execution": {
+                    "exit_code": 4,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source.\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "verified_existing_reuse",
+                  "parts": 2,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.\n",
+                    "stderr": "",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "sha256_self_test",
+                  "parts": 2,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "PASS SHA-256 : 4 vecteurs, blocs incrementaux et un million d'octets.\n",
+                    "stderr": "",
+                    "seconds": 0.015
+                  },
+                  "passed": true
+                },
+                {
+                  "case": "hash_file_matches_independent_sha256",
+                  "parts": 2,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "4ae661d0684a4208d891200892c10329dcdc1f9bc7928a75baef9f1ac3a2d1b3\n",
+                    "stderr": "",
+                    "seconds": 0.0
+                  },
+                  "passed": true
+                }
+              ],
+              "passed": true
+            },
+            {
+              "parts": 11,
+              "compilation": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "assemble_model.cpp\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-hftuthbs\\fixture-11\\assemble_model.cpp(46): warning C4127: conditional expression is constant\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-hftuthbs\\fixture-11\\assemble_model.cpp(46): note: consider using 'if constexpr' statement instead\n",
+                "stderr": "",
+                "seconds": 1.484
+              },
+              "test_header_sha256": "9ed9e44e6c1c13ffaca074dd98bfe6dac7f457a891d871aaee07951f46b8ad7c",
+              "cases": [
+                {
+                  "case": "split_success",
+                  "parts": 11,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.032
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "replace_existing_after_verification",
+                  "parts": 11,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.031
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "spaces_and_unicode_paths",
+                  "parts": 11,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.031
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "missing_last_part",
+                  "parts": 11,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "truncated_last_part",
+                  "parts": 11,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Setup-Fixture-11.bin. Le fichier doit contenir 258113 octets.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "oversized_last_part",
+                  "parts": 11,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Setup-Fixture-11.bin. Le fichier doit contenir 258113 octets.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "corrupt_part_preserves_previous",
+                  "parts": 11,
+                  "expected_exit": 7,
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\n",
+                    "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "full_gguf_only",
+                  "parts": 11,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.031
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "full_gguf_takes_priority",
+                  "parts": 11,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
+                    "stderr": "",
+                    "seconds": 0.031
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "corrupt_full_does_not_fall_back",
+                  "parts": 11,
+                  "expected_exit": 7,
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\n",
+                    "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "truncated_full_does_not_fall_back",
+                  "parts": 11,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour fixture-11.gguf. Le fichier doit contenir 262168 octets.\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "archive_magic_is_rejected",
+                  "parts": 11,
+                  "expected_exit": 7,
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\n",
+                    "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "quarantined_suffix_is_not_a_source",
+                  "parts": 11,
+                  "expected_exit": 3,
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
+                    "seconds": 0.0
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "destination_is_part",
+                  "parts": 11,
+                  "expected_exit": 4,
+                  "execution": {
+                    "exit_code": 4,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 4 : La destination ne peut pas remplacer une partie originale du modele.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "destination_is_complete_source",
+                  "parts": 11,
+                  "expected_exit": 4,
+                  "execution": {
+                    "exit_code": 4,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "destination_hardlinks_source",
+                  "parts": 11,
+                  "expected_exit": 4,
+                  "execution": {
+                    "exit_code": 4,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "verified_existing_reuse",
+                  "parts": 11,
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.\n",
+                    "stderr": "",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "problems": []
+                },
+                {
+                  "case": "sha256_self_test",
+                  "parts": 11,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "PASS SHA-256 : 4 vecteurs, blocs incrementaux et un million d'octets.\n",
+                    "stderr": "",
+                    "seconds": 0.0
+                  },
+                  "passed": true
+                },
+                {
+                  "case": "hash_file_matches_independent_sha256",
+                  "parts": 11,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "4ae661d0684a4208d891200892c10329dcdc1f9bc7928a75baef9f1ac3a2d1b3\n",
+                    "stderr": "",
+                    "seconds": 0.015
+                  },
+                  "passed": true
+                }
+              ],
+              "passed": true
+            }
+          ],
+          "production": [
+            {
+              "pack": "moe",
+              "executable_sha256": "ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306",
+              "model_bytes": 10756586464,
+              "cases": [
+                {
+                  "case": "production_sha256_self_test",
+                  "expected_exit": 0,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "PASS SHA-256 : 4 vecteurs, blocs incrementaux et un million d'octets.\n",
+                    "stderr": "",
+                    "seconds": 0.016
+                  },
+                  "passed": true
+                },
+                {
+                  "case": "full_truncated_64bit",
+                  "fixture": {
+                    "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                    "logical_bytes": 10756586463,
+                    "allocated_bytes": 65536,
+                    "contents": "size-only sparse fixture; not a model"
+                  },
+                  "expected_exit": [
+                    3
+                  ],
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf. Le fichier doit contenir 10756586464 octets.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "destination_preserved": true,
+                  "production_model_bytes": 10756586464
+                },
+                {
+                  "case": "full_oversized_64bit",
+                  "fixture": {
+                    "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                    "logical_bytes": 10756586465,
+                    "allocated_bytes": 65536,
+                    "contents": "size-only sparse fixture; not a model"
+                  },
+                  "expected_exit": [
+                    3
+                  ],
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf. Le fichier doit contenir 10756586464 octets.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "destination_preserved": true,
+                  "production_model_bytes": 10756586464
+                },
+                {
+                  "case": "full_exact_size_invalid_magic",
+                  "fixture": {
+                    "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                    "logical_bytes": 10756586464,
+                    "allocated_bytes": 65536,
+                    "contents": "size-only sparse fixture; not a model"
+                  },
+                  "expected_exit": [
+                    6,
+                    7
+                  ],
+                  "execution": {
+                    "exit_code": 7,
+                    "timed_out": false,
+                    "stdout": "Source : fichier GGUF complet Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf\nAssemblage du modele hors ligne et verification SHA-256...\n",
+                    "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes.\n",
+                    "seconds": 0.016
+                  },
+                  "passed": true,
+                  "destination_preserved": true,
+                  "production_model_bytes": 10756586464,
+                  "size_accepted": true,
+                  "invalid_magic_checked": true,
+                  "disk_space_guard_hit": false
+                },
+                {
+                  "case": "low_32_bits_cannot_match_model_size",
+                  "fixture": {
+                    "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                    "logical_bytes": 2166651872,
+                    "allocated_bytes": 65536,
+                    "contents": "size-only sparse fixture; not a model"
+                  },
+                  "expected_exit": [
+                    3
+                  ],
+                  "execution": {
+                    "exit_code": 3,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "ERREUR 3 : Taille incorrecte pour Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf. Le fichier doit contenir 10756586464 octets.\n",
+                    "seconds": 0.015
+                  },
+                  "passed": true,
+                  "destination_preserved": true,
+                  "production_model_bytes": 10756586464
+                }
+              ],
+              "passed": true
+            }
+          ],
+          "passed": true,
+          "production_pe_execution": "executed",
+          "production_config_unchanged": true
+        }
+      }
+    },
+    {
+      "name": "installer/production-path-and-size-functions",
+      "passed": true,
+      "details": {
+        "passed": true,
+        "execution": {
+          "exit_code": 0,
+          "timed_out": false,
+          "stdout": "{\"passed\": true, \"compilation_passed\": true, \"runtime\": \"executed\", \"error\": null}\r\n",
+          "stderr": "",
+          "seconds": 4.333,
+          "peak_working_set_bytes": null
+        },
+        "report_path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\validation\\windows-unsigned.installer-paths.json",
+        "results": {
+          "schema_version": 2,
+          "scope": "Unmodified production NSIS functions and pack constants",
+          "platform": "win32",
+          "target": "x86-unicode",
+          "runtime": "executed",
+          "runtime_blocker": null,
+          "model_loaded": false,
+          "path_cases": {
+            "missing_nested": true,
+            "missing_nested_trailing_separator": true,
+            "missing_spaces_and_unicode": true,
+            "default_location": true,
+            "documents_nested": true,
+            "existing_empty": true,
+            "existing_empty_trailing_separator": true,
+            "drive_root": false,
+            "documents_root": false,
+            "unowned_nonempty": false,
+            "existing_file": false,
+            "personal_data": false,
+            "legacy_personal_data": false,
+            "legacy_32go_personal_data": false,
+            "owned_installation": true,
+            "other_pack_installation": false
+          },
+          "artifacts": {
+            "current-moe": {
+              "pack": "moe",
+              "source_sha256": "3b18536d9c67adbd789ba310bb2d09a61e8fefb87015960dfad18133aaf949ae",
+              "pack_config_sha256": "0d8d9f55e78edd63464568cd2addf42b36d5222006e47a873c049d1e663b4f7d",
+              "model_bytes": 10756586464,
+              "model_parts": 8,
+              "installation_marker": "OpenCodeLocalMoE:{9C12A74B-6B0F-4A11-AF14-C1D4C7178372}",
+              "profile_directory": "OpenCodeLocalMoE",
+              "compile_passed": true,
+              "compilation": [
+                {
+                  "exit_code": 0,
+                  "timed_out": false,
+                  "stdout": "warning 6001: Variable \"ModelSourceDir\" not referenced or never set, wasting memory!\n\n1 warning:\n  6001: Variable \"ModelSourceDir\" not referenced or never set, wasting memory!\n",
+                  "stderr": "",
+                  "seconds": 0.422
+                },
+                {
+                  "exit_code": 0,
+                  "timed_out": false,
+                  "stdout": "warning 6001: Variable \"HasContent\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"FixtureDir\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"ReportPath\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"Failures\" not referenced or never set, wasting memory!\n\n4 warnings:\n  6001: Variable \"HasContent\" not referenced or never set, wasting memory!\n  6001: Variable \"FixtureDir\" not referenced or never set, wasting memory!\n  6001: Variable \"ReportPath\" not referenced or never set, wasting memory!\n  6001: Variable \"Failures\" not referenced or never set, wasting memory!\n",
+                  "stderr": "",
+                  "seconds": 0.031
+                }
+              ],
+              "runtime_passed": true,
+              "path_execution": {
+                "exit_code": 0,
+                "timed_out": false,
+                "stdout": "",
+                "stderr": "",
+                "seconds": 1.359
+              },
+              "path_results": [
+                {
+                  "case": "missing_nested",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "missing_nested_trailing_separator",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\new\\nested\\OpenCodeLocal\\",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "missing_spaces_and_unicode",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\Projet Ã©tÃ©\\assistant local",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\Projet Ã©tÃ©\\assistant local",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "default_location",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-ji9bvfol",
+                  "input": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-ji9bvfol",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "documents_nested",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-ji9bvfol\\IA\\OpenCodeLocal",
+                  "input": "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-ji9bvfol\\IA\\OpenCodeLocal",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "existing_empty",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\empty",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\empty",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "existing_empty_trailing_separator",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\empty",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\empty\\",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "drive_root",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe",
+                  "input": "C:\\",
+                  "problem": "Le dossier contient dÃ©jÃ  des fichiers et ne correspond pas Ã  une installation reconnue de OpenCode Local. Choisissez un dossier vide ou le dossier proposÃ©.",
+                  "passed": true
+                },
+                {
+                  "case": "documents_root",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\runneradmin\\Documents",
+                  "input": "C:\\Users\\runneradmin\\Documents",
+                  "problem": "Choisissez un dossier local dÃ©diÃ© au programme, par exemple C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE.",
+                  "passed": true
+                },
+                {
+                  "case": "unowned_nonempty",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\nonempty",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\nonempty",
+                  "problem": "Le dossier contient dÃ©jÃ  des fichiers et ne correspond pas Ã  une installation reconnue de OpenCode Local. Choisissez un dossier vide ou le dossier proposÃ©.",
+                  "passed": true
+                },
+                {
+                  "case": "existing_file",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\nonempty\\keep.txt",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\nonempty\\keep.txt",
+                  "problem": "Choisissez un dossier local dÃ©diÃ© au programme, par exemple C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE.",
+                  "passed": true
+                },
+                {
+                  "case": "personal_data",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\\nested",
+                  "input": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\\nested",
+                  "problem": "Choisissez un dossier local dÃ©diÃ© au programme, par exemple C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE.",
+                  "passed": true
+                },
+                {
+                  "case": "legacy_personal_data",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocal\\nested",
+                  "input": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocal\\nested",
+                  "problem": "Choisissez un dossier local dÃ©diÃ© au programme, par exemple C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE.",
+                  "passed": true
+                },
+                {
+                  "case": "legacy_32go_personal_data",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocal32Go\\nested",
+                  "input": "C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocal32Go\\nested",
+                  "problem": "Choisissez un dossier local dÃ©diÃ© au programme, par exemple C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE.",
+                  "passed": true
+                },
+                {
+                  "case": "owned_installation",
+                  "expected_allowed": true,
+                  "actual_allowed": true,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\owned",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\owned",
+                  "problem": "",
+                  "passed": true
+                },
+                {
+                  "case": "other_pack_installation",
+                  "expected_allowed": false,
+                  "actual_allowed": false,
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\other-owned",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\paths\\other-owned",
+                  "problem": "Le dossier contient dÃ©jÃ  des fichiers et ne correspond pas Ã  une installation reconnue de OpenCode Local. Choisissez un dossier vide ou le dossier proposÃ©.",
+                  "passed": true
+                }
+              ],
+              "metadata_results": [
+                {
+                  "case": "full_exact_size",
+                  "expected_allowed": true,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.063
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": true,
+                  "problem": "",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\full_exact_size",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "full_truncated",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.046
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586463,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\full_truncated",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "full_oversized",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.281
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586465,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\full_oversized",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "split_exact_sizes",
+                  "expected_allowed": true,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.046
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Modele-MoE-01.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-02.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-03.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-04.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-05.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-06.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-07.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-08.bin",
+                      "logical_bytes": 256586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": true,
+                  "problem": "",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\split_exact_sizes",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "split_missing_last",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.062
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Modele-MoE-01.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-02.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-03.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-04.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-05.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-06.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-07.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Le modÃ¨le de ce pack est absent ou incomplet. Pour une mise Ã  jour, choisissez le dossier existant qui contient le modÃ¨le. Pour une nouvelle installation, placez Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf, ou ses 8 fichiers .bin, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\split_missing_last",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "split_wrong_last_size",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.047
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Modele-MoE-01.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-02.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-03.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-04.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-05.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-06.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-07.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-08.bin",
+                      "logical_bytes": 256586463,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\split_wrong_last_size",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "invalid_full_takes_priority",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.094
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586463,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-01.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-02.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-03.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-04.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-05.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-06.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-07.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-08.bin",
+                      "logical_bytes": 256586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\invalid_full_takes_priority",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "missing_all_sources",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.062
+                  },
+                  "fixtures": [],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Le modÃ¨le de ce pack est absent ou incomplet. Pour une mise Ã  jour, choisissez le dossier existant qui contient le modÃ¨le. Pour une nouvelle installation, placez Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf, ou ses 8 fichiers .bin, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\missing_all_sources",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "reuse_owned_installed_model",
+                  "expected_allowed": true,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.156
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": true,
+                  "problem": "",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\reuse_owned_installed_model\\installed\\wad\\model",
+                  "expected_installed_source": true
+                },
+                {
+                  "case": "reject_unowned_installed_model",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.063
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Le modÃ¨le de ce pack est absent ou incomplet. Pour une mise Ã  jour, choisissez le dossier existant qui contient le modÃ¨le. Pour une nouvelle installation, placez Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf, ou ses 8 fichiers .bin, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\reject_unowned_installed_model",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "reject_foreign_installed_model",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.062
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Le modÃ¨le de ce pack est absent ou incomplet. Pour une mise Ã  jour, choisissez le dossier existant qui contient le modÃ¨le. Pour une nouvelle installation, placez Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf, ou ses 8 fichiers .bin, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\reject_foreign_installed_model",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "reject_truncated_installed_model",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.094
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586463,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\reject_truncated_installed_model\\installed\\wad\\model",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "external_full_precedes_installed",
+                  "expected_allowed": true,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.062
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": true,
+                  "problem": "",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\external_full_precedes_installed",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "external_parts_precede_installed",
+                  "expected_allowed": true,
+                  "execution": {
+                    "exit_code": 0,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.047
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-01.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-02.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-03.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-04.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-05.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-06.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-07.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-08.bin",
+                      "logical_bytes": 256586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": true,
+                  "problem": "",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\external_parts_precede_installed",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "invalid_external_full_no_installed_fallback",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.062
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586463,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\invalid_external_full_no_installed_fallback",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "partial_external_parts_no_installed_fallback",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.047
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 10756586464,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-01.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-02.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-03.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-04.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-05.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-06.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    },
+                    {
+                      "name": "Modele-MoE-07.bin",
+                      "logical_bytes": 1500000000,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Le modÃ¨le de ce pack est absent ou incomplet. Pour une mise Ã  jour, choisissez le dossier existant qui contient le modÃ¨le. Pour une nouvelle installation, placez Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf, ou ses 8 fichiers .bin, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\partial_external_parts_no_installed_fallback",
+                  "expected_installed_source": false
+                },
+                {
+                  "case": "full_low_32_bits_only",
+                  "expected_allowed": false,
+                  "execution": {
+                    "exit_code": 1,
+                    "timed_out": false,
+                    "stdout": "",
+                    "stderr": "",
+                    "seconds": 0.047
+                  },
+                  "fixtures": [
+                    {
+                      "name": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+                      "logical_bytes": 2166651872,
+                      "allocated_bytes": 65536,
+                      "contents": "size-only sparse fixture; not a model"
+                    }
+                  ],
+                  "passed": true,
+                  "actual_allowed": false,
+                  "problem": "Un fichier du modÃ¨le est incomplet ou appartient Ã  un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le mÃªme dossier que Setup.exe.",
+                  "selected_source": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-ji9bvfol\\current-moe\\full_low_32_bits_only",
+                  "expected_installed_source": false
+                }
+              ]
+            }
+          },
+          "passed": true,
+          "compilation_passed": true
+        }
+      }
+    },
+    {
+      "name": "moe/setup/metadata-and-signature",
+      "passed": true,
+      "details": {
+        "path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe",
+        "sha256": "eec8c3aed8a3f67b84c1e4beafae4157c27b9930991892a7f0b3561f4d8c6cd9",
+        "metadata": {
+          "machine": "0x014C",
+          "architecture": "x86",
+          "optional_header": "PE32",
+          "subsystem": 2,
+          "sections": 7,
+          "characteristics": 783,
+          "file_version": "1.2.1.0",
+          "product_version": "1.2.1",
+          "product_name": "OpenCode Local",
+          "original_filename": "Setup.exe",
+          "file_description": "Installation hors ligne de OpenCode Local",
+          "company_name": "M4D135",
+          "certificate_table_bytes": 0,
+          "file_bytes": 127290805
+        },
+        "authenticode": {
+          "required": false,
+          "status": "NotSigned",
+          "status_message": "The file D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+          "signature_type": "None",
+          "publisher": null,
+          "signer_certificate_sha256": null,
+          "timestamp_present": false,
+          "timestamp_subject": null,
+          "signtool": null,
+          "passed": true,
+          "problems": []
+        },
+        "problems": [],
+        "passed": true
+      }
+    },
+    {
+      "name": "moe/setup/archive-and-exact-native-payload",
+      "passed": true,
+      "details": {
+        "passed": true,
+        "archive_sha256": "eec8c3aed8a3f67b84c1e4beafae4157c27b9930991892a7f0b3561f4d8c6cd9",
+        "archive_entries": 3822,
+        "integrity": {
+          "exit_code": 0,
+          "timed_out": false,
+          "stdout": "\r\n7-Zip 26.05 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-10-21\r\n\r\nScanning the drive for archives:\r\n1 file, 127290805 bytes (122 MiB)\r\n\r\nTesting archive: D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe\r\n--\r\nPath = D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe\r\nType = Nsis\r\nPhysical Size = 127290805\r\nMethod = Deflate\r\nSolid = -\r\nHeaders Size = 1780228\r\nEmbedded Stub Size = 116224\r\nSubType = NSIS-3 Unicode\r\n\r\nEverything is Ok\r\n\r\nFiles: 3822\r\nSize:       4574\r\nCompressed: 127290805\r\n",
+          "stderr": "",
+          "seconds": 1.776,
+          "peak_working_set_bytes": null
+        },
+        "embedded_home_built_executables": [
+          {
+            "member": "$_53_/OpenCodeLocal.exe",
+            "extracted_sha256": "02602af8d7cddf695928c05c8c3582fbcf22c6474ec44e53ed21bd71430c4388",
+            "native_sha256": "02602af8d7cddf695928c05c8c3582fbcf22c6474ec44e53ed21bd71430c4388",
+            "exact_native_match": true,
+            "inspection": {
+              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\extracted\\OpenCodeLocal.exe\\OpenCodeLocal.exe",
+              "sha256": "02602af8d7cddf695928c05c8c3582fbcf22c6474ec44e53ed21bd71430c4388",
+              "metadata": {
+                "machine": "0x8664",
+                "architecture": "x64",
+                "optional_header": "PE32+",
+                "subsystem": 2,
+                "sections": 20,
+                "characteristics": 38,
+                "file_version": "1.2.1",
+                "product_version": "1.2.1",
+                "product_name": "OpenCode Local",
+                "original_filename": "OpenCodeLocal.exe",
+                "file_description": "OpenCode Local - MoE léger",
+                "company_name": "M4D135",
+                "certificate_table_bytes": 0,
+                "file_bytes": 3506302
+              },
+              "authenticode": {
+                "required": false,
+                "status": "NotSigned",
+                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\extracted\\OpenCodeLocal.exe\\OpenCodeLocal.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+                "signature_type": "None",
+                "publisher": null,
+                "signer_certificate_sha256": null,
+                "timestamp_present": false,
+                "timestamp_subject": null,
+                "signtool": null,
+                "passed": true,
+                "problems": []
+              },
+              "problems": [],
+              "passed": true
+            },
+            "passed": true
+          },
+          {
+            "member": "$PLUGINSDIR/AssembleModel.exe",
+            "extracted_sha256": "ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306",
+            "native_sha256": "ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306",
+            "exact_native_match": true,
+            "inspection": {
+              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\extracted\\AssembleModel.exe\\AssembleModel.exe",
+              "sha256": "ad1c67cf7826e27833694fc8031f6688cd46d70eaea19eb6c9fd4d9cb5e40306",
+              "metadata": {
+                "machine": "0x8664",
+                "architecture": "x64",
+                "optional_header": "PE32+",
+                "subsystem": 3,
+                "sections": 20,
+                "characteristics": 38,
+                "file_version": "1.2.1",
+                "product_version": "1.2.1",
+                "product_name": "OpenCode Local",
+                "original_filename": "AssembleModel.exe",
+                "file_description": "Assemblage et vérification du modèle OpenCode Local",
+                "company_name": "M4D135",
+                "certificate_table_bytes": 0,
+                "file_bytes": 2738636
+              },
+              "authenticode": {
+                "required": false,
+                "status": "NotSigned",
+                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\extracted\\AssembleModel.exe\\AssembleModel.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+                "signature_type": "None",
+                "publisher": null,
+                "signer_certificate_sha256": null,
+                "timestamp_present": false,
+                "timestamp_subject": null,
+                "signtool": null,
+                "passed": true,
+                "problems": []
+              },
+              "problems": [],
+              "passed": true
+            },
+            "passed": true
+          },
+          {
+            "member": "$_53_/wad/support/Uninstall.exe",
+            "extracted_sha256": "980c12f0b977420e9a719da546bf7ef5805102ccb1adf0d3ceefdb56192fc89e",
+            "native_sha256": "980c12f0b977420e9a719da546bf7ef5805102ccb1adf0d3ceefdb56192fc89e",
+            "exact_native_match": true,
+            "inspection": {
+              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\extracted\\Uninstall.exe\\Uninstall.exe",
+              "sha256": "980c12f0b977420e9a719da546bf7ef5805102ccb1adf0d3ceefdb56192fc89e",
+              "metadata": {
+                "machine": "0x014C",
+                "architecture": "x86",
+                "optional_header": "PE32",
+                "subsystem": 2,
+                "sections": 7,
+                "characteristics": 783,
+                "file_version": "1.2.1.0",
+                "product_version": "1.2.1",
+                "product_name": "OpenCode Local",
+                "original_filename": "Uninstall.exe",
+                "file_description": "Désinstallation de OpenCode Local",
+                "company_name": "M4D135",
+                "certificate_table_bytes": 0,
+                "file_bytes": 179806
+              },
+              "authenticode": {
+                "required": false,
+                "status": "NotSigned",
+                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-6adef67e652d4e3a807ba7edd0d32026\\moe\\extracted\\Uninstall.exe\\Uninstall.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+                "signature_type": "None",
+                "publisher": null,
+                "signer_certificate_sha256": null,
+                "timestamp_present": false,
+                "timestamp_subject": null,
+                "signtool": null,
+                "passed": true,
+                "problems": []
+              },
+              "problems": [],
+              "passed": true
+            },
+            "passed": true
+          }
+        ],
+        "production_installation_executed": false,
+        "model_loaded": false
+      }
+    }
+  ],
+  "cleanup_notes": []
+}

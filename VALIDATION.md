@@ -1,4 +1,81 @@
-# Validation du pack unique MoE 1.2.0
+# Validation du pack unique MoE
+
+## Version 1.2.1 — lanceur et installateur corrigés
+
+La [release 1.2.1](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.1)
+est publiée pour le commit `c0f8d868bcdfdaf8462389c0d09f600767cdd1fa`.
+Le [run de construction et de validation Windows 42019072638](https://github.com/M4D135/OpenCode-Local/actions/runs/42019072638)
+et le [run de publication 42019473800](https://github.com/M4D135/OpenCode-Local/actions/runs/42019473800)
+ont réussi le 5 novembre 2026. Le modèle, les composants amont figés et les
+réglages mémoire restent ceux de 1.2.0. Les exécutables sont **non signés**.
+
+### Contrôles exécutés sur cette version
+
+Le [rapport Windows complet](validation/windows-unsigned-1.2.1.json) référence
+la version et le commit exacts. Son environnement est Microsoft Windows NT
+10.0.20348.0, PowerShell 7.6.9. La [synthèse de provenance](validation/windows-unsigned-summary-1.2.1.json)
+conserve les identifiants des jobs, l'artefact téléchargé, ses octets et son
+SHA-256, ainsi que les empreintes avant et après normalisation des fins de
+ligne. Les valeurs JSON des rapports conservés sont inchangées.
+
+| Contrôle Windows | Résultat | Portée |
+| --- | --- | --- |
+| Contrôles principaux | 9/9 réussis | Natifs, diagnostic, tests du lanceur, assembleur, fonctions NSIS et setup |
+| Lanceur : processus | 12/12 réussis | Héritage limité des handles, fermeture de job, annulation et absence d'orphelin à la création ; contrôle négatif reproduisant l'ancien défaut |
+| Lanceur : profil | 11/11 réussis | Fichier manquant ou corrompu après préparation, corruption de même taille, chemins longs, jonctions, préservation de données et environnement enfant |
+| Lanceur : HTTP et interface | 7/7 réussis | Réponses complètes, tronquées ou trop grandes, absence de redirection et erreur du dossier Journaux contenue dans l'action |
+| Assembleur sur petits fichiers | 38/38 réussis | Intégrité, assemblage et conservation de données |
+| Assembleur de production | 5/5 réussis | Grandes tailles et rejets attendus, avec fichiers creux |
+| Installateur : chemins | 16/16 réussis | Dossiers dédiés, espaces, Unicode et préservation de l'installation |
+| Installateur : source du modèle | 17/17 réussis | Huit parties ou GGUF, modèle déjà installé, marqueur requis, tailles et priorité des fichiers externes |
+| Archive du setup | Réussie | 3 822 entrées ; les trois exécutables maison extraits sont identiques aux natifs contrôlés |
+| ZIP public retéléchargé | Réussi | CRC valide, un seul `Setup.exe`, identique octet pour octet au setup validé sous Windows |
+
+Les 30 scénarios du lanceur incluent les contrôles de nettoyage des fixtures.
+Ils recompilent les fonctions de production avec MSVC et embarquent le
+manifeste applicatif avec ses options de chemins longs. Les exécutables
+distribués sont construits avec MinGW, puis leurs métadonnées, leur diagnostic
+et leur présence exacte dans le setup sont contrôlés séparément. Le registre
+de la machine de test est seulement lu : `LongPathsEnabled` vaut 1 ; aucun
+réglage de Windows ou de protection n'est modifié par cette suite.
+
+### Téléchargement publié vérifié
+
+Le [contrôle du téléchargement public](validation/release-download-1.2.1.json)
+a réellement récupéré `Setup.zip`, testé son CRC et calculé le SHA-256 du ZIP
+et de son unique membre. Le [manifeste de distribution](validation/release-manifest-1.2.1.json)
+conserve les références aux huit parties du modèle de 1.2.0 ; cette release
+source est conservée et aucun poids n'est dupliqué dans 1.2.1.
+
+| Fichier publié ou embarqué | Octets | SHA-256 |
+| --- | ---: | --- |
+| `Setup.zip` public | 127 290 921 | `ee9cf430f4314a0f048601237d5abe9dcf87b90334cf3fe082b2840ef3977b88` |
+| `Setup.exe` dans ce ZIP | 127 290 805 | `eec8c3aed8a3f67b84c1e4beafae4157c27b9930991892a7f0b3561f4d8c6cd9` |
+| `OpenCodeLocal.exe` dans le setup | 3 506 302 | `02602af8d7cddf695928c05c8c3582fbcf22c6474ec44e53ed21bd71430c4388` |
+
+Le ZIP finalisé dans le job Windows et celui finalisé lors de la publication
+ont des octets de conteneur différents. Le [rapport de finalisation Windows](validation/finalize-unsigned-1.2.1.json)
+reste identifié comme tel ; son empreinte ZIP n'est pas attribuée au fichier
+public. Le `Setup.exe` contenu dans les deux archives est identique.
+
+### Portée et limites
+
+Ces essais ne chargent pas le modèle et ne réalisent pas une installation
+complète avec ses vrais poids sur Windows. Les cas de grandes tailles de
+l'installateur utilisent des fichiers creux. Le contrôle SHA-256 du modèle
+est toujours exécuté par l'assembleur pendant une installation réelle, avant
+remplacement de l'installation existante. Les résultats d'inférence et de RAM
+ci-dessous restent **historiques pour 1.2.0** ; aucune nouvelle mesure du modèle
+n'est attribuée à 1.2.1.
+
+Les défauts corrigés ne sont pas établis comme cause de l'alerte signalée.
+**L'acceptation du nouveau lanceur par TEHTRIS sur le poste utilisateur reste
+non vérifiée.** Le [dossier TEHTRIS](docs/TEHTRIS.md) décrit les corrections et
+le signalement avec cette distinction. Aucun accès à la console antivirus,
+contact avec un tiers ou changement de protection n'est requis pour les
+corrections et les tests effectués ici.
+
+## Résultats historiques — version 1.2.0
 
 La [release 1.2.0](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0)
 est publiée. La construction Windows, les essais réels du modèle et d'OpenCode,
@@ -6,7 +83,7 @@ la publication et le retrait des anciennes versions ont réussi pour le commit
 `4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1`. Les résultats et leurs limites sont
 conservés ci-dessous ; les exécutables distribués restent non signés.
 
-## Contrôles Windows réussis — 5 novembre 2026
+### Contrôles Windows réussis — 5 novembre 2026
 
 Le [run GitHub Actions 41996391326](https://github.com/M4D135/OpenCode-Local/actions/runs/41996391326)
 a terminé avec succès ses jobs de construction et de validation Windows sur le
@@ -42,7 +119,7 @@ vérifie le refus attendu d'un paquet volontairement incomplet. Ils ne qualifien
 donc ni une session de modèle ni sa consommation de RAM. L'installation complète
 du pack avec les vrais poids sur un poste Windows 10/11 reste à vérifier.
 
-## Modèle et mémoire — essais réels réussis
+### Modèle et mémoire — essais réels réussis
 
 Le [run de validation et publication 41996782971](https://github.com/M4D135/OpenCode-Local/actions/runs/41996782971)
 a réussi les quatre groupes de tests du modèle Qwen3.6-35B-A3B UD-IQ2_XXS puis
@@ -87,7 +164,7 @@ ce run sont explicitement **non signés** (`NotSigned`) ; aucun certificat réel
 n'a été utilisé. Le signalement TEHTRIS ci-dessous est distinct de ces essais
 fonctionnels et mémoire.
 
-## TEHTRIS — blocage signalé le 5 novembre 2026
+### TEHTRIS — blocage signalé le 5 novembre 2026
 
 L’utilisateur signale un arrêt et une mise en quarantaine de
 `OpenCodeLocal.exe` après la première saisie « salut », avec un pack présenté
@@ -116,7 +193,7 @@ les références de code et les éléments à recueillir auprès de l’administ
 du parc ou du support. Aucun test d’acceptation TEHTRIS réussi ni correctif
 binaire à cet incident n’est revendiqué.
 
-## Publication et retrait des anciennes versions
+### Publication et retrait des anciennes versions
 
 Le [rapport de publication](validation/publication-1.2.0.json) confirme les
 empreintes des fichiers distribués et le nettoyage après vérification de la
@@ -142,7 +219,7 @@ tags ont été conservés. Le rapport brut conserve les URL d'assets observées
 pendant le brouillon ; les liens de téléchargement ci-dessus utilisent la
 release publique `v1.2.0`, vérifiée par l'API GitHub.
 
-### Premier essai réel et correction du délai
+#### Premier essai réel et correction du délai
 
 Le [premier essai Linux](validation/model-runtime-first-attempt-1.2.0.json)
 du commit `c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c`, exécuté dans le
@@ -162,11 +239,11 @@ de mémoire sont restés exigés. Le nouvel essai complet décrit ci-dessus a r�
 
 ---
 
-## Historique des validations précédentes
+### Historique des validations précédentes
 
 # Validation des packs et de la chaîne de signature
 
-## Préparation 1.1.1 — état au 4 novembre 2026
+### Préparation 1.1.1 — état au 4 novembre 2026
 
 La chaîne de construction et de vérification des deux profils est préparée pour
 une signature SignPath en deux étapes. **Aucun certificat réel n'a été utilisé,
@@ -175,7 +252,7 @@ publiée.** Les essais ci-dessous portent sur des candidats explicitement non
 signés. L'installation complète avec les modèles et l'acceptation par TEHTRIS
 restent des validations distinctes sur les postes cibles.
 
-### Contrôles locaux terminés
+#### Contrôles locaux terminés
 
 | Contrôle | Résultat | Portée |
 | --- | --- | --- |
@@ -191,7 +268,7 @@ conserve les empreintes et la portée du parcours local. Il indique explicitemen
 que le checkout local comportait le correctif de copie lors de cet essai ; il
 ne se présente pas comme une construction SignPath ou une qualification Windows.
 
-### Vérification GitHub et Windows
+#### Vérification GitHub et Windows
 
 Le [run GitHub Actions 41922735490](https://github.com/M4D135/OpenCode-Local/actions/runs/41922735490)
 a terminé **avec succès ses deux jobs**, construction Linux et validation
@@ -229,7 +306,7 @@ un poste Windows 10/11 ; l'interface, les opérations d'installation/réparation
 désinstallation, les sessions de modèle en contexte de production, la RAM
 cible et la compatibilité TEHTRIS restent à qualifier sur ces postes.
 
-### Défaut de manifeste corrigé
+#### Défaut de manifeste corrigé
 
 L'extraction complète a trouvé dans les manifestes des deux setups 1.1.0 une
 entrée surnuméraire : `wad/opencode/.opencode.exe.uMQYmH`, un temporaire de copie
@@ -244,7 +321,7 @@ La politique et les prérequis d'activation sont détaillés dans
 
 ---
 
-## Historique : validation des packs 1.1.0
+### Historique : validation des packs 1.1.0
 
 Contrôles réalisés le 4 novembre 2026. Les résultats distinguent compilation, tests natifs Linux et exécution Windows.
 
@@ -263,25 +340,25 @@ Contrôles réalisés le 4 novembre 2026. Les résultats distinguent compilation
 
 Rapports : `validation/pack-16go.json`, `validation/pack-32go.json`, `validation/model-32go-parts.json`, `validation/model-32go-compatibility.json`, `validation/assembler-new-profiles.json` et `validation/installer-paths.json`.
 
-## Configuration testée pour le grand modèle
+### Configuration testée pour le grand modèle
 
 Les essais natifs ont utilisé `--no-repack`, `--no-warmup`, quatre threads et un plafond de 3 Gio pour les allocations anonymes, avec des poids lus par mémoire mappée. Les commandes de production du pack 32 Go incluent `--no-repack`. Les temps mesurés avec 8 Gio disponibles ne prédisent pas le débit sur le PC de 32 Go. La consommation au contexte de production de 16 384 tokens reste à mesurer sur ce PC.
 
 Le choix forcé par nom sous forme d’objet `tool_choice` a été ignoré avec avertissement par le runtime ; le modèle a néanmoins choisi la fonction et le serveur l’a parsée. Le rapport ne prétend pas que ce format d’API est pris en charge.
 
-## Détection antivirus
+### Détection antivirus
 
 Les nouvelles ressources et le chargement de `dwmapi.dll` depuis System32 améliorent l’identification et le chargement des DLL. Ils ne constituent ni une signature Authenticode ni une preuve de faux positif. Les éléments à relever dans TEHTRIS sont décrits dans `docs/TEHTRIS.md`.
 
 ---
 
-## Historique de la version 1.0.0
+### Historique de la version 1.0.0
 
 # Résultats initiaux du pack 1.0.0
 
 Vérifications effectuées le 4 novembre 2026. Les rapports structurés conservés dans `validation/` correspondent aux essais ci-dessous.
 
-## Ce qui a été testé
+### Ce qui a été testé
 
 | Vérification | Résultat | Portée |
 |---|---|---|
@@ -300,7 +377,7 @@ Vérifications effectuées le 4 novembre 2026. Les rapports structurés conserv�
 | Compilation de l’installateur NSIS | PASS | Fixture puis pack complet ; véritable `Setup.exe`, compression zlib, code de retour 0 |
 | Archive finale et extraction | PASS | `7z t` code 0 ; 3 809 fichiers de payload ; SHA-256 des trois exécutables principaux extraits identique à leurs sources |
 
-## Limites observées
+### Limites observées
 
 Le premier essai OpenCode avec un nom de fichier relatif a échoué : le petit modèle a inventé un chemin absolu hors projet. La demande d’autorisation correspondante a été refusée automatiquement par le test non interactif. L’essai suivant a utilisé le chemin absolu correct sans élargir les permissions et a réussi. Cela confirme une limite pratique du modèle 4B : les appels d’outils ne sont pas infaillibles.
 
@@ -308,7 +385,7 @@ Le test OpenCode complet a pris 126,78 secondes sur le CPU de l’environnement 
 
 Dans `llama-completion` b12089, `--reasoning off` est accepté mais ne désactive pas le texte `<think>` dans ce chemin de formatage du chat. Le test direct a néanmoins terminé avec la bonne réponse. `--chat-template-kwargs` n’est pas accepté par ce binaire. Cette limite ne concerne pas le chemin serveur utilisé par OpenCode.
 
-## Ce qui reste à valider sur Windows
+### Ce qui reste à valider sur Windows
 
 **Le setup et le lanceur n’ont pas été exécutés sur un vrai Windows.** Wine est indisponible dans l’environnement de construction : la création des sockets Unix requises est refusée avant le démarrage du code Windows. La compilation ne remplace pas une qualification de l’interface, de l’installation, de la réparation et de la désinstallation.
 
@@ -320,7 +397,7 @@ Les exécutables d’intégration ne portent pas de signature Authenticode comme
 
 La compilation complète émet l’avertissement NSIS 9000 sur le nom `Setup.exe` et les mécanismes de compatibilité Windows associés à ce nom. Le nom demandé est conservé. Ce message n’empêche pas la compilation ; il n’est pas présenté comme un test Windows réussi. Le journal de construction et les tailles/empreintes finales sont conservés avec les rapports.
 
-## Sources techniques
+### Sources techniques
 
 - [OpenCode 1.19.5](https://github.com/anomalyco/opencode/tree/v1.19.5)
 - [llama.cpp b12089](https://github.com/ggml-org/llama.cpp/tree/b12089)

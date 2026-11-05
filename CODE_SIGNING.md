@@ -4,8 +4,8 @@
 
 **Signing is not active.** The historical 1.0.0, 1.0.1 and 1.1.0 Windows packs
 were unsigned. The single MoE 1.2.0 distribution is also explicitly unsigned.
-**The 1.2.1 launcher correction is undergoing validation in unsigned mode;
-signing is not active for 1.2.1 either.** Its code fixes do not establish EDR
+**The 1.2.1 launcher correction is published after new Windows validation in
+unsigned mode; signing is not active for 1.2.1 either.** Its code fixes do not establish EDR
 acceptance. The integration prepares a verifiable signing pipeline and a
 SignPath Foundation application. Preparing the integration is not acceptance
 by the Foundation, certificate issuance or a completed signing operation.
@@ -91,7 +91,10 @@ The build sequence is:
    exactly one `Setup.exe` and regenerate distribution hashes.
 
 The separate `publish-moe.yml` workflow can publish an explicitly unsigned
-release after Windows and real model/harness validation. It cannot claim
+full pack after Windows and real model/harness validation. A launcher-only
+update requires new Windows tests and verifies references to an unchanged,
+previously published model without downloading its weights; it makes no new
+model-inference claim. Neither publication path can claim
 SignPath approval or access signing secrets. The release plan records the
 maintainer-requested cleanup of old downloads only after replacement checks.
 

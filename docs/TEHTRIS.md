@@ -1,13 +1,15 @@
 # Détection du lanceur par TEHTRIS
 
-## Correctif 1.2.1 — en cours de validation
+## Correctif 1.2.1 — publié après validation Windows
 
 Une revue approfondie du code a identifié des défauts de fiabilité et
 d’intégrité du lanceur. Le correctif 1.2.1 les traite dans
-[`src/launcher.cpp`](../src/launcher.cpp) ; sa validation Windows est en cours.
+[`src/launcher.cpp`](../src/launcher.cpp). Le [run Windows 42019072638](https://github.com/M4D135/OpenCode-Local/actions/runs/42019072638)
+a réussi sur le commit `c0f8d868bcdfdaf8462389c0d09f600767cdd1fa` ; les
+résultats détaillés sont conservés dans [le rapport 1.2.1](../validation/windows-unsigned-1.2.1.json).
 **Ces défauts n’ont pas été établis comme causes de l’alerte TEHTRIS.** Le
 signalement et l’empreinte 1.2.0 ci-dessous restent des éléments historiques,
-distincts des nouveaux exécutables et de leurs futurs rapports de validation.
+distincts des nouveaux exécutables et de leurs rapports de validation.
 
 | Fonction concernée | Correction apportée dans les sources 1.2.1 |
 | --- | --- |
