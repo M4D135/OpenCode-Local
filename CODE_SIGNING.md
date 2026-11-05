@@ -106,12 +106,23 @@ versioned in `.signpath/` for review and import after acceptance.
 
 ## Endpoint security and privacy
 
-An early unsigned launcher was terminated and quarantined by TEHTRIS on one
-reported workstation. The available notification did not identify the precise
-rule or establish a false positive. [TEHTRIS.md](docs/TEHTRIS.md) records this
-open issue. Signing establishes provenance; it does not override an antivirus
-decision, establish that the program is harmless, or prove acceptance by that
-workstation's policy.
+TEHTRIS terminated and quarantined an early unsigned launcher on 4 November
+2026. A further incident was reported on 5 November after the first message,
+“salut”, using a pack presented as version 1.2.0. The notification identifies
+`OpenCodeLocal.exe`, but the affected file's EDR hash and detection rule are
+unavailable. The expected 1.2.0 launcher is 3,498,714 bytes and `NotSigned`, as
+recorded with its SHA-256 in the [Windows validation report](validation/windows-unsigned-1.2.0.json)
+and [incident dossier](docs/TEHTRIS.md). This expected identity has not been
+matched to the EDR event. The reported workstation is blocked; neither the
+cause nor a false positive has been established.
+
+During conversation the launcher waits for its child processes. Terminating
+this parent also closes its Job Object and stops the children, which can
+explain the whole session stopping without identifying the detection trigger.
+Signing establishes provenance; it does not override an antivirus decision,
+establish that the program is harmless, or prove acceptance by that
+workstation's policy. No support submission or binary fix is claimed by this
+documentation update.
 
 The software does not modify endpoint protection, firewall rules or certificate
 trust stores. No installation step should add a test root certificate or an

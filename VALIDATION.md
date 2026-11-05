@@ -84,7 +84,37 @@ L'essai fonctionnel et mémoire est réussi pour cette configuration. Il ne
 constitue pas une évaluation générale de la qualité du modèle ni une
 qualification de l'installation complète sur le PC cible. Les exécutables de
 ce run sont explicitement **non signés** (`NotSigned`) ; aucun certificat réel
-n'a été utilisé et la compatibilité TEHTRIS reste non validée.
+n'a été utilisé. Le signalement TEHTRIS ci-dessous est distinct de ces essais
+fonctionnels et mémoire.
+
+## TEHTRIS — blocage signalé le 5 novembre 2026
+
+L’utilisateur signale un arrêt et une mise en quarantaine de
+`OpenCodeLocal.exe` après la première saisie « salut », avec un pack présenté
+comme 1.2.0. La notification affiche **Malware detected**. **Le blocage est
+observé sur le poste signalé**, mais l’empreinte du fichier effectivement
+bloqué et la règle de détection ne sont pas disponibles. La cause et la
+correspondance exacte avec le binaire publié restent à qualifier ; aucun
+faux positif n’est établi.
+
+L’identité attendue provient du [rapport Windows 1.2.0](validation/windows-unsigned-1.2.0.json),
+entrée `moe/native/OpenCodeLocal.exe` et contrôle de son extraction du setup :
+
+| Élément du lanceur attendu | Valeur |
+| --- | --- |
+| Version | `1.2.0` |
+| Taille | 3 498 714 octets |
+| SHA-256 | `ed0f93d403253f6c8779312e1f97851d303f552276e4330da4ea902b7b6f7ac0` |
+| Signature Authenticode | `NotSigned` |
+
+Ce SHA-256 n’est ni celui de `Setup.exe`, ni un hash fourni par l’EDR du poste.
+Le lanceur reste en attente des processus pendant la conversation ; il ne lit
+pas le message utilisateur. Son Job Object arrête les enfants quand le parent
+est terminé, ce qui peut expliquer l’arrêt de toute la session sans identifier
+la cause de l’alerte. Le [dossier TEHTRIS](docs/TEHTRIS.md) conserve les faits,
+les références de code et les éléments à recueillir auprès de l’administration
+du parc ou du support. Aucun test d’acceptation TEHTRIS réussi ni correctif
+binaire à cet incident n’est revendiqué.
 
 ## Publication et retrait des anciennes versions
 
@@ -229,7 +259,7 @@ Contrôles réalisés le 4 novembre 2026. Les résultats distinguent compilation
 | Modèle Qwen3.8-27B complet | Taille et SHA-256 vérifiés après téléchargement | Empreinte figée dans `config/packs.json` |
 | Tokenizer, chargement, template et génération 32 Go | Réussis avec llama.cpp b12089 Linux | Contexte réduit à 1 024 tokens et hôte limité à 8 Gio |
 | Appel d’outil 32 Go | `finish_reason=tool_calls`, fonction `done`, arguments `{}` | Pas de boucle complète d’exécution OpenCode ; le choix d’outil forcé par objet est non pris en charge par ce runtime |
-| Compatibilité TEHTRIS | Non validée | Une détection sur l’ancien lanceur reste à qualifier |
+| Compatibilité TEHTRIS | Non validée au 4 novembre 2026 | État historique ; le signalement du 5 novembre sur le pack présenté comme 1.2.0 est décrit plus haut |
 
 Rapports : `validation/pack-16go.json`, `validation/pack-32go.json`, `validation/model-32go-parts.json`, `validation/model-32go-compatibility.json`, `validation/assembler-new-profiles.json` et `validation/installer-paths.json`.
 

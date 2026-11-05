@@ -82,9 +82,13 @@ pas présentée comme acceptée.
 
 Voir la [Code signing policy](CODE_SIGNING.md), la [politique de confidentialité](PRIVACY.md)
 et le [dossier de candidature](docs/SIGNPATH_APPLICATION.md).
-Une détection TEHTRIS sur un ancien lanceur reste à qualifier : cette version
-ne promet pas son acceptation et ne modifie aucune protection du poste.
-[Informations pour le diagnostic](docs/TEHTRIS.md).
+**Un nouveau blocage TEHTRIS a été signalé le 5 novembre 2026**, avec un pack
+présenté comme 1.2.0 : arrêt et quarantaine de `OpenCodeLocal.exe` après la
+première saisie « salut ». Le SHA-256 du fichier bloqué et la règle de détection
+ne sont pas disponibles ; la cause reste à qualifier. Les validations de
+construction et du modèle ne prouvent pas l’acceptation par l’EDR. Le
+[dossier TEHTRIS](docs/TEHTRIS.md) distingue l’identité attendue du lanceur,
+l’historique et les éléments à recueillir. Aucune protection du poste n’est modifiée.
 
 ## Construction et validation
 
