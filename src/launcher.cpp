@@ -446,8 +446,8 @@ uint64_t EstimatedSessionMemoryMB(int context) {
     if (!IsAllowedContext(context))
         throw std::runtime_error("La taille de contexte n’est pas proposée par ce pack.");
     // Count every expert's mapped weights, not just the experts active for a
-    // token. The allowance also covers the engine, OpenCode and one recurrent
-    // checkpoint. This is a startup estimate, not a Windows memory limit.
+    // token. The allowance also covers the engine, OpenCode and four recurrent
+    // checkpoints. This is a startup estimate, not a Windows memory limit.
     const uint64_t weights = (kModelBytes + 1024ULL * 1024 - 1) / (1024ULL * 1024);
     const uint64_t contextBlocks = (static_cast<uint64_t>(context) + 4095) / 4096;
     return weights + static_cast<uint64_t>(PackConfig::RuntimeOverheadMB) +
@@ -876,14 +876,15 @@ Process StartEngine(HANDLE job, unsigned short port, const std::string& token, i
     args.insert(args.end(), {
         L"--alias", kAlias, L"--no-webui",
         // The upstream 8 GiB prompt-cache default is separate from the KV
-        // buffers. Disable it and retain only one recurrent-state checkpoint.
-        L"--cache-ram", L"0", L"--ctx-checkpoints", L"1",
+        // buffers. Disable it; four small recurrent checkpoints preserve useful
+        // message boundaries without retaining the upstream 32-state default.
+        L"--cache-ram", L"0", L"--ctx-checkpoints", L"4",
         L"--host", L"127.0.0.1", L"--port", std::to_wstring(port),
         L"--api-key", Wide(token)
     });
     fs::path output = g.paths.logs / (L"moteur-" + TimeStamp() + L".log");
     Log(L"Démarrage du moteur CPU : " + InferenceSummary(context, cpu) +
-        L", cache de prompts RAM=0 Mo, checkpoints=1" +
+        L", cache de prompts RAM=0 Mo, checkpoints=4" +
         L", adresse=127.0.0.1:" + std::to_wstring(port) + L", journal=" + output.filename().wstring());
     auto process = StartProcess(g.paths.engine, args, g.paths.install, ChildEnvironment(), job, false, output);
     WaitForEngine(process, port, token);
@@ -1003,7 +1004,7 @@ std::wstring DiagnosticReport(bool* valid = nullptr) {
     report << L"Cache KV K/V : " << PackConfig::CacheTypeK << L" / " << PackConfig::CacheTypeV << L"\r\n";
     report << L"Flash Attention : " << (PackConfig::FlashAttention ? L"activée" : L"désactivée") << L"\r\n";
     report << L"Batch / micro-batch : " << PackConfig::BatchSize << L" / " << PackConfig::MicroBatchSize << L"\r\n";
-    report << L"Serveur : une séquence ; cache de prompts RAM désactivé ; un checkpoint récurrent\r\n";
+    report << L"Serveur : une séquence ; cache de prompts RAM désactivé ; quatre checkpoints récurrents\r\n";
     report << L"Discussion directe : une séquence, sans cache de prompts serveur\r\n\r\n";
     bool allValid = true;
     const std::vector<std::pair<std::wstring, fs::path>> files = {

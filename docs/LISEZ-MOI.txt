@@ -28,7 +28,7 @@ SHA-256 : 2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef
 Source figée : https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf
 Contexte initial : 8192 tokens. Une session de calcul à la fois.
 Profil mémoire : poids mappés, aucune copie de repacking, cache de conversations
-désactivé, un seul checkpoint, petits lots et cache KV BF16.
+désactivé, quatre checkpoints, petits lots et cache KV BF16.
 Le lanceur vérifie un budget estimé pour le modèle et les outils, auquel il
 ajoute 6 Gio de réserve pour vos autres applications.
 Prévoir environ 20 Gio disponibles avant lancement sur un PC de 32 Gio.

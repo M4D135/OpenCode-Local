@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 from datetime import datetime, timezone
+import errno
 import json
 import os
 from pathlib import Path
@@ -33,6 +34,10 @@ from pack_profiles import ROOT, configure_opencode, load_pack
 
 GIB = 1024**3
 MAX_RSS_BYTES = 14 * GIB
+MAX_RUNTIME_SECONDS = 1800
+DEFAULT_RUNTIME_SECONDS = MAX_RUNTIME_SECONDS
+OPENCODE_TIMEOUT_SECONDS = 800
+CLEANUP_RESERVE_SECONDS = 20
 
 
 class DeadlineExpired(TimeoutError):
@@ -62,6 +67,24 @@ def small_tail(path: Path, maximum: int = 12000) -> str:
     with path.open("rb") as stream:
         stream.seek(max(0, path.stat().st_size - maximum))
         return stream.read(maximum).decode("utf-8", "replace")
+
+
+def opencode_log_tails(env: dict[str, str]) -> dict:
+    """Keep bounded diagnostics before the isolated profile is removed."""
+    directory = Path(env["XDG_DATA_HOME"]) / "opencode/log"
+    result = {"directory": str(directory), "files": [], "errors": []}
+    try:
+        paths = sorted((path for path in directory.glob("*.log") if path.is_file()),
+                       key=lambda path: path.stat().st_mtime_ns)[-3:]
+        for path in paths:
+            try:
+                result["files"].append({"filename": path.name, "bytes": path.stat().st_size,
+                                        "tail": small_tail(path, 24000)})
+            except OSError as error:
+                result["errors"].append(f"{path.name}: {error}")
+    except OSError as error:
+        result["errors"].append(str(error))
+    return result
 
 
 def process_status(pid: int) -> dict[str, int]:
@@ -134,6 +157,7 @@ class MemoryMonitor:
             "host_initial": host_memory(),
             "minimum_host_available_bytes": host_memory()["MemAvailable"],
             "peak_tracked_swap_bytes": 0,
+            "process_exit_races": 0,
             "errors": [],
         }
         self.cgroup = Path("/sys/fs/cgroup")
@@ -197,8 +221,15 @@ class MemoryMonitor:
                 engine_smaps_rss, model_rss = model_mapping_rss(engine_pid, self.model)
                 full_estimate = (self.model_bytes + max(0, engine_smaps_rss - model_rss)
                                  + max(0, totals["engine"] - engine_root_rss) + totals["opencode"])
-            except FileNotFoundError:
-                pass  # normal process exit between samples
+            except OSError as error:
+                # Linux can return ENOENT before opening smaps, or ESRCH
+                # while reading it if the process exits in the meantime.
+                # Other failures (permissions, I/O, malformed data) must
+                # still reach the monitor's error list and fail the gate.
+                if error.errno not in {errno.ENOENT, errno.ESRCH}:
+                    raise
+                with self.lock:
+                    self.result["process_exit_races"] += 1
         validator_rss = process_status(os.getpid()).get("VmRSS", 0)
         combined = totals["engine"] + totals["opencode"]
         current_host = host_memory()
@@ -248,7 +279,7 @@ class Runtime:
         self.monitor = monitor
         self.processes: list[subprocess.Popen] = []
 
-    def remaining(self, maximum: float = 1200) -> float:
+    def remaining(self, maximum: float = MAX_RUNTIME_SECONDS) -> float:
         remaining = self.deadline - time.monotonic()
         if remaining <= 0:
             raise DeadlineExpired("Global runtime validation deadline reached")
@@ -354,7 +385,7 @@ def engine_arguments(engine: Path, model: Path, pack: dict, context: int,
             "--parallel", "1", "--n-predict", str(min(pack["output_tokens"], context // 2)),
             "--jinja", "--reasoning", "off", "--reasoning-budget", "0", "--offline",
             "--alias", pack["model"]["alias"], "--no-webui", "--cache-ram", "0",
-            "--ctx-checkpoints", "1", "--host", "127.0.0.1", "--port", str(port), "--api-key", key]
+            "--ctx-checkpoints", "4", "--host", "127.0.0.1", "--port", str(port), "--api-key", key]
 
 
 def response_message(response: dict) -> dict:
@@ -401,18 +432,24 @@ def seed_opencode(seed: Path, profile: Path, pack: dict, context: int,
 
 
 def run_opencode(runtime: Runtime, binary: Path, command: list[str], project: Path,
-                 env: dict, prefix: Path, timeout: int = 420) -> dict:
+                 env: dict, prefix: Path, timeout: int = OPENCODE_TIMEOUT_SECONDS) -> dict:
     stdout_path, stderr_path = prefix.with_suffix(".stdout"), prefix.with_suffix(".stderr")
     started = time.monotonic()
     timed_out = False
+    global_deadline_expired = False
     code = None
+    allocated_timeout = runtime.remaining(timeout)
     with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
         process = runtime.launch([str(binary), *command], label="opencode", cwd=project,
                                  env=env, stdout=stdout, stderr=stderr)
         try:
-            code = process.wait(timeout=runtime.remaining(timeout))
+            code = process.wait(timeout=allocated_timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
+        except DeadlineExpired:
+            # Preserve logs and events even if the global alarm interrupted
+            # a long prompt evaluation. This remains a failed, timed-out test.
+            timed_out = global_deadline_expired = True
         finally:
             runtime.terminate(process)
     text = stdout_path.read_text(encoding="utf-8", errors="replace")
@@ -428,9 +465,13 @@ def run_opencode(runtime: Runtime, binary: Path, command: list[str], project: Pa
         document = json.loads(text)
     except json.JSONDecodeError:
         document = None
-    return {"exit_code": code, "timed_out": timed_out, "seconds": round(time.monotonic() - started, 3),
+    return {"exit_code": code, "final_process_exit_code": process.returncode,
+            "timed_out": timed_out, "global_deadline_expired": global_deadline_expired,
+            "requested_timeout_seconds": timeout, "allocated_timeout_seconds": round(allocated_timeout, 3),
+            "seconds": round(time.monotonic() - started, 3),
             "events": events, "document": document,
-            "stdout_tail": text[-16000:], "stderr_tail": small_tail(stderr_path)}
+            "stdout_tail": text[-16000:], "stderr_tail": small_tail(stderr_path),
+            "runtime_logs": opencode_log_tails(env)}
 
 
 def opencode_checks(runtime: Runtime, binary: Path, seed: Path, profile: Path,
@@ -448,6 +489,12 @@ def opencode_checks(runtime: Runtime, binary: Path, seed: Path, profile: Path,
     effective = run_opencode(runtime, binary, ["debug", "config"], project, env,
                              profile / "opencode-config", timeout=90)
     resolved = effective.get("document")
+    expected_prompt = config.get("agent", {}).get("build", {}).get("prompt")
+    effective["production_build_prompt_configured"] = expected_prompt is not None
+    effective["build_prompt_matches_production"] = (
+        isinstance(resolved, dict)
+        and resolved.get("agent", {}).get("build", {}).get("prompt") == expected_prompt
+    )
     effective["passed"] = (
         effective["exit_code"] == 0 and isinstance(resolved, dict)
         and resolved.get("model") == config["model"]
@@ -455,10 +502,11 @@ def opencode_checks(runtime: Runtime, binary: Path, seed: Path, profile: Path,
         and resolved.get("permission") == config["permission"]
         and resolved.get("provider", {}).get("local", {}).get("models", {}).get(
             pack["model"]["alias"], {}).get("limit", {}).get("context") == context
+        and (expected_prompt is None or effective["build_prompt_matches_production"])
     )
     result["checks"]["effective_configuration"] = effective
     if not effective["passed"]:
-        result["error"] = "OpenCode effective model, context or permissions differ from the generated pack config"
+        result["error"] = "OpenCode effective model, context, build prompt or permissions differ from the generated pack config"
         return result
     command = ["run", "--format", "json", "--model", config["model"], "--agent", "build"]
     prompt = ("Lis uniquement le fichier texte " + str(proof_file) +
@@ -489,7 +537,7 @@ def opencode_checks(runtime: Runtime, binary: Path, seed: Path, profile: Path,
               " par exactement WRITE_PERMISSION_PROBE. Ceci est un test local de demande d'autorisation. "
               "N'utilise pas le shell. Si l'autorisation est refusée, arrête-toi immédiatement sans réessayer.")
     denied = run_opencode(runtime, binary, [*command, "--title", "Local MoE permission smoke", prompt],
-                          project, env, profile / "opencode-permission", timeout=300)
+                          project, env, profile / "opencode-permission")
     errors = [event.get("part", {}) for event in denied["events"]
               if event.get("type") == "tool_use" and isinstance(event.get("part"), dict)
               and event["part"].get("tool") in {"write", "edit", "apply_patch"}
@@ -521,9 +569,11 @@ def main() -> int:
     parser.add_argument("--opencode", type=Path)
     parser.add_argument("--offline-seed", type=Path, default=ROOT / "build/payload/wad/offline-cache")
     parser.add_argument("--context", type=int, default=8192)
-    parser.add_argument("--timeout", type=int, default=1150, help="Total seconds including cleanup, at most 1200")
+    parser.add_argument("--timeout", type=int, default=DEFAULT_RUNTIME_SECONDS,
+                        help=f"Total seconds including cleanup, at most {MAX_RUNTIME_SECONDS}")
     args = parser.parse_args()
-    require(60 <= args.timeout <= 1200, "--timeout must be between 60 and 1200 seconds")
+    require(60 <= args.timeout <= MAX_RUNTIME_SECONDS,
+            f"--timeout must be between 60 and {MAX_RUNTIME_SECONDS} seconds")
     require(args.report.resolve() not in {args.engine.resolve(), args.model.resolve(),
                                           args.opencode.resolve() if args.opencode else None},
             "Report must not replace a runtime input")
@@ -534,6 +584,9 @@ def main() -> int:
         "platform": platform.platform(), "python": platform.python_version(),
         "scope": "Linux CPU functional/memory smoke, not Windows qualification or a quality benchmark",
         "windows_execution": False, "quality_benchmark": False, "threads": 4,
+        "timeouts": {"global_seconds": args.timeout, "cleanup_reserve_seconds": CLEANUP_RESERVE_SECONDS,
+                     "opencode_session_seconds": OPENCODE_TIMEOUT_SECONDS,
+                     "reason": "Observed CPU prefill of about 7150 tokens took over 420 seconds; allow two real harness sessions without assuming cache reuse"},
         "tests": {name: {"passed": False, "executed": False}
                   for name in ("text", "tool_call", "tool_result", "opencode")},
         "model": {"filename": args.model.name, "bytes": None, "sha256": None, "sha256_verified": False},
@@ -564,10 +617,10 @@ def main() -> int:
         require(not args.opencode or (args.opencode.is_file() and os.access(args.opencode, os.X_OK)),
                 "Requested OpenCode executable is missing")
         previous_handler = signal.signal(signal.SIGALRM, timed_out)
-        signal.setitimer(signal.ITIMER_REAL, args.timeout - 15)
+        signal.setitimer(signal.ITIMER_REAL, args.timeout - CLEANUP_RESERVE_SECONDS)
         monitor = MemoryMonitor(model, initial_stat.st_size)
         monitor.start()
-        runtime = Runtime(started + args.timeout - 15, monitor)
+        runtime = Runtime(started + args.timeout - CLEANUP_RESERVE_SECONDS, monitor)
         with tempfile.TemporaryDirectory(prefix="opencode-moe-validation-") as temporary:
             work = Path(temporary)
             project, profile = work / "project", work / "profile"
@@ -666,7 +719,9 @@ def main() -> int:
                         report["tests"]["opencode"]["reason"] = "Not requested; no harness success is claimed"
                     monitor.sample()
                 finally:
-                    report["engine"]["server_log_tail"] = small_tail(server_log)
+                    report["engine"]["server_log_tail"] = small_tail(server_log, 48000)
+                    if args.opencode:
+                        report["tests"]["opencode"]["runtime_logs"] = opencode_log_tails(env)
                     runtime.cleanup()
             final_stat = model.stat()
             report["model"]["unchanged_during_test"] = (initial_stat.st_size, initial_stat.st_mtime_ns, initial_stat.st_ino) == (

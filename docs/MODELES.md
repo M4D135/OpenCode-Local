@@ -35,9 +35,15 @@ totale du processus sont trois mesures différentes.
 ## Réglages mémoire
 
 Le cache serveur de prompts est désactivé (`--cache-ram 0`), les checkpoints
-récurrents sont limités à un, et le chargement utilise `--load-mode mmap
+récurrents sont limités à quatre, et le chargement utilise `--load-mode mmap
 --no-repack`. Le runtime b12089 pourrait sinon consacrer par défaut jusqu'à
 8 Gio au cache de prompts, indépendamment du cache KV.
+
+Les quatre checkpoints conservent davantage de débuts de messages et de fins de
+préremplissage. Cela limite les recalculs de préfixes lors des échanges d'outils,
+sans garantir une réutilisation si les premières instructions changent. Le premier
+essai a observé 62,813 Mio par checkpoint sur ce modèle. Le prompt général de
+l'agent `build` est également raccourci ; les outils et permissions sont conservés.
 
 Le contexte initial est **8 192 tokens** ; 4 096 reste disponible. Le modèle
 hybride n'a que dix couches d'attention complète : le cache KV BF16 théorique
@@ -46,9 +52,9 @@ est d'environ 160 Mio à 8K, hors états récurrents et buffers. Réduire ce con
 schémas d'outils OpenCode. BF16 est conservé pour éviter une quantification
 supplémentaire du cache pour un gain limité.
 
-Le budget de démarrage compte les poids complets, 2 Gio de surcoût moteur/outils
+Le budget de démarrage compte les poids complets, 2,25 Gio de surcoût moteur/outils
 et 256 Mio par bloc de 4K pour les caches/buffers, puis ajoute 6 Gio de réserve.
-À 8K : 12 819 Mio estimés pour la session, 18 963 Mio libres demandés au total.
+À 8K : 13 075 Mio estimés pour la session, 19 219 Mio libres demandés au total.
 Ce calcul est une précaution de démarrage, **pas une réservation de RAM** et
 pas un maximum imposé par Windows.
 

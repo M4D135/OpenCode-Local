@@ -1,0 +1,457 @@
+{
+  "schema_version": 1,
+  "passed": false,
+  "started_utc": "2026-11-05T08:26:02.169384+00:00",
+  "context": 8192,
+  "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
+  "python": "3.12.16",
+  "scope": "Linux CPU functional/memory smoke, not Windows qualification or a quality benchmark",
+  "windows_execution": false,
+  "quality_benchmark": false,
+  "threads": 4,
+  "tests": {
+    "text": {
+      "passed": true,
+      "executed": true,
+      "seconds": 2.123,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "LOCAL_OK"
+            }
+          }
+        ],
+        "created": 1793867165,
+        "model": "qwen3.6-35b-a3b",
+        "system_fingerprint": "b12089-9309bf1bc",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 3,
+          "prompt_tokens": 24,
+          "total_tokens": 27,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-cHUq2ekG6ldkt3gSs5x9vdQqHKbo36I4",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 24,
+          "prompt_ms": 1902.228,
+          "prompt_per_token_ms": 79.2595,
+          "prompt_per_second": 12.616784107898738,
+          "predicted_n": 3,
+          "predicted_ms": 217.118,
+          "predicted_per_token_ms": 108.559,
+          "predicted_per_second": 9.211580799380982
+        }
+      }
+    },
+    "tool_call": {
+      "passed": true,
+      "executed": true,
+      "seconds": 23.0,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "tool_calls",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "",
+              "tool_calls": [
+                {
+                  "type": "function",
+                  "function": {
+                    "name": "read_file",
+                    "arguments": "{\"path\":\"/tmp/opencode-moe-validation-k0crmck5/project/proof.txt\"}"
+                  },
+                  "id": "V5qMCIoNPo7LMl5JnJVzO0DOPq9QQgZH"
+                }
+              ]
+            }
+          }
+        ],
+        "created": 1793867188,
+        "model": "qwen3.6-35b-a3b",
+        "system_fingerprint": "b12089-9309bf1bc",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 39,
+          "prompt_tokens": 322,
+          "total_tokens": 361,
+          "prompt_tokens_details": {
+            "cached_tokens": 0
+          }
+        },
+        "id": "chatcmpl-LtkI2ZNOIK1zfdilyuAg59jB4nbCsh13",
+        "timings": {
+          "cache_n": 0,
+          "prompt_n": 322,
+          "prompt_ms": 18169.381,
+          "prompt_per_token_ms": 56.42664906832299,
+          "prompt_per_second": 17.72212272944246,
+          "predicted_n": 39,
+          "predicted_ms": 4825.15,
+          "predicted_per_token_ms": 126.97763157894735,
+          "predicted_per_second": 7.8754028372174965
+        }
+      }
+    },
+    "tool_result": {
+      "passed": true,
+      "executed": true,
+      "seconds": 6.66,
+      "response": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "message": {
+              "role": "assistant",
+              "content": "PROOF=LOCAL_MOE_PROOF_e021cab8bef31b5e7a5a6313"
+            }
+          }
+        ],
+        "created": 1793867195,
+        "model": "qwen3.6-35b-a3b",
+        "system_fingerprint": "b12089-9309bf1bc",
+        "object": "chat.completion",
+        "usage": {
+          "completion_tokens": 29,
+          "prompt_tokens": 406,
+          "total_tokens": 435,
+          "prompt_tokens_details": {
+            "cached_tokens": 360
+          }
+        },
+        "id": "chatcmpl-sM4gedOyRWk6fRfl5e5DbrwKCDFBQ2fM",
+        "timings": {
+          "cache_n": 360,
+          "prompt_n": 46,
+          "prompt_ms": 3099.474,
+          "prompt_per_token_ms": 67.37986956521739,
+          "prompt_per_second": 14.841227898669256,
+          "predicted_n": 29,
+          "predicted_ms": 3552.606,
+          "predicted_per_token_ms": 126.87878571428573,
+          "predicted_per_second": 7.881538228556727
+        }
+      },
+      "proof_was_absent_from_user_prompt": true
+    },
+    "opencode": {
+      "passed": false,
+      "executed": true,
+      "checks": {
+        "effective_configuration": {
+          "exit_code": 0,
+          "timed_out": false,
+          "seconds": 0.92,
+          "events": [],
+          "document": {
+            "$schema": "https://opencode.ai/config.json",
+            "model": "local/qwen3.6-35b-a3b",
+            "small_model": "local/qwen3.6-35b-a3b",
+            "enabled_providers": [
+              "local"
+            ],
+            "default_agent": "build",
+            "autoupdate": false,
+            "share": "disabled",
+            "snapshot": false,
+            "shell": "/bin/bash",
+            "lsp": false,
+            "formatter": false,
+            "plugin": [],
+            "mcp": {},
+            "experimental": {
+              "openTelemetry": false
+            },
+            "compaction": {
+              "auto": true,
+              "prune": true,
+              "reserved": 1024,
+              "preserve_recent_tokens": 2048,
+              "tail_turns": 2
+            },
+            "permission": {
+              "*": "ask",
+              "read": {
+                "*": "allow",
+                "*.env": "ask",
+                "*.env.*": "ask"
+              },
+              "glob": "allow",
+              "grep": "allow",
+              "list": "allow",
+              "question": "allow",
+              "todowrite": "allow",
+              "edit": "ask",
+              "bash": "ask",
+              "task": "ask",
+              "external_directory": "ask",
+              "doom_loop": "ask",
+              "webfetch": "deny",
+              "websearch": "deny",
+              "codesearch": "deny",
+              "lsp": "deny"
+            },
+            "provider": {
+              "local": {
+                "name": "Qwen local - hors ligne",
+                "npm": "@ai-sdk/openai-compatible",
+                "options": {
+                  "baseURL": "http://127.0.0.1:39169/v1",
+                  "apiKey": "***",
+                  "timeout": 900000,
+                  "headerTimeout": 900000,
+                  "chunkTimeout": 300000
+                },
+                "models": {
+                  "qwen3.6-35b-a3b": {
+                    "name": "Qwen3.6-35B-A3B UD-IQ2_XXS — MoE local",
+                    "family": "qwen",
+                    "tool_call": true,
+                    "reasoning": false,
+                    "temperature": true,
+                    "attachment": false,
+                    "modalities": {
+                      "input": [
+                        "text"
+                      ],
+                      "output": [
+                        "text"
+                      ]
+                    },
+                    "cost": {
+                      "input": 0,
+                      "output": 0
+                    },
+                    "limit": {
+                      "context": 8192,
+                      "output": 2048
+                    }
+                  }
+                }
+              }
+            },
+            "agent": {},
+            "mode": {},
+            "command": {},
+            "username": "unknown"
+          },
+          "stdout_tail": "{\n  \"$schema\": \"https://opencode.ai/config.json\",\n  \"model\": \"local/qwen3.6-35b-a3b\",\n  \"small_model\": \"local/qwen3.6-35b-a3b\",\n  \"enabled_providers\": [\n    \"local\"\n  ],\n  \"default_agent\": \"build\",\n  \"autoupdate\": false,\n  \"share\": \"disabled\",\n  \"snapshot\": false,\n  \"shell\": \"/bin/bash\",\n  \"lsp\": false,\n  \"formatter\": false,\n  \"plugin\": [],\n  \"mcp\": {},\n  \"experimental\": {\n    \"openTelemetry\": false\n  },\n  \"compaction\": {\n    \"auto\": true,\n    \"prune\": true,\n    \"reserved\": 1024,\n    \"preserve_recent_tokens\": 2048,\n    \"tail_turns\": 2\n  },\n  \"permission\": {\n    \"*\": \"ask\",\n    \"read\": {\n      \"*\": \"allow\",\n      \"*.env\": \"ask\",\n      \"*.env.*\": \"ask\"\n    },\n    \"glob\": \"allow\",\n    \"grep\": \"allow\",\n    \"list\": \"allow\",\n    \"question\": \"allow\",\n    \"todowrite\": \"allow\",\n    \"edit\": \"ask\",\n    \"bash\": \"ask\",\n    \"task\": \"ask\",\n    \"external_directory\": \"ask\",\n    \"doom_loop\": \"ask\",\n    \"webfetch\": \"deny\",\n    \"websearch\": \"deny\",\n    \"codesearch\": \"deny\",\n    \"lsp\": \"deny\"\n  },\n  \"provider\": {\n    \"local\": {\n      \"name\": \"Qwen local - hors ligne\",\n      \"npm\": \"@ai-sdk/openai-compatible\",\n      \"options\": {\n        \"baseURL\": \"http://127.0.0.1:39169/v1\",\n        \"apiKey\": \"***\",\n        \"timeout\": 900000,\n        \"headerTimeout\": 900000,\n        \"chunkTimeout\": 300000\n      },\n      \"models\": {\n        \"qwen3.6-35b-a3b\": {\n          \"name\": \"Qwen3.6-35B-A3B UD-IQ2_XXS — MoE local\",\n          \"family\": \"qwen\",\n          \"tool_call\": true,\n          \"reasoning\": false,\n          \"temperature\": true,\n          \"attachment\": false,\n          \"modalities\": {\n            \"input\": [\n              \"text\"\n            ],\n            \"output\": [\n              \"text\"\n            ]\n          },\n          \"cost\": {\n            \"input\": 0,\n            \"output\": 0\n          },\n          \"limit\": {\n            \"context\": 8192,\n            \"output\": 2048\n          }\n        }\n      }\n    }\n  },\n  \"agent\": {},\n  \"mode\": {},\n  \"command\": {},\n  \"username\": \"unknown\"\n}\n",
+          "stderr_tail": "",
+          "passed": true
+        },
+        "read": {
+          "exit_code": null,
+          "timed_out": true,
+          "seconds": 420.115,
+          "events": [],
+          "document": null,
+          "stdout_tail": "",
+          "stderr_tail": "",
+          "proof_in_answer": false,
+          "successful_read_tool": false,
+          "passed": false
+        }
+      },
+      "configuration_difference": "Only shell path /bin/bash instead of Windows PowerShell",
+      "automatic_permissions_approved": false,
+      "permissions": {
+        "*": "ask",
+        "read": {
+          "*": "allow",
+          "*.env": "ask",
+          "*.env.*": "ask"
+        },
+        "glob": "allow",
+        "grep": "allow",
+        "list": "allow",
+        "question": "allow",
+        "todowrite": "allow",
+        "edit": "ask",
+        "bash": "ask",
+        "task": "ask",
+        "external_directory": "ask",
+        "doom_loop": "ask",
+        "webfetch": "deny",
+        "websearch": "deny",
+        "codesearch": "deny",
+        "lsp": "deny"
+      },
+      "model": "local/qwen3.6-35b-a3b",
+      "context": 8192,
+      "offline_seed_version": "1.19.5",
+      "error": "OpenCode did not complete the real read tool and return its unknown proof"
+    }
+  },
+  "model": {
+    "filename": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+    "bytes": 10756586464,
+    "sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+    "sha256_verified": false,
+    "revision": "a483e9e6cbd595906af30beda3187c2663a1118c",
+    "hash_verification": "Required upstream before invocation; not repeated here",
+    "unchanged_during_test": true
+  },
+  "memory": {
+    "measurement": "Linux /proc, sampled every 0.5 seconds; RSS sums may count shared pages twice",
+    "sample_interval_seconds": 0.5,
+    "samples": 680,
+    "peak_engine_rss_bytes": 11205087232,
+    "peak_engine_hwm_bytes": 11206488064,
+    "peak_opencode_rss_bytes": 505372672,
+    "peak_combined_rss_bytes": 11687682048,
+    "peak_validator_rss_bytes": 28205056,
+    "peak_including_validator_rss_bytes": 11715469312,
+    "peak_model_mapped_rss_bytes": 10745597952,
+    "peak_full_residency_estimate_bytes": 11698670560,
+    "full_residency_estimate": "All GGUF bytes + sampled engine non-model RSS + OpenCode process-tree RSS; estimate, not a measured Windows peak",
+    "rss_budget_bytes": 15032385536,
+    "host_initial": {
+      "MemTotal": 16760344576,
+      "MemAvailable": 15583145984,
+      "SwapTotal": 3221221376,
+      "SwapFree": 3221221376
+    },
+    "minimum_host_available_bytes": 14758588416,
+    "peak_tracked_swap_bytes": 0,
+    "errors": [
+      "[Errno 3] No such process"
+    ],
+    "cgroup": {
+      "scope": "Entire cgroup, including other runner processes and file cache"
+    },
+    "cgroup_final": {
+      "scope": "Entire cgroup, including other runner processes and file cache"
+    },
+    "passed": false
+  },
+  "engine": {
+    "filename": "llama-server",
+    "command": [
+      "/home/runner/work/OpenCode-Local/OpenCode-Local/qa/runtime-inputs/engine/llama-b12089/llama-server",
+      "--model",
+      "/home/runner/work/OpenCode-Local/OpenCode-Local/downloads/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+      "--ctx-size",
+      "8192",
+      "--n-gpu-layers",
+      "0",
+      "--load-mode",
+      "mmap",
+      "--no-repack",
+      "--threads",
+      "4",
+      "--threads-batch",
+      "4",
+      "--batch-size",
+      "256",
+      "--ubatch-size",
+      "64",
+      "--cache-type-k",
+      "bf16",
+      "--cache-type-v",
+      "bf16",
+      "--flash-attn",
+      "on",
+      "--parallel",
+      "1",
+      "--n-predict",
+      "2048",
+      "--jinja",
+      "--reasoning",
+      "off",
+      "--reasoning-budget",
+      "0",
+      "--offline",
+      "--alias",
+      "qwen3.6-35b-a3b",
+      "--no-webui",
+      "--cache-ram",
+      "0",
+      "--ctx-checkpoints",
+      "1",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "39169",
+      "--api-key",
+      "<redacted>"
+    ],
+    "same_inference_settings_as_launcher": true,
+    "thread_count_difference": "CI uses four threads; launcher chooses from host CPU",
+    "startup_seconds": 1.512,
+    "models": {
+      "models": [
+        {
+          "name": "qwen3.6-35b-a3b",
+          "model": "qwen3.6-35b-a3b",
+          "modified_at": "",
+          "size": "",
+          "digest": "",
+          "type": "model",
+          "description": "",
+          "tags": [
+            ""
+          ],
+          "capabilities": [
+            "completion"
+          ],
+          "parameters": "",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "",
+            "families": [
+              ""
+            ],
+            "parameter_size": "",
+            "quantization_level": ""
+          }
+        }
+      ],
+      "object": "list",
+      "data": [
+        {
+          "id": "qwen3.6-35b-a3b",
+          "aliases": [
+            "qwen3.6-35b-a3b"
+          ],
+          "tags": [],
+          "object": "model",
+          "architecture": {
+            "input_modalities": [
+              "text"
+            ],
+            "output_modalities": [
+              "text"
+            ]
+          },
+          "created": 1793867163,
+          "owned_by": "llamacpp",
+          "meta": {
+            "vocab_type": 2,
+            "n_vocab": 248320,
+            "n_ctx": 8192,
+            "n_ctx_train": 262144,
+            "n_embd": 2048,
+            "n_params": 34660610688,
+            "size": 10745596416,
+            "ftype": "IQ2_XXS - 2.0625 bpw"
+          }
+        }
+      ]
+    },
+    "server_log_tail": "0.00.009.861 I srv  llama_server: initializing ...\n0.00.009.878 I cmn  common_param: common_params_print_info: verbosity = 3 (adjust with the `-lv N` CLI arg)\n0.00.009.967 I srv  init_listene: The UI is disabled\n0.00.009.972 I srv  init_listene: Use --ui/--no-ui (or deprecated --webui/--no-webui) to enable/disable\n0.00.011.469 I srv    load_model: loading model '/home/runner/work/OpenCode-Local/OpenCode-Local/downloads/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf'\n0.00.877.528 I cmn          init: llama threadpool init, n_threads = 4\n0.01.344.254 I srv    load_model: initializing, n_slots = 1, n_ctx_slot = 8192, kv_unified = 'false'\n0.01.344.339 W srv          init: --cache-idle-slots requires --cache-ram, disabling\n0.01.351.837 W srv          init: chat template supports preserving reasoning, it is enabled by default (may use more tokens, disable via --no-reasoning-preserve)\n0.01.351.919 I srv  server_run_i: model loaded\n0.01.351.931 I srv  server_on_li: listening on http://127.0.0.1:39169\n0.01.508.442 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1\n0.01.508.542 I slot launch_slot_: id  0 | task 0 | processing task, is_child = 0\n0.03.627.932 I slot print_timing: id  0 | task 0 | prompt eval time =    1902.23 ms /    24 tokens (   79.26 ms per token,    12.62 tokens per second)\n0.03.627.998 I slot print_timing: id  0 | task 0 |        eval time =     217.12 ms /     3 tokens (  108.56 ms per token,     9.21 tokens per second)\n0.03.628.001 I slot print_timing: id  0 | task 0 |       total time =    2119.35 ms /    27 tokens\n0.03.628.006 I slot print_timing: id  0 | task 0 |    graphs reused =          2\n0.03.628.007 I slot print_timing: id  0 | task 0 |   graph reallocs =          0    /     0        (same size) / (changed size)\n0.03.628.048 I slot      release: id  0 | task 0 | stop processing: n_tokens = 26, truncated = 0\n0.03.636.112 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 26, t_last = 343008581\n0.03.636.586 I slot launch_slot_: id  0 | task 5 | processing task, is_child = 0\n0.17.504.196 I slot print_timing: id  0 | task 5 | prompt processing, n_tokens =    254, progress = 0.79, t =  13.87 s / 18.32 tokens per second\n0.18.471.187 I slot print_timing: id  0 | task 5 | prompt processing, n_tokens =    266, progress = 0.83, t =  14.83 s / 17.93 tokens per second\n0.18.471.271 W slot create_check: id  0 | task 5 | erasing old context checkpoint (pos_min = 253, pos_max = 253, n_tokens = 254, size = 62.813 MiB)\n0.21.414.565 I slot print_timing: id  0 | task 5 | prompt processing, n_tokens =    318, progress = 0.99, t =  17.78 s / 17.89 tokens per second\n0.21.414.709 W slot create_check: id  0 | task 5 | erasing old context checkpoint (pos_min = 265, pos_max = 265, n_tokens = 266, size = 62.813 MiB)\n0.26.631.155 I slot print_timing: id  0 | task 5 | prompt eval time =   18169.38 ms /   322 tokens (   56.43 ms per token,    17.72 tokens per second)\n0.26.631.224 I slot print_timing: id  0 | task 5 |        eval time =    4825.15 ms /    39 tokens (  126.98 ms per token,     7.88 tokens per second)\n0.26.631.254 I slot print_timing: id  0 | task 5 |       total time =   22994.53 ms /   361 tokens\n0.26.631.282 I slot print_timing: id  0 | task 5 |    graphs reused =         40\n0.26.631.311 I slot print_timing: id  0 | task 5 |   graph reallocs =          0    /     0        (same size) / (changed size)\n0.26.631.394 I slot      release: id  0 | task 5 | stop processing: n_tokens = 360, truncated = 0\n0.26.640.125 I slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.887 (> 0.100 thold), f_keep = 1.000\n0.26.640.208 I slot launch_slot_: id  0 | task 48 | processing task, is_child = 0\n0.26.640.246 W slot create_check: id  0 | task 48 | erasing old context checkpoint (pos_min = 317, pos_max = 317, n_tokens = 318, size = 62.813 MiB)\n0.29.254.225 W slot create_check: id  0 | task 48 | erasing old context checkpoint (pos_min = 359, pos_max = 359, n_tokens = 360, size = 62.813 MiB)\n0.33.292.333 I slot print_timing: id  0 | task 48 | prompt eval time =    3099.47 ms /    46 tokens (   67.38 ms per token,    14.84 tokens per second)\n0.33.292.342 I slot print_timing: id  0 | task 48 |        eval time =    3552.61 ms /    29 tokens (  126.88 ms per token,     7.88 tokens per second)\n0.33.292.343 I slot print_timing: id  0 | task 48 |       total time =    6652.08 ms /    75 tokens\n0.33.292.345 I slot print_timing: id  0 | task 48 |    graphs reused =         67\n0.33.292.346 I slot print_timing: id  0 | task 48 |   graph reallocs =          0    /     0        (same size) / (changed size)\n0.33.292.408 I slot      release: id  0 | task 48 | stop processing: n_tokens = 434, truncated = 0\n0.36.852.462 I slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 434, t_last = 372672940\n0.36.853.142 I slot launch_slot_: id  0 | task 79 | processing task, is_child = 0\n0.51.422.192 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =    256, progress = 0.04, t =  14.57 s / 17.57 tokens per second\n1.06.457.609 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =    512, progress = 0.07, t =  29.60 s / 17.29 tokens per second\n1.21.546.851 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =    768, progress = 0.11, t =  44.69 s / 17.18 tokens per second\n1.37.357.776 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   1024, progress = 0.14, t =  60.50 s / 16.92 tokens per second\n1.53.106.550 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   1280, progress = 0.18, t =  76.25 s / 16.79 tokens per second\n2.09.624.621 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   1536, progress = 0.21, t =  92.77 s / 16.56 tokens per second\n2.26.391.716 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   1792, progress = 0.25, t = 109.54 s / 16.36 tokens per second\n2.43.901.338 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   2048, progress = 0.29, t = 127.05 s / 16.12 tokens per second\n3.01.769.557 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   2304, progress = 0.32, t = 144.92 s / 15.90 tokens per second\n3.19.990.168 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   2560, progress = 0.36, t = 163.14 s / 15.69 tokens per second\n3.38.270.179 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   2816, progress = 0.39, t = 181.42 s / 15.52 tokens per second\n3.57.335.547 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   3072, progress = 0.43, t = 200.48 s / 15.32 tokens per second\n4.16.709.561 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   3328, progress = 0.47, t = 219.86 s / 15.14 tokens per second\n4.36.081.537 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   3584, progress = 0.50, t = 239.23 s / 14.98 tokens per second\n4.56.317.527 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   3840, progress = 0.54, t = 259.46 s / 14.80 tokens per second\n5.16.981.586 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   4096, progress = 0.57, t = 280.13 s / 14.62 tokens per second\n5.37.950.614 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   4352, progress = 0.61, t = 301.10 s / 14.45 tokens per second\n5.59.226.575 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   4608, progress = 0.64, t = 322.37 s / 14.29 tokens per second\n6.20.546.355 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   4864, progress = 0.68, t = 343.69 s / 14.15 tokens per second\n6.42.135.309 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   5120, progress = 0.72, t = 365.28 s / 14.02 tokens per second\n7.04.008.300 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   5376, progress = 0.75, t = 387.16 s / 13.89 tokens per second\n7.25.988.608 I slot print_timing: id  0 | task 79 | prompt processing, n_tokens =   5632, progress = 0.79, t = 409.14 s / 13.77 tokens per second\n7.34.930.103 W srv          stop: cancel task, id_task = 79\n"
+  },
+  "all_requested_tests_executed": true,
+  "finished_utc": "2026-11-05T08:33:40.560649+00:00",
+  "seconds": 458.391
+}

@@ -18,11 +18,12 @@ Aucun téléchargement n'est lancé sur le poste cible.
 **Qwen3.6-35B-A3B UD-IQ2_XXS** : MoE 35B total / 3B actifs, poids de **10,76 Go
 (10,02 Gio)**, soit **5,71 Go de moins** que l'ancien fichier 27B.
 
-- Cache de conversations du serveur désactivé ; un seul checkpoint.
+- Cache de conversations du serveur désactivé ; quatre checkpoints pour mieux réutiliser les préfixes de conversation.
+- Instructions générales OpenCode raccourcies, en conservant les outils et leurs permissions.
 - Poids mappés sans copie de repacking ; une seule session de calcul.
 - Contexte initial 8 192 tokens, cache KV BF16, batch 256 / micro-batch 64.
 - Threads limités aux cœurs physiques, avec une marge pour le poste.
-- Budget de démarrage estimé à **12,52 Gio**, plus **6 Gio de réserve**.
+- Budget de démarrage estimé à **12,77 Gio**, plus **6 Gio de réserve**.
 
 Le budget est une estimation et non un plafond Windows. Les experts inactifs
 comptent aussi dans la mémoire des poids. La quantification IQ2 peut réduire la

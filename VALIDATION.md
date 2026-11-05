@@ -1,14 +1,67 @@
 # Validation du pack unique MoE 1.2.0
 
-État de préparation au 5 novembre 2026 : les sources ont été adaptées au profil
-unique `moe`. La publication doit attendre les contrôles Windows, l'exécution
-réelle du nouveau GGUF et une session OpenCode. Aucun résultat du modèle 27B
-historique ci-dessous ne qualifie le nouveau modèle IQ2.
+## Contrôles Windows réussis — 5 novembre 2026
 
-Le budget estimé est de 12 819 Mio à 8K, avec 6 144 Mio de réserve. Les rapports
-mesurés de la release préciseront le RSS, les paramètres et leurs limites.
-Le contrôle d'intégrité des signatures reste testé en mode non signé ; aucun
-certificat réel n'est disponible et la compatibilité TEHTRIS reste non validée.
+Le [run GitHub Actions 41993863228](https://github.com/M4D135/OpenCode-Local/actions/runs/41993863228)
+a terminé avec succès ses jobs de construction et de validation Windows sur le
+commit `c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c`, pour le seul profil `moe`.
+Les contrôles ont été exécutés sous Windows NT 10.0.20348 avec PowerShell 7.6.9.
+Le [rapport Windows complet](validation/windows-unsigned-1.2.0.json) conserve
+les résultats détaillés, dont les cas de refus attendus.
+
+| Contrôle exécuté sous Windows | Résultat | Portée |
+| --- | --- | --- |
+| Contrôles principaux | 8/8 réussis | Trois exécutables natifs, diagnostic du lanceur, assembleur, fonctions NSIS et setup |
+| Assembleur sur petits fichiers | 38/38 réussis | Exécution réelle des fixtures de deux et onze parties, intégrité et préservation des données |
+| Assembleur de production MoE | 5/5 réussis | Exécutable Windows réel ; grandes tailles et rejets attendus |
+| Dossiers d'installation NSIS | 16/16 réussis | Dossiers neufs, Documents, espaces et Unicode ; protection des données et des anciennes installations |
+| Métadonnées du modèle NSIS | 8/8 réussis | GGUF complet, huit parties, tailles incorrectes, parties absentes et priorité du GGUF |
+| Archive du setup | Réussie | 3 821 entrées ; intégrité vérifiée et correspondance SHA-256 exacte des trois exécutables maison embarqués |
+| ZIP final | Réussi | Un seul `Setup.exe`, identique au setup validé ; empreintes et provenance enregistrées |
+
+Le setup validé contient **127 278 384 octets** et porte le SHA-256
+`8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291`.
+Le [manifeste de finalisation](validation/finalize-unsigned-1.2.0.json) conserve
+aussi l'empreinte du ZIP. La [synthèse de provenance](validation/windows-unsigned-summary-1.2.0.json)
+relie les rapports à ce commit, aux jobs et à l'artefact GitHub téléchargé ; son
+empreinte ZIP a été vérifiée contre le digest annoncé par GitHub. Seul le petit
+artefact de rapports a été récupéré pour cette synthèse.
+
+Ces contrôles Windows n'ont téléchargé ni chargé le modèle. Les vérifications
+de grandes tailles utilisent des fichiers creux ; le diagnostic du lanceur
+vérifie le refus attendu d'un paquet volontairement incomplet. Ils ne qualifient
+donc ni une session de modèle ni sa consommation de RAM. L'installation complète
+du pack avec les vrais poids sur un poste Windows 10/11 reste à vérifier.
+
+## Modèle et mémoire — validation en cours
+
+Lors de ce relevé, le [run de validation et publication 41994232790](https://github.com/M4D135/OpenCode-Local/actions/runs/41994232790)
+est encore en cours pour le même commit. L'exécution réelle du GGUF
+Qwen3.6-35B-A3B UD-IQ2_XXS, les appels d'outils, la session OpenCode et les mesures
+de mémoire ne disposent pas encore d'un résultat final conservé ici. Aucun
+résultat du modèle 27B historique ci-dessous ne qualifie ce modèle IQ2.
+
+Le budget estimé reste de **13 075 Mio à 8K**, avec **6 144 Mio de réserve**.
+Les mesures doivent confirmer ce budget avant publication ; elles préciseront
+le RSS, les paramètres et leurs limites. Les exécutables de ce run sont
+explicitement **non signés** (`NotSigned`) ; aucun certificat réel n'a été
+utilisé et la compatibilité TEHTRIS reste non validée.
+
+### Premier essai réel et correction du délai
+
+Le [premier essai Linux](validation/model-runtime-first-attempt-1.2.0.json),
+avec la configuration précédente à un checkpoint et le prompt OpenCode standard,
+a réussi la génération, l'appel d'outil et la restitution d'une preuve lue dans
+un fichier. Il **n'a pas validé le harnais complet** : le préremplissage continu
+du prompt OpenCode d'environ 7 150 tokens a dépassé le délai de 420 secondes.
+Une disparition normale de PID lors du nettoyage était également comptée à tort
+comme une erreur du moniteur. Le pic RSS partiel était de 11 687 682 048 octets.
+
+La nouvelle configuration raccourcit le prompt général sans retirer les outils,
+conserve quatre checkpoints et réserve 2,25 Gio de surcoût. Le validateur distingue
+les PID disparus des vraies erreurs et autorise 800 secondes par session, dans une
+limite totale de 30 minutes. Tous les contrôles de lecture, de refus d'écriture et
+de mémoire restent exigés. Le retest complet est encore nécessaire.
 
 ---
 

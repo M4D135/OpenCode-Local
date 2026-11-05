@@ -28,11 +28,11 @@ l'utiliser. Aucun téléchargement n'est lancé sur le poste cible.
 | Quantification | UD-IQ2_XXS, priorité à l'économie mémoire |
 | Fichier des poids | 10 756 586 464 octets : 10,76 Go / 10,02 Gio |
 | Contexte | 8 192 tokens par défaut ; 4 096 disponible |
-| Budget de session au démarrage | Estimation prudente de 12 819 Mio / 12,52 Gio à 8K |
+| Budget de session au démarrage | Estimation prudente de 13 075 Mio / 12,77 Gio à 8K |
 | Réserve pour les autres logiciels | 6 144 Mio / 6 Gio |
-| RAM libre nécessaire au démarrage | 18 963 Mio / 18,52 Gio à 8K |
+| RAM libre nécessaire au démarrage | 19 219 Mio / 18,77 Gio à 8K |
 | Poids | Mappés en mémoire, sans copie de repacking |
-| Cache de conversations du serveur | Désactivé ; un seul checkpoint récurrent |
+| Cache de conversations du serveur | Désactivé ; quatre checkpoints récurrents |
 | Cache KV | BF16, Flash Attention |
 | Calcul | Une séquence, batch 256, micro-batch 64 |
 | Threads | Cœurs physiques, maximum 8 ; un cœur laissé disponible à partir de 4 |

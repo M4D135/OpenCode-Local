@@ -100,7 +100,7 @@ SHA-256 : {model["sha256"]}
 Source figée : {model["url"]}
 Contexte initial : {pack["default_context"]} tokens. Une session de calcul à la fois.
 Profil mémoire : poids mappés, aucune copie de repacking, cache de conversations
-désactivé, un seul checkpoint, petits lots et cache KV BF16.
+désactivé, quatre checkpoints, petits lots et cache KV BF16.
 Le lanceur vérifie un budget estimé pour le modèle et les outils, auquel il
 ajoute {pack["memory_reserve_mb"] // 1024} Gio de réserve pour vos autres applications.
 Prévoir environ 20 Gio disponibles avant lancement sur un PC de 32 Gio.
