@@ -77,10 +77,12 @@ OutFile "{nsis_escape(str(executable))}"
 !include "{nsis_escape(str(config))}"
 !define PRODUCT_MARKER {definition("PRODUCT_MARKER")}
 !define MARKER_PATH {definition("MARKER_PATH")}
+!define MODEL_PATH {definition("MODEL_PATH")}
 !define PROFILE_DIRECTORY {profile_value}
 Var Problem
 Var Owned
 Var HasContent
+Var ModelSourceDir
 Var FixtureDir
 Var ReportPath
 Var Failures
@@ -146,14 +148,18 @@ SectionEnd
 def metadata_harness(source: str, executable: Path, config: Path) -> str:
     # Each case runs the same harness beside its fixture files. $EXEDIR and
     # the production ValidateDataParts function are not patched for tests.
-    return shared_header(source, executable, config) + nsis_function(source, "ValidateDataParts") + r'''
+    functions = "\n\n".join(nsis_function(source, name) for name in (
+        "${PREFIX}CheckAncestors", "${PREFIX}ReadOwner", "ValidateDataParts"))
+    return shared_header(source, executable, config) + functions + r'''
 Section
+  StrCpy $INSTDIR "$EXEDIR\installed"
   Call ValidateDataParts
   StrCpy $0 0
   StrCmp $Problem "" 0 +2
   StrCpy $0 1
   WriteINIStr "$EXEDIR\metadata.ini" "result" "allowed" "$0"
   WriteINIStr "$EXEDIR\metadata.ini" "result" "problem" "$Problem"
+  WriteINIStr "$EXEDIR\metadata.ini" "result" "model_source" "$ModelSourceDir"
   IntOp $1 1 - $0
   SetErrorLevel $1
 SectionEnd
@@ -196,23 +202,42 @@ def prepare_paths(fixture: Path, pack: dict, other_pack: dict) -> None:
 def exercise_metadata(folder: Path, exe: Path, pack: dict, wine: str | None) -> list[dict]:
     whole = pack["model"]["bytes"]
     specs = [
-        ("full_exact_size", True, whole, "none"),
-        ("full_truncated", False, whole - 1, "none"),
-        ("full_oversized", False, whole + 1, "none"),
-        ("split_exact_sizes", True, None, "exact"),
-        ("split_missing_last", False, None, "missing"),
-        ("split_wrong_last_size", False, None, "wrong"),
-        ("invalid_full_takes_priority", False, whole - 1, "exact"),
+        ("full_exact_size", True, whole, "none", None),
+        ("full_truncated", False, whole - 1, "none", None),
+        ("full_oversized", False, whole + 1, "none", None),
+        ("split_exact_sizes", True, None, "exact", None),
+        ("split_missing_last", False, None, "missing", None),
+        ("split_wrong_last_size", False, None, "wrong", None),
+        ("invalid_full_takes_priority", False, whole - 1, "exact", None),
+        ("missing_all_sources", False, None, "none", None),
+        ("reuse_owned_installed_model", True, None, "none", "exact"),
+        ("reject_unowned_installed_model", False, None, "none", "unowned"),
+        ("reject_foreign_installed_model", False, None, "none", "foreign"),
+        ("reject_truncated_installed_model", False, None, "none", "truncated"),
+        ("external_full_precedes_installed", True, whole, "none", "exact"),
+        ("external_parts_precede_installed", True, None, "exact", "exact"),
+        ("invalid_external_full_no_installed_fallback", False, whole - 1, "none", "exact"),
+        ("partial_external_parts_no_installed_fallback", False, None, "missing", "exact"),
     ]
     if whole > 2**32:
-        specs.append(("full_low_32_bits_only", False, whole % 2**32, "none"))
+        specs.append(("full_low_32_bits_only", False, whole % 2**32, "none", None))
     rows = []
-    for name, expected, full_size, parts in specs:
+    for name, expected, full_size, parts, installed in specs:
         case = folder / name
         case.mkdir()
         runner = case / "MetadataHarness.exe"
         shutil.copyfile(exe, runner)
         files = []
+        if installed is not None:
+            support = case / "installed/wad/support"
+            support.mkdir(parents=True)
+            if installed != "unowned":
+                marker = (FOREIGN_INSTALLATION["installation_marker"] if installed == "foreign"
+                          else pack["installation_marker"])
+                (support / "installation.id").write_text(marker + "\n", encoding="utf-8")
+            installed_model = case / "installed/wad/model" / pack["model"]["filename"]
+            installed_model.parent.mkdir()
+            files.append(sparse_file(installed_model, whole - (1 if installed == "truncated" else 0)))
         if full_size is not None:
             files.append(sparse_file(case / pack["model"]["filename"], full_size))
         if parts != "none":
@@ -228,8 +253,14 @@ def exercise_metadata(folder: Path, exe: Path, pack: dict, wine: str | None) -> 
         if ini.is_file():
             values = read_ini(ini)
             actual = values.getboolean("result", "allowed")
+            selected_source = values.get("result", "model_source", fallback="")
+            source_matches = True
+            if expected:
+                expected_source = (case / "installed/wad/model" if name == "reuse_owned_installed_model" else case)
+                source_matches = Path(selected_source).resolve() == expected_source.resolve() if os.name == "nt" else True
             row.update(actual_allowed=actual, problem=values.get("result", "problem"),
-                       passed=actual == expected and result["exit_code"] == (0 if expected else 1))
+                       selected_source=selected_source, expected_installed_source=name == "reuse_owned_installed_model",
+                       passed=actual == expected and source_matches and result["exit_code"] == (0 if expected else 1))
         else:
             row["problem"] = "Harness produced no result file"
         rows.append(row)

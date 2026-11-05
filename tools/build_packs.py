@@ -81,12 +81,20 @@ def make_readme(pack: dict, signing: str = "unsigned") -> str:
 
 INSTALLATION HORS LIGNE
 1. Extraire Setup.exe de Setup.zip. Le ZIP contient uniquement cet exécutable.
-2. Placer dans le même dossier SOIT le modèle complet :
+2. Pour une première installation, placer dans le même dossier SOIT le modèle complet :
    {model["filename"]}
    SOIT toutes ses {len(pack["parts"])} parties :
 {parts}
-3. Lancer Setup.exe et choisir un dossier dédié au programme.
+3. Lancer Setup.exe et choisir le dossier du programme.
 4. Ouvrir le raccourci « {pack["shortcut_name"]} ».
+
+MISE À JOUR DEPUIS 1.2.0
+Conserver l'installation existante et choisir son même dossier dans le setup.
+Si aucun GGUF et aucune partie .bin ne sont présents à côté de Setup.exe,
+l'installateur réutilise le modèle de cette installation, après vérification
+de son identité, de sa taille et de son SHA-256. Aucun modèle n'est téléchargé.
+Le modèle est copié dans la nouvelle installation préparée avant remplacement.
+Si des fichiers externes sont présents, ils doivent être complets et valides.
 
 Aucun téléchargement n'est effectué par l'installateur ou le lanceur.
 Les parties des anciens modèles ne sont pas compatibles avec ce nouveau pack.
@@ -114,8 +122,10 @@ Ce pack utilise son propre profil. Les données des anciennes versions sont
 conservées ; leur suppression locale n'est pas automatique.
 
 PROTECTION DU POSTE
-{signature}Une détection TEHTRIS a été observée sur le lanceur 1.0.0/1.0.1 ;
-sa cause n'est pas encore qualifiée.
+{signature}Un blocage TEHTRIS a été signalé le 5 novembre 2026 avec un pack
+présenté comme 1.2.0. Le hash du fichier bloqué et la règle détaillée restent
+inconnus. Les corrections du logiciel ne constituent pas une validation
+d'acceptation par TEHTRIS ; la cause de cette détection reste à qualifier.
 Consulter wad\\docs\\TEHTRIS.md et les empreintes du pack pour l'analyse.
 Ce pack ne modifie pas l'antivirus, le pare-feu ou leurs exclusions.
 

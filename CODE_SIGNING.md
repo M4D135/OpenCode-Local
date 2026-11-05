@@ -4,8 +4,10 @@
 
 **Signing is not active.** The historical 1.0.0, 1.0.1 and 1.1.0 Windows packs
 were unsigned. The single MoE 1.2.0 distribution is also explicitly unsigned.
-The integration prepares a verifiable signing pipeline and
-a SignPath Foundation application. Preparing the integration is not acceptance
+**The 1.2.1 launcher correction is undergoing validation in unsigned mode;
+signing is not active for 1.2.1 either.** Its code fixes do not establish EDR
+acceptance. The integration prepares a verifiable signing pipeline and a
+SignPath Foundation application. Preparing the integration is not acceptance
 by the Foundation, certificate issuance or a completed signing operation.
 
 The last confirmed application state on 4 November 2026 was prepared, not
@@ -116,13 +118,36 @@ and [incident dossier](docs/TEHTRIS.md). This expected identity has not been
 matched to the EDR event. The reported workstation is blocked; neither the
 cause nor a false positive has been established.
 
-During conversation the launcher waits for its child processes. Terminating
-this parent also closes its Job Object and stops the children, which can
-explain the whole session stopping without identifying the detection trigger.
+In the historical 1.2.0 implementation, the launcher waited for its child
+processes. Terminating this parent closed its Job Object and stopped the
+children, which can explain the whole session stopping without identifying
+the detection trigger. The [incident dossier](docs/TEHTRIS.md) links this
+behavior to the fixed 1.2.0 source commit; its executable hash must not be
+used as the identity of a rebuilt 1.2.1 launcher.
+
+The 1.2.1 source correction addresses defects found in a deeper review:
+process-attribute values now retain their lifetime through process creation;
+the child is assigned to its Job Object during creation, while suspended
+creation and explicit resume are preserved. Offline dependencies are checked
+by content and repaired against the installed seed. The private root and
+parent directories are checked for unexpected links; atomic writes use
+unique temporaries without overwriting a pre-existing temporary file.
+Engine working directories and
+selected runtime overrides are controlled, incomplete local HTTP responses
+are rejected, and a failure to open Logs is handled inside the GUI action.
+
+These fixes are undergoing Windows validation and **have not been established
+as causes or a verified resolution of the TEHTRIS detection**. Seed comparison
+checks consistency with the installed seed, not its authenticity or
+completeness. Path checks do not claim a sandbox against another process of
+the same user modifying files concurrently. See [TEHTRIS.md](docs/TEHTRIS.md)
+for the exact scope and [VALIDATION.md](VALIDATION.md) for executed checks.
+
 Signing establishes provenance; it does not override an antivirus decision,
 establish that the program is harmless, or prove acceptance by that
-workstation's policy. No support submission or binary fix is claimed by this
-documentation update.
+workstation's policy. No access to the security console, third-party contact
+or endpoint-policy change is requested for these code corrections, and no
+support submission is claimed.
 
 The software does not modify endpoint protection, firewall rules or certificate
 trust stores. No installation step should add a test root certificate or an

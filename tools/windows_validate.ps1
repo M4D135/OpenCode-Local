@@ -55,6 +55,7 @@ $script:SignatureTool = $null
 $script:OwnerToken = [Guid]::NewGuid().ToString('N')
 $script:TempRoot = $null
 $script:Configuration = $null
+$script:SourceCommit = $null
 $started = [DateTime]::UtcNow
 $exitCode = 1
 
@@ -439,6 +440,10 @@ try {
     if (-not $IsWindows) { throw 'This validation entry point must run on Windows; use the Python --fixtures-only/--build-only checks on Linux' }
     if (-not [Environment]::Is64BitProcess -or -not [Environment]::Is64BitOperatingSystem) { throw 'Use x64 PowerShell on an x64 Windows runner' }
     $script:Configuration = Get-Content -LiteralPath (Join-Path $script:Repository 'config/packs.json') -Raw | ConvertFrom-Json -AsHashtable
+    $script:SourceCommit = (& git -C $script:Repository rev-parse HEAD).Trim()
+    if ($LASTEXITCODE -ne 0 -or $script:SourceCommit -cnotmatch '^[0-9a-f]{40}$') {
+        throw 'The exact source commit is required for Windows validation provenance'
+    }
     if ($script:Configuration.schema_version -ne 1 -or
         $script:Configuration.packs -isnot [Collections.IDictionary] -or
         $script:Configuration.packs.Count -eq 0) {
@@ -476,6 +481,9 @@ try {
             foreach ($name in $Pack) { [void](Invoke-Check "$name/launcher-diagnostic" { Invoke-LauncherDiagnostic $name }) }
             $PythonPath = Find-Tool $PythonPath @('python.exe', 'python')
             $CxxPath = Initialize-Cxx
+            $launcherArguments = @('--cxx', $CxxPath)
+            $launcherReport = [IO.Path]::ChangeExtension($ReportPath, 'launcher.json')
+            [void](Invoke-Check 'launcher/runtime-regressions' { Invoke-PythonValidation 'test_launcher_runtime.py' $launcherArguments $launcherReport })
             $MakensisPath = Find-Tool $MakensisPath @('makensis.exe', 'makensis') @((Join-Path ${env:ProgramFiles(x86)} 'NSIS/makensis.exe'))
             $arguments = @('--native-root', $NativeRoot, '--cxx', $CxxPath)
             foreach ($name in $Pack) { $arguments += @('--pack', $name) }
@@ -509,6 +517,8 @@ finally {
     catch { $exitCode = 1; $script:CleanupNotes.Add([ordered]@{ path = $script:TempRoot; preserved = $true; reason = $_.Exception.Message }) }
     $report = [ordered]@{
         schema_version = 1; phase = $Phase; packs = @($Pack); passed = $exitCode -eq 0
+        source_commit = $script:SourceCommit
+        app_version = $(if ($script:Configuration) { $script:Configuration.app_version } else { $null })
         started_utc = $started.ToString('o'); finished_utc = [DateTime]::UtcNow.ToString('o')
         platform = [Environment]::OSVersion.VersionString; powershell = $PSVersionTable.PSVersion.ToString()
         native_root = $NativeRoot; setup_root = $SetupRoot; build_root = $WorkRoot

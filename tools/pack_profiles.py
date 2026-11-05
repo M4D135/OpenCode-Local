@@ -127,6 +127,11 @@ def generate(pack: dict, output: Path, non_model_bytes: int = 450_000_000) -> di
     }
     lines = ["; Generated from config/packs.json; do not edit."]
     lines += [f'!define {key} "{nsis_escape(value)}"' for key, value in values.items()]
+    lines += ["", "; An external partial set must not silently fall back to an installed model.",
+              "!macro DetectExternalPackParts"]
+    for part in pack["parts"]:
+        lines.append(f'  IfFileExists "$EXEDIR\\{part["name"]}" parts_split 0')
+    lines += ["!macroend"]
     lines += ["", "; Called once inside ValidateDataParts. A full GGUF is checked first.", "!macro ValidatePackParts"]
     for part in pack["parts"]:
         lines += ["  ClearErrors", f'  FileOpen $0 "$EXEDIR\\{part["name"]}" r',

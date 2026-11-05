@@ -76,7 +76,7 @@ AutoCloseWindow false
 
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "Bienvenue dans ${PACK_DISPLAY_NAME}"
-!define MUI_WELCOMEPAGE_TEXT "Votre assistant de code, directement sur votre PC.$\r$\n$\r$\nModèle MoE : ${PACK_MODEL_LABEL}. Réglé pour un PC disposant d’environ 20 Go de RAM libres, en conservant une marge pour vos autres applications.$\r$\n$\r$\nPlacez Setup.exe et le fichier GGUF du modèle (ou toutes ses parties .bin) dans le même dossier. Aucun téléchargement n’est lancé par l’installation.$\r$\n$\r$\nL’installation se fait dans votre session Windows. Vos projets, conversations et réglages restent séparés."
+!define MUI_WELCOMEPAGE_TEXT "Votre assistant de code, directement sur votre PC.$\r$\n$\r$\nModèle MoE : ${PACK_MODEL_LABEL}. Réglé pour un PC disposant d’environ 20 Go de RAM libres, en conservant une marge pour vos autres applications.$\r$\n$\r$\nPour une mise à jour, choisissez le dossier déjà installé : le modèle présent sera vérifié et réutilisé. Pour une nouvelle installation, placez le GGUF (ou toutes ses parties .bin) à côté de Setup.exe. Aucun téléchargement n’est lancé.$\r$\n$\r$\nL’installation se fait dans votre session Windows. Vos projets, conversations et réglages restent séparés."
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_COMPONENTS
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave
@@ -103,6 +103,7 @@ Var StageCreated
 Var BackupDir
 Var Owned
 Var HasContent
+Var ModelSourceDir
 
 !macro SharedFunctions PREFIX
 Function ${PREFIX}ReleaseProfileLock
@@ -366,11 +367,24 @@ Function ValidateDataParts
   Push $1
   Push $2
   StrCpy $Problem ""
+  StrCpy $ModelSourceDir "$EXEDIR"
   ; A complete GGUF can exceed 4 GiB, so use the 64-bit Win32 size API.
   ; If it is present but invalid, do not silently choose another model source.
-  IfFileExists "$EXEDIR\${PACK_MODEL_FILENAME}" whole_model parts_split
+  IfFileExists "$EXEDIR\${PACK_MODEL_FILENAME}" whole_model 0
+  !insertmacro DetectExternalPackParts
+  ; A maintenance setup can reuse the exact model in its recognized target.
+  ; The assembler still copies it to staging and verifies the full SHA-256
+  ; before the old installation is renamed or any of its files are removed.
+  Push $INSTDIR
+  Call ReadOwner
+  StrCmp $Owned 1 0 parts_missing
+  Push "$INSTDIR\${MODEL_PATH}"
+  Call CheckAncestors
+  StrCmp $Problem "" 0 parts_done
+  IfFileExists "$INSTDIR\${MODEL_PATH}" 0 parts_missing
+  StrCpy $ModelSourceDir "$INSTDIR\wad\model"
 whole_model:
-  System::Call 'kernel32::CreateFileW(w "$EXEDIR\${PACK_MODEL_FILENAME}", i 0x80000000, i 1, p 0, i 3, i 0x80, p 0) p .r0'
+  System::Call 'kernel32::CreateFileW(w "$ModelSourceDir\${PACK_MODEL_FILENAME}", i 0x80000000, i 1, p 0, i 3, i 0x80, p 0) p .r0'
   StrCmp $0 "0" parts_bad
   StrCmp $0 "-1" parts_bad
   StrCmp $0 "4294967295" parts_bad
@@ -383,7 +397,7 @@ whole_model:
 parts_split:
   !insertmacro ValidatePackParts
 parts_missing:
-  StrCpy $Problem "Le modèle de ce pack est incomplet. Placez ${PACK_MODEL_FILENAME}, ou ses ${PACK_PART_COUNT} fichiers .bin, dans le même dossier que Setup.exe."
+  StrCpy $Problem "Le modèle de ce pack est absent ou incomplet. Pour une mise à jour, choisissez le dossier existant qui contient le modèle. Pour une nouvelle installation, placez ${PACK_MODEL_FILENAME}, ou ses ${PACK_PART_COUNT} fichiers .bin, dans le même dossier que Setup.exe."
   Goto parts_done
 parts_bad:
   StrCpy $Problem "Un fichier du modèle est incomplet ou appartient à un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le même dossier que Setup.exe."
@@ -501,7 +515,9 @@ Section "${PACK_DISPLAY_NAME} et modèle Qwen (obligatoire)" SEC_MAIN
   IfErrors extraction_error
   CreateDirectory "$StageDir\wad\model"
   DetailPrint "Préparation et vérification du modèle ${PACK_MODEL_LABEL} (${PACK_MODEL_SIZE_TEXT})..."
-  nsExec::ExecToLog /TIMEOUT=3600000 '"$PLUGINSDIR\AssembleModel.exe" "$EXEDIR" "$StageDir\${MODEL_PATH}"'
+  StrCmp $ModelSourceDir "$EXEDIR" +2
+  DetailPrint "Réutilisation du modèle déjà installé : vérification complète avant remplacement du programme."
+  nsExec::ExecToLog /TIMEOUT=3600000 '"$PLUGINSDIR\AssembleModel.exe" "$ModelSourceDir" "$StageDir\${MODEL_PATH}"'
   Pop $0
   StrCmp $0 "0" model_ready
   StrCpy $Problem "Le modèle n’a pas pu être assemblé ou sa vérification a échoué. Consultez les détails ci-dessus. L’ancienne installation n’a pas été remplacée."

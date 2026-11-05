@@ -244,11 +244,14 @@ std::string ReadSmallFile(const fs::path& p, size_t maxBytes = 2 * 1024 * 1024) 
     return text;
 }
 
+void EnsureProfileDirectory(const fs::path& path);
+std::string RandomToken();
+
 void WriteAtomic(const fs::path& path, const std::string& text) {
-    MakeDirectory(path.parent_path());
+    EnsureProfileDirectory(path.parent_path());
     fs::path temp = path;
-    temp += L".tmp." + std::to_wstring(GetCurrentProcessId());
-    Handle file(CreateFileW(temp.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS,
+    temp += L".tmp." + std::to_wstring(GetCurrentProcessId()) + L"." + Wide(RandomToken().substr(0, 16));
+    Handle file(CreateFileW(temp.c_str(), GENERIC_WRITE, 0, nullptr, CREATE_NEW,
                             FILE_ATTRIBUTE_NORMAL, nullptr));
     if (!file.valid()) Fail(L"Impossible d'écrire " + temp.wstring());
     size_t offset = 0;
@@ -283,11 +286,15 @@ std::wstring TimeStamp() {
 
 void Log(const std::wstring& message) {
     try {
-        MakeDirectory(g.paths.logs);
+        EnsureProfileDirectory(g.paths.logs);
         const std::string text = Utf8(TimeStamp() + L"  " + message + L"\r\n");
-        Handle file(CreateFileW((g.paths.logs / L"launcher.log").c_str(), FILE_APPEND_DATA,
+        const fs::path path = g.paths.logs / L"launcher.log";
+        const DWORD attributes = GetFileAttributesW(path.c_str());
+        if (attributes != INVALID_FILE_ATTRIBUTES &&
+            (attributes & (FILE_ATTRIBUTE_REPARSE_POINT | FILE_ATTRIBUTE_DIRECTORY))) return;
+        Handle file(CreateFileW(path.c_str(), FILE_APPEND_DATA,
                                FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_ALWAYS,
-                               FILE_ATTRIBUTE_NORMAL, nullptr));
+                               FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OPEN_REPARSE_POINT, nullptr));
         if (file.valid()) { DWORD written; WriteFile(file.value, text.data(), static_cast<DWORD>(text.size()), &written, nullptr); }
     } catch (...) { /* Logging must never turn successful cleanup into a failure. */ }
 }
@@ -515,64 +522,142 @@ CpuBudget ReadCpuBudget() {
     return budget;
 }
 
+DWORD SeedPathAttributes(const fs::path& path, bool missingAllowed = false) {
+    const DWORD attributes = GetFileAttributesW(path.c_str());
+    if (attributes == INVALID_FILE_ATTRIBUTES) {
+        const DWORD error = GetLastError();
+        if (missingAllowed && (error == ERROR_FILE_NOT_FOUND || error == ERROR_PATH_NOT_FOUND))
+            return INVALID_FILE_ATTRIBUTES;
+        Fail(L"Impossible de vérifier un composant hors ligne : " + path.wstring(), error);
+    }
+    if (attributes & FILE_ATTRIBUTE_REPARSE_POINT)
+        throw std::runtime_error(Utf8(L"Un lien de fichier ou de dossier inattendu empêche la préparation : " + path.wstring()));
+    return attributes;
+}
+
+void EnsureProfileDirectory(const fs::path& path) {
+    // The known Windows folder may legitimately be redirected. Only the
+    // application's private root and its descendants must be plain folders.
+    const fs::path root = g.paths.profile.lexically_normal();
+    const fs::path relative = path.lexically_normal().lexically_relative(root);
+    if (relative.empty() || relative.is_absolute())
+        throw std::runtime_error("Un dossier de préparation se trouve hors du profil de l'application.");
+    for (const auto& part : relative)
+        if (part == L"..")
+            throw std::runtime_error("Un dossier de préparation se trouve hors du profil de l'application.");
+    const auto ensure = [](const fs::path& directory) {
+        DWORD attributes = SeedPathAttributes(directory, true);
+        if (attributes == INVALID_FILE_ATTRIBUTES) {
+            if (!CreateDirectoryW(directory.c_str(), nullptr) && GetLastError() != ERROR_ALREADY_EXISTS)
+                Fail(L"Impossible de créer le dossier de préparation : " + directory.wstring());
+            attributes = SeedPathAttributes(directory);
+        }
+        if (!(attributes & FILE_ATTRIBUTE_DIRECTORY))
+            throw std::runtime_error(Utf8(L"Un fichier remplace un dossier de préparation : " + directory.wstring()));
+    };
+    fs::path current = root;
+    ensure(current);
+    for (const auto& part : relative) {
+        if (part == L".") continue;
+        current /= part;
+        ensure(current);
+    }
+}
+
+bool SeedFileContentsMatch(const fs::path& source, const fs::path& target) {
+    CheckStop();
+    if (SeedPathAttributes(source) & FILE_ATTRIBUTE_DIRECTORY)
+        throw std::runtime_error("Un composant hors ligne attendu comme fichier est un dossier.");
+    const DWORD targetAttributes = SeedPathAttributes(target, true);
+    if (targetAttributes == INVALID_FILE_ATTRIBUTES) return false;
+    if (targetAttributes & FILE_ATTRIBUTE_DIRECTORY)
+        throw std::runtime_error(Utf8(L"Un dossier remplace un fichier de préparation : " + target.wstring()));
+    if (fs::file_size(source) != fs::file_size(target)) return false;
+    std::ifstream incoming(source, std::ios::binary), cached(target, std::ios::binary);
+    if (!incoming || !cached)
+        throw std::runtime_error("Impossible de comparer un composant hors ligne avec sa copie locale.");
+    std::array<char, 64 * 1024> expected{}, actual{};
+    for (;;) {
+        CheckStop();
+        incoming.read(expected.data(), static_cast<std::streamsize>(expected.size()));
+        cached.read(actual.data(), static_cast<std::streamsize>(actual.size()));
+        if (incoming.bad() || cached.bad() ||
+            (incoming.fail() && !incoming.eof()) || (cached.fail() && !cached.eof()))
+            throw std::runtime_error("Lecture incomplète pendant la vérification des composants hors ligne.");
+        const auto count = incoming.gcount();
+        if (count != cached.gcount() ||
+            (count && std::memcmp(expected.data(), actual.data(), static_cast<size_t>(count)) != 0)) return false;
+        if (!count) return true;
+    }
+}
+
+void CopySeedFile(const fs::path& source, const fs::path& target) {
+    EnsureProfileDirectory(target.parent_path());
+    SeedPathAttributes(target, true);
+    fs::path temporary = target;
+    temporary += L".seedtmp." + std::to_wstring(GetCurrentProcessId()) + L"." + Wide(RandomToken().substr(0, 16));
+    // Fail if a file already occupies this temporary name; never overwrite a
+    // pre-existing temporary link or file. The destination is replaced only
+    // after the copied bytes have been checked against the installed seed.
+    if (!CopyFileW(source.c_str(), temporary.c_str(), TRUE)) {
+        const DWORD error = GetLastError();
+        if (error != ERROR_FILE_EXISTS && error != ERROR_ALREADY_EXISTS) DeleteFileW(temporary.c_str());
+        Fail(L"Impossible de préparer " + target.wstring(), error);
+    }
+    try {
+        if (!SeedFileContentsMatch(source, temporary))
+            throw std::runtime_error("La copie d'un composant hors ligne est incomplète ou différente.");
+        CheckStop();
+        EnsureProfileDirectory(target.parent_path());
+        SeedPathAttributes(target, true);
+        if (!MoveFileExW(temporary.c_str(), target.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH))
+            Fail(L"Impossible de finaliser " + target.wstring());
+    } catch (...) {
+        DeleteFileW(temporary.c_str());
+        throw;
+    }
+}
+
 void PrepareProfile() {
     for (const auto& p : {g.paths.profile, g.paths.runtime, g.paths.config, g.paths.cache,
-                          g.paths.data, g.paths.state, g.paths.logs}) MakeDirectory(p);
-    fs::path ready = g.paths.runtime / L"offline-seed.ready";
-    const fs::path pluginPackage = g.paths.config / L"opencode" / L"node_modules" /
-                                  L"@opencode-ai" / L"plugin" / L"package.json";
-    bool needsSeed = !fs::exists(ready) || !fs::is_regular_file(pluginPackage);
-    const fs::path dataSeed = g.paths.seed / L"data";
-    if (!needsSeed && fs::is_directory(dataSeed)) {
-        for (const auto& entry : fs::recursive_directory_iterator(dataSeed)) {
-            if (entry.is_regular_file() &&
-                !fs::is_regular_file(g.paths.data / entry.path().lexically_relative(dataSeed))) {
-                needsSeed = true; break;
+                          g.paths.data, g.paths.state, g.paths.logs}) EnsureProfileDirectory(p);
+    const fs::path ready = g.paths.runtime / L"offline-seed.ready";
+    const DWORD readyAttributes = SeedPathAttributes(ready, true);
+    if (readyAttributes != INVALID_FILE_ATTRIBUTES) {
+        if (readyAttributes & FILE_ATTRIBUTE_DIRECTORY)
+            throw std::runtime_error("Le témoin de préparation hors ligne a été remplacé par un dossier.");
+        if (!DeleteFileW(ready.c_str())) Fail(L"Impossible de renouveler le témoin de préparation hors ligne");
+    }
+    CheckStop();
+    if (!(SeedPathAttributes(g.paths.seed) & FILE_ATTRIBUTE_DIRECTORY))
+        throw std::runtime_error("Le cache de démarrage hors ligne est absent ou invalide. Relancez Setup.exe depuis le pack complet.");
+    Status(L"Vérification des composants hors ligne…");
+    size_t count = 0, repaired = 0;
+    for (const auto& entry : fs::recursive_directory_iterator(g.paths.seed)) {
+        CheckStop();
+        const DWORD attributes = SeedPathAttributes(entry.path());
+        const auto relative = entry.path().lexically_relative(g.paths.seed);
+        // Only paths explicitly shipped in the seed are checked or repaired.
+        // OpenCode sessions and unrelated files in the stable data root stay
+        // untouched. A ready marker or equal file size never skips this check.
+        const bool stableData = relative.begin() != relative.end() && *relative.begin() == fs::path(L"data");
+        const auto target = (stableData ? g.paths.profile : g.paths.runtime) / relative;
+        if (attributes & FILE_ATTRIBUTE_DIRECTORY) EnsureProfileDirectory(target);
+        else if (entry.is_regular_file()) {
+            EnsureProfileDirectory(target.parent_path());
+            if (!SeedFileContentsMatch(entry.path(), target)) {
+                CopySeedFile(entry.path(), target);
+                ++repaired;
             }
+            if (++count % 150 == 0) Status(L"Vérification hors ligne : " + std::to_wstring(count) + L" fichiers…");
         }
     }
-    if (needsSeed) {
-        if (!fs::is_directory(g.paths.seed))
-            throw std::runtime_error("Le cache de démarrage hors ligne est absent. Relancez Setup.exe depuis le pack complet.");
-        Status(L"Préparation des composants hors ligne du premier lancement…");
-        size_t count = 0;
-        for (const auto& entry : fs::recursive_directory_iterator(g.paths.seed)) {
-            CheckStop();
-            DWORD attr = GetFileAttributesW(entry.path().c_str());
-            if (attr == INVALID_FILE_ATTRIBUTES) Fail(L"Impossible de lire un composant du pack");
-            if (attr & FILE_ATTRIBUTE_REPARSE_POINT)
-                throw std::runtime_error("Un lien de fichier inattendu a été trouvé dans le pack.");
-            const auto relative = entry.path().lexically_relative(g.paths.seed);
-            // OpenTUI's parser cache follows XDG_DATA_HOME. OpenCode sessions
-            // stay in that stable data root; versioned config/cache stay in
-            // runtime. Only the files explicitly present in the seed are copied.
-            const bool stableData = relative.begin() != relative.end() && *relative.begin() == fs::path(L"data");
-            const auto target = (stableData ? g.paths.profile : g.paths.runtime) / relative;
-            if (entry.is_directory()) MakeDirectory(target);
-            else if (entry.is_regular_file()) {
-                MakeDirectory(target.parent_path());
-                // Only packaged runtime dependencies live in this seed. Copy
-                // atomically so an interrupted first launch is repairable.
-                std::error_code sizeError;
-                bool existingComplete = fs::is_regular_file(target) &&
-                    fs::file_size(target, sizeError) == entry.file_size() && !sizeError;
-                if (!existingComplete) {
-                    fs::path temporary = target;
-                    temporary += L".seedtmp." + std::to_wstring(GetCurrentProcessId());
-                    if (!CopyFileW(entry.path().c_str(), temporary.c_str(), FALSE)) {
-                        DWORD error = GetLastError(); DeleteFileW(temporary.c_str());
-                        Fail(L"Impossible de préparer " + target.wstring(), error);
-                    }
-                    if (!MoveFileExW(temporary.c_str(), target.c_str(), MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH)) {
-                        DWORD error = GetLastError(); DeleteFileW(temporary.c_str());
-                        Fail(L"Impossible de finaliser " + target.wstring(), error);
-                    }
-                }
-                if (++count % 150 == 0) Status(L"Préparation hors ligne : " + std::to_wstring(count) + L" fichiers…");
-            }
-        }
-        WriteAtomic(ready, Utf8(std::wstring(kProduct) + L" " + kVersion) + "\n");
-    }
+    CheckStop();
+    EnsureProfileDirectory(ready.parent_path());
+    SeedPathAttributes(ready, true);
+    WriteAtomic(ready, Utf8(std::wstring(kProduct) + L" " + kVersion) + "\n");
+    Log(L"Composants hors ligne vérifiés : " + std::to_wstring(count) +
+        L" ; copies réparées : " + std::to_wstring(repaired) + L".");
 }
 
 std::string WriteConfig(unsigned short port, const std::string& token, int context) {
@@ -624,6 +709,13 @@ Environment ChildEnvironment(const std::string& config = {}) {
             entry = env.erase(entry);
         else ++entry;
     }
+    // These upstream overrides can load an external backend, change the
+    // embedded runtime's startup flags, preload JS, or run Bun instead of
+    // OpenCode. Keep them out of this application's child environment only.
+    env.erase(L"GGML_BACKEND_PATH");
+    env.erase(L"BUN_OPTIONS");
+    env.erase(L"BUN_BE_BUN");
+    env.erase(L"BUN_INSPECT_PRELOAD");
     env[L"XDG_CONFIG_HOME"] = g.paths.config.wstring();
     env[L"XDG_CACHE_HOME"] = g.paths.cache.wstring();
     env[L"XDG_DATA_HOME"] = g.paths.data.wstring();
@@ -673,21 +765,56 @@ struct Process {
     DWORD id = 0;
 };
 
+class ProcessAttributes {
+    std::vector<unsigned char> storage;
+    LPPROC_THREAD_ATTRIBUTE_LIST attributes = nullptr;
+public:
+    explicit ProcessAttributes(DWORD count) {
+        SIZE_T bytes = 0;
+        InitializeProcThreadAttributeList(nullptr, count, 0, &bytes);
+        if (!bytes) Fail(L"Impossible de dimensionner les attributs de la session");
+        storage.resize(bytes);
+        auto list = reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(storage.data());
+        if (!InitializeProcThreadAttributeList(list, count, 0, &bytes))
+            Fail(L"Impossible de préparer les attributs de la session");
+        attributes = list;
+    }
+    ~ProcessAttributes() { if (attributes) DeleteProcThreadAttributeList(attributes); }
+    ProcessAttributes(const ProcessAttributes&) = delete;
+    ProcessAttributes& operator=(const ProcessAttributes&) = delete;
+    LPPROC_THREAD_ATTRIBUTE_LIST get() const { return attributes; }
+    void Set(DWORD_PTR key, void* value, SIZE_T bytes) {
+        if (!UpdateProcThreadAttribute(attributes, 0, key, value, bytes, nullptr, nullptr))
+            Fail(L"Impossible de configurer les attributs de la session");
+    }
+};
+
 Process StartProcess(const fs::path& executable, const std::vector<std::wstring>& args,
                      const fs::path& cwd, const Environment& environment, HANDLE job,
                      bool newConsole, const fs::path& outputLog = {}) {
     CheckStop();
+    if (!job || job == INVALID_HANDLE_VALUE)
+        Fail(L"La session de processus est absente", ERROR_INVALID_HANDLE);
     std::wstring command = CommandLine(executable, args);
     std::vector<wchar_t> mutableCommand(command.begin(), command.end());
     mutableCommand.push_back(L'\0');
     auto env = EnvironmentBlock(environment);
     STARTUPINFOEXW startup{};
-    startup.StartupInfo.cb = sizeof(STARTUPINFOW);
-    DWORD flags = CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT |
+    startup.StartupInfo.cb = sizeof(startup);
+    DWORD flags = CREATE_SUSPENDED | CREATE_UNICODE_ENVIRONMENT | EXTENDED_STARTUPINFO_PRESENT |
                   (newConsole ? CREATE_NEW_CONSOLE : CREATE_NO_WINDOW);
     Handle logHandle, inputHandle;
-    std::vector<unsigned char> attributes;
-    bool initializedAttributes = false;
+    // Attribute values must outlive the attribute list itself. Keep both arrays
+    // in this scope and declare the owning list after them for reverse cleanup.
+    std::array<HANDLE, 1> jobs{job};
+    std::array<HANDLE, 2> inheritedHandles{};
+    ProcessAttributes attributes(outputLog.empty() ? 1 : 2);
+    // Windows 10+ assigns the child to this job as part of process creation.
+    // When CreateProcessW returns, the suspended child already belongs to our
+    // KILL_ON_JOB_CLOSE session; there is no later assignment gap to leave it
+    // orphaned if this launcher exits.
+    attributes.Set(PROC_THREAD_ATTRIBUTE_JOB_LIST, jobs.data(), sizeof(jobs));
+    startup.lpAttributeList = attributes.get();
     BOOL inherit = FALSE;
     if (!outputLog.empty()) {
         SECURITY_ATTRIBUTES sa{sizeof(sa), nullptr, TRUE};
@@ -700,38 +827,23 @@ Process StartProcess(const fs::path& executable, const std::vector<std::wstring>
         startup.StartupInfo.hStdInput = inputHandle.value;
         startup.StartupInfo.hStdOutput = logHandle.value;
         startup.StartupInfo.hStdError = logHandle.value;
-        SIZE_T required = 0;
-        InitializeProcThreadAttributeList(nullptr, 1, 0, &required);
-        attributes.resize(required);
-        startup.lpAttributeList = reinterpret_cast<LPPROC_THREAD_ATTRIBUTE_LIST>(attributes.data());
-        if (!InitializeProcThreadAttributeList(startup.lpAttributeList, 1, 0, &required))
-            Fail(L"Impossible de préparer les handles du moteur");
-        initializedAttributes = true;
-        HANDLE inheritedHandles[] = {inputHandle.value, logHandle.value};
-        if (!UpdateProcThreadAttribute(startup.lpAttributeList, 0, PROC_THREAD_ATTRIBUTE_HANDLE_LIST,
-                                       inheritedHandles, sizeof(inheritedHandles), nullptr, nullptr)) {
-            DWORD error = GetLastError(); DeleteProcThreadAttributeList(startup.lpAttributeList);
-            Fail(L"Impossible de limiter les handles transmis", error);
-        }
-        startup.StartupInfo.cb = sizeof(startup);
-        flags |= EXTENDED_STARTUPINFO_PRESENT;
+        inheritedHandles = {inputHandle.value, logHandle.value};
+        attributes.Set(PROC_THREAD_ATTRIBUTE_HANDLE_LIST, inheritedHandles.data(), sizeof(inheritedHandles));
         inherit = TRUE;
     }
     PROCESS_INFORMATION process{};
     BOOL created = CreateProcessW(executable.c_str(), mutableCommand.data(), nullptr, nullptr, inherit,
                                   flags, env.data(), cwd.c_str(), &startup.StartupInfo, &process);
     DWORD creationError = GetLastError();
-    if (initializedAttributes) DeleteProcThreadAttributeList(startup.lpAttributeList);
-    if (!created) Fail(L"Impossible de lancer " + executable.filename().wstring(), creationError);
-    Handle processHandle(process.hProcess), threadHandle(process.hThread);
-    if (!AssignProcessToJobObject(job, processHandle.value)) {
-        DWORD error = GetLastError(); TerminateProcess(processHandle.value, 1);
-        WaitForSingleObject(processHandle.value, 5000);
-        Fail(L"Windows empêche la gestion de cette session", error);
+    if (!created) {
+        CheckStop();
+        Fail(L"Impossible de lancer " + executable.filename().wstring(), creationError);
     }
+    Handle processHandle(process.hProcess), threadHandle(process.hThread);
     if (g.stopRequested.load()) { TerminateProcess(processHandle.value, 1); throw Cancelled(); }
     if (ResumeThread(threadHandle.value) == static_cast<DWORD>(-1)) {
         DWORD error = GetLastError(); TerminateProcess(processHandle.value, 1);
+        CheckStop();
         Fail(L"Impossible de démarrer le processus", error);
     }
     return Process{std::move(processHandle), process.dwProcessId};
@@ -777,16 +889,16 @@ HttpResponse LocalHttp(unsigned short port, const std::string& token, const wcha
     InternetHandle session(WinHttpOpen(userAgent.c_str(), WINHTTP_ACCESS_TYPE_NO_PROXY,
                                        WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0));
     if (!session.value) return {};
-    WinHttpSetTimeouts(session.value, timeoutMs, timeoutMs, timeoutMs, timeoutMs);
+    if (!WinHttpSetTimeouts(session.value, timeoutMs, timeoutMs, timeoutMs, timeoutMs)) return {};
     InternetHandle connection(WinHttpConnect(session.value, L"127.0.0.1", port, 0));
     if (!connection.value) return {};
     InternetHandle request(WinHttpOpenRequest(connection.value, method, path, nullptr,
                                               WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0));
     if (!request.value) return {};
     DWORD redirectPolicy = WINHTTP_OPTION_REDIRECT_POLICY_NEVER;
-    WinHttpSetOption(request.value, WINHTTP_OPTION_REDIRECT_POLICY, &redirectPolicy, sizeof(redirectPolicy));
+    if (!WinHttpSetOption(request.value, WINHTTP_OPTION_REDIRECT_POLICY, &redirectPolicy, sizeof(redirectPolicy))) return {};
     DWORD features = WINHTTP_DISABLE_COOKIES | WINHTTP_DISABLE_AUTHENTICATION;
-    WinHttpSetOption(request.value, WINHTTP_OPTION_DISABLE_FEATURE, &features, sizeof(features));
+    if (!WinHttpSetOption(request.value, WINHTTP_OPTION_DISABLE_FEATURE, &features, sizeof(features))) return {};
     std::wstring headers = L"Authorization: Bearer " + Wide(token) + L"\r\nContent-Type: application/json\r\n";
     if (!WinHttpSendRequest(request.value, headers.c_str(), static_cast<DWORD>(headers.size()),
                             body.empty() ? WINHTTP_NO_REQUEST_DATA : const_cast<char*>(body.data()),
@@ -794,11 +906,18 @@ HttpResponse LocalHttp(unsigned short port, const std::string& token, const wcha
         !WinHttpReceiveResponse(request.value, nullptr)) return {};
     HttpResponse response;
     DWORD statusBytes = sizeof(response.status);
-    WinHttpQueryHeaders(request.value, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
-                         WINHTTP_HEADER_NAME_BY_INDEX, &response.status, &statusBytes, WINHTTP_NO_HEADER_INDEX);
+    if (!WinHttpQueryHeaders(request.value, WINHTTP_QUERY_STATUS_CODE | WINHTTP_QUERY_FLAG_NUMBER,
+                            WINHTTP_HEADER_NAME_BY_INDEX, &response.status, &statusBytes, WINHTTP_NO_HEADER_INDEX)) return {};
+    DWORD expectedBytes = 0;
+    DWORD lengthBytes = sizeof(expectedBytes);
+    const bool hasLength = WinHttpQueryHeaders(request.value, WINHTTP_QUERY_CONTENT_LENGTH | WINHTTP_QUERY_FLAG_NUMBER,
+                                              WINHTTP_HEADER_NAME_BY_INDEX, &expectedBytes, &lengthBytes,
+                                              WINHTTP_NO_HEADER_INDEX) != FALSE;
+    if ((!hasLength && GetLastError() != ERROR_WINHTTP_HEADER_NOT_FOUND) || expectedBytes > 1024 * 1024) return {};
     for (;;) {
         DWORD available = 0;
-        if (!WinHttpQueryDataAvailable(request.value, &available) || !available) break;
+        if (!WinHttpQueryDataAvailable(request.value, &available)) return {};
+        if (!available) break;
         if (response.body.size() + available > 1024 * 1024) return {};
         size_t old = response.body.size(); response.body.resize(old + available);
         DWORD received = 0;
@@ -806,6 +925,7 @@ HttpResponse LocalHttp(unsigned short port, const std::string& token, const wcha
         response.body.resize(old + received);
         if (!received) break;
     }
+    if (hasLength && response.body.size() != expectedBytes) return {};
     return response;
 }
 
@@ -886,7 +1006,9 @@ Process StartEngine(HANDLE job, unsigned short port, const std::string& token, i
     Log(L"Démarrage du moteur CPU : " + InferenceSummary(context, cpu) +
         L", cache de prompts RAM=0 Mo, checkpoints=4" +
         L", adresse=127.0.0.1:" + std::to_wstring(port) + L", journal=" + output.filename().wstring());
-    auto process = StartProcess(g.paths.engine, args, g.paths.install, ChildEnvironment(), job, false, output);
+    // llama.cpp also discovers backend DLLs in its working directory. Keep
+    // that directory in the installed engine, never in a user's project.
+    auto process = StartProcess(g.paths.engine, args, g.paths.engine.parent_path(), ChildEnvironment(), job, false, output);
     WaitForEngine(process, port, token);
     return process;
 }
@@ -918,7 +1040,7 @@ void RunSession(bool direct, fs::path project, int context) {
             auto args = InferenceArguments(context, cpu.threads);
             args.emplace_back(L"--conversation");
             Log(L"Discussion directe CPU : " + InferenceSummary(context, cpu) + L", sans cache de prompts serveur.");
-            auto chat = StartProcess(g.paths.completion, args, project, ChildEnvironment(), job.value, true);
+            auto chat = StartProcess(g.paths.completion, args, g.paths.completion.parent_path(), ChildEnvironment(), job.value, true);
             Status(L"Discussion ouverte dans sa console. Fermez-la pour terminer.");
             while (WaitForSingleObject(chat.handle.value, 250) == WAIT_TIMEOUT) CheckStop();
             CheckStop();
@@ -1227,8 +1349,19 @@ void BrowseProject() {
 }
 
 void OpenLogs() {
-    MakeDirectory(g.paths.logs);
-    ShellExecuteW(g.window, L"open", g.paths.logs.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+    try {
+        EnsureProfileDirectory(g.paths.logs);
+        const auto opened = reinterpret_cast<INT_PTR>(ShellExecuteW(
+            g.window, L"open", g.paths.logs.c_str(), nullptr, nullptr, SW_SHOWNORMAL));
+        if (opened <= 32) throw std::runtime_error("Impossible d'ouvrir le dossier des journaux.");
+    } catch (const std::exception& ex) {
+        // No C++ exception may cross the Win32 window callback: a failed
+        // folder action must not close the launcher and its active session.
+        Log(L"Ouverture des journaux impossible.");
+        std::wstring error = L"Impossible d'ouvrir le dossier des journaux.";
+        try { error = Wide(ex.what()); } catch (...) { }
+        MessageBoxW(g.window, error.c_str(), kProduct, MB_OK | MB_ICONERROR);
+    }
 }
 
 void ShowDiagnostic() {
@@ -1437,7 +1570,10 @@ int WINAPI wWinMain(HINSTANCE instance, HINSTANCE, PWSTR, int show) {
     bool socketsReady = WSAStartup(MAKEWORD(2, 2), &sockets) == 0;
     int result = 1;
     try {
-        g.paths = FindPaths(); MakeDirectory(g.paths.profile); MakeDirectory(g.paths.logs); LoadSettings();
+        g.paths = FindPaths();
+        EnsureProfileDirectory(g.paths.profile);
+        EnsureProfileDirectory(g.paths.logs);
+        LoadSettings();
         int count = 0; LPWSTR* args = CommandLineToArgvW(GetCommandLineW(), &count);
         std::wstring mode = count > 1 ? args[1] : L"";
         if (args) LocalFree(args);
