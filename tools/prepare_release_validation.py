@@ -98,7 +98,8 @@ def extract_seed(setup: Path, destination: Path, sevenzip: str) -> tuple[Path, d
     if not boundary:
         raise ValueError("7-Zip did not return an archive member listing")
     entries = []
-    expanded_bytes = 0
+    listed_expanded_bytes = 0
+    unknown_size_entries = 0
     for block in re.split(r"\r?\n\r?\n", files.strip()):
         fields = dict(line.split(" = ", 1) for line in block.splitlines() if " = " in line)
         if "Path" not in fields:
@@ -108,15 +109,32 @@ def extract_seed(setup: Path, destination: Path, sevenzip: str) -> tuple[Path, d
         if "Symbolic Link" in fields or "Hard Link" in fields:
             raise ValueError("Links are not permitted in the setup extraction")
         entries.append(name)
-        if "Size" in fields:
-            expanded_bytes += int(fields["Size"])
+        # Solid NSIS archives can report an empty Size field. Treat that as
+        # unknown, then enforce the budget against the extracted files below.
+        size = fields.get("Size", "").strip()
+        if size:
+            if not re.fullmatch(r"[0-9]+", size):
+                raise ValueError("Invalid setup archive member size: " + repr(size))
+            listed_expanded_bytes += int(size)
+        else:
+            unknown_size_entries += 1
     if not entries or len(entries) > MAX_ARCHIVE_ENTRIES or len(entries) != len(set(entries)):
         raise ValueError("Invalid or duplicate setup archive entries")
-    if expanded_bytes > MAX_RUNTIME_ARCHIVE_BYTES:
+    if listed_expanded_bytes > MAX_RUNTIME_ARCHIVE_BYTES:
         raise ValueError("Setup extraction exceeds the runtime input budget")
     destination.mkdir(parents=True, exist_ok=False)
     run_sevenzip(sevenzip, ["x", "-y", "-bd", "-sccUTF-8", "-o" + str(destination), str(setup)])
     verify_tree(destination, allow_internal_links=False)
+    expanded_bytes = 0
+    extracted_entries = 0
+    for path in destination.rglob("*"):
+        extracted_entries += 1
+        if extracted_entries > MAX_ARCHIVE_ENTRIES:
+            raise ValueError("Setup extraction contains too many entries")
+        if path.is_file():
+            expanded_bytes += path.stat().st_size
+        if expanded_bytes > MAX_RUNTIME_ARCHIVE_BYTES:
+            raise ValueError("Setup extraction exceeds the runtime input budget")
     candidates = [path for path in destination.rglob("offline-cache")
                   if path.is_dir() and path.parent.name == "wad"]
     if len(candidates) != 1:
@@ -125,6 +143,9 @@ def extract_seed(setup: Path, destination: Path, sevenzip: str) -> tuple[Path, d
     if not (seed / "seed-manifest.json").is_file():
         raise ValueError("The extracted OpenCode seed has no verification manifest")
     return seed, {"entries": len(entries), "expanded_bytes": expanded_bytes,
+                  "listed_expanded_bytes": listed_expanded_bytes,
+                  "unknown_size_entries": unknown_size_entries,
+                  "extracted_entries": extracted_entries,
                   "setup_sha256": digest(setup)}
 
 

@@ -386,7 +386,7 @@ parts_missing:
   StrCpy $Problem "Le modèle de ce pack est incomplet. Placez ${PACK_MODEL_FILENAME}, ou ses ${PACK_PART_COUNT} fichiers .bin, dans le même dossier que Setup.exe."
   Goto parts_done
 parts_bad:
-  StrCpy $Problem "Un fichier du modèle est incomplet ou appartient à un autre pack. Utilisez les fichiers du pack ${PACK_RAM_GIB} Go."
+  StrCpy $Problem "Un fichier du modèle est incomplet ou appartient à un autre pack. Utilisez les huit fichiers Modele-MoE de cette version, dans le même dossier que Setup.exe."
 parts_done:
   Pop $2
   Pop $1
