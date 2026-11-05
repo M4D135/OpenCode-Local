@@ -140,6 +140,20 @@ int main() {
             Require(Read(g.paths.data / L"opentui/tree-sitter/languages/fixture.wasm") == "fixture wasm bytes\n", "Stable parser data was not seeded");
             Require(fs::is_regular_file(fixture.Ready()), "Ready marker is missing after successful preparation");
         }},
+        {"long_source_and_destination_paths", [] {
+            Fixture fixture;
+            // Keep this explicit case as well as the naturally long temporary
+            // paths above. Fixtures embed the unchanged production manifest.
+            const auto source = fixture.root / (L"long seed " + std::wstring(160, L's'));
+            fs::rename(g.paths.seed, source);
+            g.paths.seed = source;
+            fixture.SetProfile(fixture.root / (L"long profile " + std::wstring(160, L'p')));
+            Require((g.paths.seed / fixture.script).wstring().size() > MAX_PATH, "Source path did not exceed MAX_PATH");
+            Require(fixture.CachedScript().wstring().size() > MAX_PATH, "Destination path did not exceed MAX_PATH");
+            PrepareProfile();
+            Require(Read(fixture.CachedScript()) == fixture.scriptContents, "Long-path seed copy differs");
+            Require(fs::is_regular_file(fixture.Ready()), "Long-path preparation did not complete");
+        }},
         {"missing_dependency_after_ready", [] {
             Fixture fixture;
             PrepareProfile();

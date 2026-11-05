@@ -95,6 +95,36 @@ DWORD ActiveProcesses(HANDLE job) {
     return info.ActiveProcesses;
 }
 
+std::string JobMembers(HANDLE job) {
+    // Diagnostic only. The fixtures create at most a few processes; reserve
+    // space for console helpers as well, without adopting or stopping any PID.
+    std::vector<unsigned char> bytes(sizeof(JOBOBJECT_BASIC_PROCESS_ID_LIST) + 64 * sizeof(ULONG_PTR));
+    auto* list = reinterpret_cast<JOBOBJECT_BASIC_PROCESS_ID_LIST*>(bytes.data());
+    if (!QueryInformationJobObject(job, JobObjectBasicProcessIdList, list,
+                                  static_cast<DWORD>(bytes.size()), nullptr))
+        return "PID query error " + std::to_string(GetLastError());
+    std::ostringstream result;
+    result << '[';
+    for (DWORD i = 0; i < list->NumberOfProcessIdsInList; ++i) {
+        if (i) result << ',';
+        result << list->ProcessIdList[i];
+    }
+    result << ']';
+    return result.str();
+}
+
+void WaitJobEmpty(HANDLE job, DWORD milliseconds = 10000) {
+    const auto deadline = std::chrono::steady_clock::now() + std::chrono::milliseconds(milliseconds);
+    for (;;) {
+        DWORD active = ActiveProcesses(job);
+        if (!active) return;
+        if (std::chrono::steady_clock::now() >= deadline)
+            throw std::runtime_error("Fixture job did not drain: active=" +
+                std::to_string(active) + ", pids=" + JobMembers(job));
+        Sleep(10);
+    }
+}
+
 std::vector<std::wstring> Arguments() {
     int count = 0;
     LPWSTR* values = CommandLineToArgvW(GetCommandLineW(), &count);
@@ -226,12 +256,21 @@ void StopSupervisorAtCreation(const fs::path& work, bool legacy) {
     if (legacy) {
         Require(WaitForSingleObject(child.value, 300) == WAIT_TIMEOUT,
                 "Negative control did not reproduce the former orphan gap");
+        Require(ActiveProcesses(outerJob.value) > 0,
+                "The negative-control orphan is missing from its observer job");
         Require(TerminateProcess(child.value, 78) != FALSE, "Cannot clean up the negative-control child");
         WaitEnded(child.value);
     } else {
         WaitEnded(child.value);
     }
-    Require(ActiveProcesses(outerJob.value) == 0, "A fixture descendant remains active");
+    // Both explicit process handles must already be signaled. Job accounting
+    // (including nested jobs and any console helpers) has its own lifetime;
+    // release the completed observations, then require the whole group to drain.
+    // Keep the observer job open and do NOT terminate it to make this pass: a
+    // surviving orphan must still cause a bounded failure with its PID recorded.
+    child.reset();
+    supervisor.handle.reset();
+    WaitJobEmpty(outerJob.value);
 }
 
 int Suite() {

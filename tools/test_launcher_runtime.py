@@ -49,17 +49,52 @@ def find_compiler(requested: str | None) -> str:
 
 def compile_fixture(source: Path, folder: Path, header: Path, compiler: str) -> tuple[Path, dict]:
     executable = folder / (source.stem + ".exe")
+    manifest = ROOT / "src/launcher.manifest"
+    resource_result = None
     if Path(compiler).name.lower() in ("cl", "cl.exe"):
         command = [compiler, "/nologo", "/std:c++17", "/O2", "/W4", "/EHsc", "/MT", "/utf-8",
                    "/I" + str(header), str(source), "/Fe" + str(executable),
-                   "/Fo" + str(folder / "fixture.obj"), "/link", "/SUBSYSTEM:CONSOLE"]
+                   "/Fo" + str(folder / "fixture.obj"), "/link", "/SUBSYSTEM:CONSOLE",
+                   "/MANIFEST:EMBED", "/MANIFESTINPUT:" + str(manifest)]
         command += [name + ".lib" for name in LIBRARIES]
     else:
+        # Use the production manifest unchanged: otherwise the same Win32
+        # file operations run without production's longPathAware declaration.
+        windres_name = Path(compiler).name.replace("g++", "windres")
+        windres = Path(compiler).with_name(windres_name)
+        resource_compiler = str(windres) if windres.is_file() else shutil.which("windres")
+        if not resource_compiler:
+            raise RuntimeError("The matching MinGW windres is required to embed the production manifest")
+        resource_source = folder / "fixture-manifest.rc"
+        resource_source.write_text('1 24 "' + manifest.as_posix().replace('"', '\\"') + '"\n', encoding="utf-8")
+        resource = folder / "fixture-manifest.o"
+        resource_result = run_process(
+            [resource_compiler, "--codepage=65001", "-O", "coff", str(resource_source), "-o", str(resource)],
+            timeout=60, cwd=folder,
+        )
+        if resource_result["exit_code"] != 0 or resource_result["timed_out"]:
+            return executable, resource_result
         command = [compiler, "-std=c++17", "-O2", "-Wall", "-Wextra", "-Werror",
                    "-static", "-static-libgcc", "-static-libstdc++", "-mconsole",
-                   "-I", str(header), str(source), "-o", str(executable)]
+                   "-I", str(header), str(source), str(resource), "-o", str(executable)]
         command += ["-l" + name for name in LIBRARIES]
-    return executable, run_process(command, timeout=180, cwd=folder)
+    result = run_process(command, timeout=180, cwd=folder)
+    if resource_result is not None:
+        result["manifest_resource"] = resource_result
+    return executable, result
+
+
+def long_paths_setting() -> dict | None:
+    """Report the existing Windows opt-in; never change a machine policy."""
+    if os.name != "nt":
+        return None
+    import winreg
+    try:
+        with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\FileSystem") as key:
+            value, _ = winreg.QueryValueEx(key, "LongPathsEnabled")
+        return {"value": value, "enabled": value == 1, "changed": False}
+    except OSError as error:
+        return {"value": None, "enabled": False, "changed": False, "read_error": str(error)}
 
 
 def read_results(execution: dict) -> tuple[dict | None, list[str]]:
@@ -100,6 +135,8 @@ def main() -> int:
         "antivirus_qualification": False,
         "pack": args.pack,
         "launcher_source_sha256": digest(ROOT / "src/launcher.cpp"),
+        "production_manifest_input_sha256": digest(ROOT / "src/launcher.manifest"),
+        "windows_long_paths_setting": long_paths_setting(),
         "pack_config_source_sha256": digest(ROOT / "config/packs.json"),
         "checks": [],
         "passed": False,

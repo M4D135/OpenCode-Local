@@ -129,6 +129,7 @@ int main() {
             std::to_wstring(GetCurrentProcessId()) + L"-" + std::to_wstring(GetTickCount64()));
         created = fs::create_directory(fixture);
         if (!created) return false;
+        g.paths.profile = fixture;
         g.paths.logs = fixture / L"logs";
         { std::ofstream file(g.paths.logs, std::ios::binary); file << "keep"; }
         OpenLogs();
