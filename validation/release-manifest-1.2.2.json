@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "kind": "launcher-update",
+  "version": "1.2.2",
+  "source_commit": "4e81349256fb63bc1a06ad61e54bcaa111d19d0b",
+  "windows_run_id": 42079620191,
+  "model_sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+  "model_reference": {
+    "release_tag": "v1.2.0",
+    "release_id": 434962198,
+    "source_commit": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1",
+    "release_url": "https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0",
+    "manifest_sha256": "80119c6d29fd192360b0ec07cc4466092b6cf84455ac262eac51175a69ffb262",
+    "model_metadata_sha256": "81c777f5fa3e41c42f8620d5faef4e60971b914b846c0eeab7df97adda306e9c",
+    "model_sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+    "model_bytes": 10756586464,
+    "parts": [
+      {
+        "name": "Modele-MoE-01.bin",
+        "bytes": 1500000000,
+        "sha256": "3fc8b9e31d6fdc90053c9f5e116dec46494546eb562bb59cda419a0a2e6109e6",
+        "asset_id": 712718449,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-01.bin"
+      },
+      {
+        "name": "Modele-MoE-02.bin",
+        "bytes": 1500000000,
+        "sha256": "75a37f6b7f8a26329a196967f27a1e475a547dd1297d71a5d69e8d25aa47a492",
+        "asset_id": 712721426,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-02.bin"
+      },
+      {
+        "name": "Modele-MoE-03.bin",
+        "bytes": 1500000000,
+        "sha256": "8eb89b6c33242a1702845aa26c89439eedefc7fe053b45778f5535f13b6178d2",
+        "asset_id": 712724548,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-03.bin"
+      },
+      {
+        "name": "Modele-MoE-04.bin",
+        "bytes": 1500000000,
+        "sha256": "154beabbcf23053e6f748963a402f23bc114fb3250174b5cbc652cdae501a668",
+        "asset_id": 712727599,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-04.bin"
+      },
+      {
+        "name": "Modele-MoE-05.bin",
+        "bytes": 1500000000,
+        "sha256": "ff887943ed477b9375b01851994658580d090dc139c38a66d71440f2cf65c606",
+        "asset_id": 712730511,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-05.bin"
+      },
+      {
+        "name": "Modele-MoE-06.bin",
+        "bytes": 1500000000,
+        "sha256": "ee40d1c61edb9857ae8162e08967fa3ffffdc22b66b6018688f98e76d674681c",
+        "asset_id": 712733328,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-06.bin"
+      },
+      {
+        "name": "Modele-MoE-07.bin",
+        "bytes": 1500000000,
+        "sha256": "9bedeb7207b2c583bcb16c3ddd2c45357a31b2e98905182911f1660c0c64069d",
+        "asset_id": 712736368,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-07.bin"
+      },
+      {
+        "name": "Modele-MoE-08.bin",
+        "bytes": 256586464,
+        "sha256": "eae89e17be4d46659368d74c96218624c8e782f962e43775137e8baae170963e",
+        "asset_id": 712739269,
+        "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Modele-MoE-08.bin"
+      }
+    ],
+    "weights_downloaded": false,
+    "inference_executed": false,
+    "verification_scope": "Published JSON metadata and GitHub slice identities/digests only"
+  },
+  "signing": "unsigned",
+  "assets_verified": true,
+  "assets": [
+    {
+      "name": "Setup.zip",
+      "id": 714305374,
+      "bytes": 127293899,
+      "sha256": "9002591dc86060460b3f0109d90bfec3e65c7eb2e3535433da264618ba901b9d",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/Setup.zip"
+    },
+    {
+      "name": "VALIDATION-WINDOWS.json",
+      "id": 714305763,
+      "bytes": 119348,
+      "sha256": "3034847e66426bec6fe5884fde2bb687db217308f3d4d656a906082d0a51371d",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/VALIDATION-WINDOWS.json"
+    },
+    {
+      "name": "MODELE.json",
+      "id": 714305813,
+      "bytes": 2881,
+      "sha256": "70655a6edc0652b390b75fb82d3f3c142bdbb4a62a0e3cc527b54dccb47c2160",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/MODELE.json"
+    },
+    {
+      "name": "LISEZ-MOI.txt",
+      "id": 714305861,
+      "bytes": 3856,
+      "sha256": "1ec4a99e52bbd49f523b5dca1664a07f7fff98d3a5bb16f38e02c89831a0e6df",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/LISEZ-MOI.txt"
+    },
+    {
+      "name": "SIGNATURES.json",
+      "id": 714305917,
+      "bytes": 5213,
+      "sha256": "4778ac92854a100c4ef2e583dd5d47e8468782447e1fada7b1f8906a6883373d",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/SIGNATURES.json"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "id": 714305992,
+      "bytes": 580,
+      "sha256": "841e76b6c6bf82203d119c67e9932507b938a5e336eee7d8d554860e2ad2c5c7",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/SHA256SUMS.txt"
+    }
+  ],
+  "inference_validation_performed": false,
+  "tehtris_compatibility": "not_validated",
+  "verification_scope": "Fresh Windows component and launcher regression tests; unchanged model referenced, not re-executed"
+}

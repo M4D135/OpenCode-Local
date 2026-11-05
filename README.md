@@ -1,8 +1,9 @@
 # OpenCode Local — pack unique MoE léger
 
 Un assistant de code local pour Windows x64, avec **OpenCode**, un moteur CPU
-et **Qwen3.6-35B-A3B UD-IQ2_XXS**. La version **1.2.1** corrige des défauts du lanceur et
-permet de réparer une installation existante en conservant le même modèle.
+et **Qwen3.6-35B-A3B UD-IQ2_XXS**. La version **1.2.2** ajoute un contrôle du
+modèle préparé avant de remplacer l'installation existante, en conservant les
+corrections du lanceur 1.2.1 et le même modèle.
 Le pack unique reste réglé pour un PC de 32 Gio disposant d'environ 20 Gio de
 RAM libres avant lancement.
 
@@ -18,11 +19,12 @@ constituent donc pas une solution vérifiée à ce blocage. Voir le
 
 ## Télécharger et installer hors ligne
 
-La [release 1.2.1](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.1)
-est publiée après de nouveaux tests Windows du lanceur et de l'installateur.
-[Télécharger directement Setup.zip — 127,3 Mo](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.1/Setup.zip).
+La [maintenance 1.2.2](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.2)
+est publiée après de nouveaux tests Windows, dont neuf cas de protection de
+l'installation avant remplacement. Elle ne résout pas les détections TEHTRIS.
+[Télécharger directement Setup.zip — 127,3 Mo](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.2/Setup.zip).
 
-### Réparer ou mettre à jour une installation 1.2.0
+### Réparer ou mettre à jour une installation 1.2.0 ou 1.2.1
 
 1. Fermer les sessions OpenCode Local et conserver le dossier installé.
 2. Télécharger **Setup.zip** et l'extraire dans un nouveau dossier : **le ZIP contient uniquement `Setup.exe`**.
@@ -34,6 +36,13 @@ d'installation et le modèle doivent être intacts. Le modèle est recopié et s
 SHA-256 complet vérifié avant remplacement de l'ancienne installation. Les
 projets, réglages et conversations restent dans leur dossier de données séparé.
 **Aucun nouveau téléchargement du modèle n'est nécessaire dans ce cas.**
+
+Après le retour réussi de l'assembleur, le setup 1.2.2 exige que le modèle
+final préparé existe, soit un fichier ordinaire sans lien/jonction et ait
+exactement la taille attendue sur 64 bits. Un retour `0` sans modèle final
+interrompt désormais l'installation avant le premier renommage. Ce contrôle
+de publication complète le SHA-256 effectué par l'assembleur ; il ne valide
+pas l'acceptation de l'exécutable par l'antivirus.
 
 ### Première installation
 
@@ -52,7 +61,9 @@ le modèle installé. Aucun téléchargement n'est lancé sur le poste cible.
 Les corrections 1.2.1 portent sur la durée de vie des attributs Windows de
 création, la propriété et l'arrêt des processus, la réparation des fichiers du
 cache hors ligne, le dossier de chargement du moteur et le traitement des
-erreurs HTTP et de l'interface. Voir les [notes de version](docs/RELEASE-1.2.1.md)
+erreurs HTTP et de l'interface. La garde du setup est décrite dans les
+[notes de maintenance 1.2.2](docs/RELEASE-1.2.2.md) ; voir aussi les
+[corrections 1.2.1](docs/RELEASE-1.2.1.md)
 et les [résultats vérifiés](VALIDATION.md).
 
 ## Mémoire et CPU
@@ -79,9 +90,9 @@ avec réserve, sans imposer de plafond système. La quantification IQ2 peut réd
 la qualité du modèle ; les scores du modèle original ne sont pas ceux de ce pack.
 
 Les résultats mesurés du modèle restent ceux de `VALIDATION-MODELE.json` de
-la release **1.2.0**. Le rapport `VALIDATION-WINDOWS.json` de **1.2.1** couvre
-les nouveaux exécutables. Aucune nouvelle inférence ni mesure RAM du modèle
-n'est revendiquée pour 1.2.1. Une mesure Linux ne constitue pas une qualification
+la release **1.2.0**. Le rapport `VALIDATION-WINDOWS.json` de **1.2.2** couvre
+les nouveaux exécutables et la garde du setup. Aucune nouvelle inférence ni
+mesure RAM du modèle n'est revendiquée pour 1.2.1 ou 1.2.2. Une mesure Linux ne constitue pas une qualification
 de toutes les configurations Windows.
 
 L'essai complet sur le runner Linux à quatre threads a mesuré **10,97 Gio de
@@ -111,7 +122,7 @@ réseau de la session Windows.
 
 ## Code signing policy
 
-**La distribution 1.2.1 est explicitement non signée.** La chaîne est préparée
+**La distribution 1.2.2 est explicitement non signée.** La chaîne est préparée
 pour une signature SignPath en deux étapes, mais aucun certificat n'a été fourni.
 La demande au programme gratuit SignPath Foundation est préparée ; elle n'est
 pas présentée comme acceptée.
@@ -128,13 +139,17 @@ corrigés dans 1.2.1 ne sont pas établis comme cause de cette détection, et
 [dossier TEHTRIS](docs/TEHTRIS.md) distingue l’identité attendue du lanceur,
 l’historique et les éléments à recueillir. Aucune protection du poste n’est modifiée.
 
+**Le signalement persiste après diffusion de 1.2.1**, avec les deux exécutables
+maison concernés. La maintenance 1.2.2 n'est pas présentée comme un correctif
+de cette détection.
+
 ## Construction et validation
 
 [Instructions de construction](BUILD.md) · [Rapports et limites](VALIDATION.md)
 · [Modèle et sources](docs/MODELES.md) · [Licences tierces](THIRD_PARTY.md)
 
 Une publication complète attend les tests Windows, vérifie l'inférence et les
-appels d'outils, puis transfère le modèle par parties. La mise à jour 1.2.1 exige
+appels d'outils, puis transfère le modèle par parties. Les mises à jour 1.2.1 et 1.2.2 exigent
 de nouveaux contrôles Windows et vérifie les métadonnées du modèle inchangé
 déjà publié, sans télécharger ni dupliquer ses poids. La release 1.2.0 est
 conservée comme source de ces huit fichiers. Après publication vérifiée de 1.2.0,

@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "phase": "finalize",
+  "signing": "unsigned",
+  "packs": [
+    {
+      "pack": "moe",
+      "version": "1.2.2",
+      "source_commit": "4e81349256fb63bc1a06ad61e54bcaa111d19d0b",
+      "source_inputs_sha256": "ed0f7b4426495854e183eced91841aceb0aa33747d5f1391604103a4880fe3e9",
+      "signing": "unsigned",
+      "model": {
+        "filename": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+        "label": "Qwen3.6-35B-A3B UD-IQ2_XXS",
+        "alias": "qwen3.6-35b-a3b",
+        "bytes": 10756586464,
+        "sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+        "url": "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+        "license": "Apache-2.0",
+        "repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c"
+      },
+      "zip": "D:\\a\\OpenCode-Local\\OpenCode-Local\\dist\\moe\\Setup.zip",
+      "zip_contains": [
+        "Setup.exe"
+      ],
+      "zip_bytes": 127293899,
+      "zip_sha256": "40b49c21baeb4e9b4810a8626513e0f8cd9707f854217669f51f3ec7b2f38a96",
+      "setup": {
+        "sha256": "7e7afacbd91e126ff22b33e89ffb3bf1a4cbb9d45d114280dd4de2ebd170f191",
+        "bytes": 127293783,
+        "signature": {
+          "status": "unsigned"
+        }
+      },
+      "native_validation": {
+        "moe/OpenCodeLocal.exe": {
+          "sha256": "194f6e6db6b77d52ff4435acccb3b7c8462cb313bbdf01b1c8e9c255024680ee",
+          "bytes": 3506302,
+          "signature": {
+            "status": "unsigned"
+          }
+        },
+        "moe/AssembleModel.exe": {
+          "sha256": "5eb148e0e62ac7a2979bd531e1d814c8438e2631344467e54f901f9d2996250d",
+          "bytes": 2738636,
+          "signature": {
+            "status": "unsigned"
+          }
+        },
+        "moe/Uninstall.exe": {
+          "sha256": "4b45eb1991cecf0f6cc5c570609d902bb1b8a199609972fb84eb674e3f1e22a4",
+          "bytes": 179800,
+          "signature": {
+            "status": "unsigned"
+          }
+        }
+      },
+      "parts": [],
+      "model_downloads": false,
+      "tehtris_compatibility": "not_validated"
+    }
+  ]
+}

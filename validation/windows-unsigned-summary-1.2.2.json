@@ -1,0 +1,298 @@
+{
+  "schema_version": 1,
+  "version": "1.2.2",
+  "pack": "moe",
+  "retrieved_utc": "2026-11-05T18:03:34.077268+00:00",
+  "scope": "Fresh unsigned Windows native/installer checks, launcher runtime regressions and prepared-model transaction guard fixtures. No model inference, production installation, target-PC RAM measurement or TEHTRIS qualification.",
+  "repository": "M4D135/OpenCode-Local",
+  "artifact": {
+    "id": 13440326050,
+    "name": "unsigned-windows-reports-42079620191-1",
+    "size_in_bytes": 12383,
+    "url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13440326050",
+    "archive_download_url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13440326050/zip",
+    "expired": false,
+    "created_at": "2026-11-05T18:00:48Z",
+    "expires_at": "2026-11-06T18:00:47Z",
+    "updated_at": "2026-11-05T18:00:48Z",
+    "digest": "sha256:9207e07c8f3d9b7b188471f27d42e94480adbec8a39469cf039191bc4a15ab70",
+    "workflow_run": {
+      "id": 42079620191,
+      "repository_id": 1445408791,
+      "head_repository_id": 1445408791,
+      "head_branch": "main",
+      "head_sha": "4e81349256fb63bc1a06ad61e54bcaa111d19d0b"
+    }
+  },
+  "workflow": {
+    "id": 42079620191,
+    "name": "Build and Windows validation (unsigned)",
+    "path": ".github/workflows/validate-unsigned.yml",
+    "head_branch": "main",
+    "head_sha": "4e81349256fb63bc1a06ad61e54bcaa111d19d0b",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "run_number": 11,
+    "run_attempt": 1,
+    "created_at": "2026-11-05T17:57:27Z",
+    "updated_at": "2026-11-05T18:00:53Z",
+    "run_started_at": "2026-11-05T17:57:27Z",
+    "html_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/42079620191"
+  },
+  "jobs": [
+    {
+      "id": 127428933302,
+      "name": "build",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 127429891644,
+      "name": "windows",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifact_zip_sha256_verified": true,
+  "artifact_zip_crc_verified": true,
+  "candidate_bundle_downloaded_for_this_summary": false,
+  "model_weights_downloaded_for_this_summary": false,
+  "saved_reports": {
+    "windows-unsigned-1.2.2.json": {
+      "archive_path": "validation/windows-unsigned.json",
+      "bytes": 119348,
+      "sha256": "3034847e66426bec6fe5884fde2bb687db217308f3d4d656a906082d0a51371d",
+      "source_encoding": "UTF-8 (strict)",
+      "utf8_bom_removed": false,
+      "checked_in_encoding": "UTF-8",
+      "checked_in_line_endings": "LF",
+      "bytes_checked_in_utf8_lf": 116900,
+      "sha256_checked_in_utf8_lf": "ea8c580cfb57e504dde1a422f038f61a26f548d2bbe6f43a6cf5a02e9f233731",
+      "json_value_unchanged": true
+    },
+    "finalize-unsigned-1.2.2.json": {
+      "archive_path": "signing/finalize-manifest.json",
+      "bytes": 2267,
+      "sha256": "93f4bd2fbcfd4c09c2a8cf192bc1bcb43b94469f726c923dc2b65ec819e8da33",
+      "source_encoding": "UTF-8 (strict)",
+      "utf8_bom_removed": false,
+      "checked_in_encoding": "UTF-8",
+      "checked_in_line_endings": "LF",
+      "bytes_checked_in_utf8_lf": 2203,
+      "sha256_checked_in_utf8_lf": "507dc3e2ffbf3d553d97484aa51f37093b9c4f5e131d694eccefb95223de4341",
+      "json_value_unchanged": true
+    }
+  },
+  "platform": "Microsoft Windows NT 10.0.20348.0",
+  "powershell": "7.6.9",
+  "source_file_sha256_verified": {
+    "src/launcher.cpp": "c7cdb4331032143978bfe6b5641a9fa8d04cba5d39706b8da720b1902d9fc161",
+    "src/launcher.manifest": "a5b77d9cfd919b6bf5c6aba791ac5a5f4cfa986c78ede8e76d5c5a5bde5e1d8c",
+    "config/packs.json": "969ff469083ebb6f9b854a2de95f5be69e5e0bd2706ec85be882e922b426a613",
+    "src/assemble_model.cpp": "7d714f7717d17255b177d6c108490c1b46ed786ba5b7c475375e2c4fcaea95ce",
+    "installer/OpenCodeLocal.nsi": "fccd23dfa28ab8069f6a813e96f8428731f08c85d3b6403b0cbb5a5027fa11c8"
+  },
+  "generated_installer_config_sha256_reported": "f4d5cf34846d075ec2667395f2fc63673dd46f03b85b6f9302b33f17bdfc5896",
+  "checks": {
+    "top_level": {
+      "total": 9,
+      "passed": 9
+    },
+    "nested_success_flags": {
+      "total": 163,
+      "passed": 163,
+      "note": "Includes aggregate and nested flags; not a count of independent test cases."
+    },
+    "launcher": {
+      "launcher_http_ui_tests": {
+        "runtime_executed": true,
+        "total": 7,
+        "passed": 7
+      },
+      "launcher_process_tests": {
+        "runtime_executed": true,
+        "total": 12,
+        "passed": 12
+      },
+      "launcher_profile_tests": {
+        "runtime_executed": true,
+        "total": 11,
+        "passed": 11
+      }
+    },
+    "assembler": {
+      "small_fixture_cases": 38,
+      "production_executable_cases": 5,
+      "passed": true
+    },
+    "installer": {
+      "path_cases": 16,
+      "model_metadata_cases": 17,
+      "installed_model_reuse_case_passed": true,
+      "passed": true,
+      "prepared_model_guard": {
+        "total": 9,
+        "passed": 9,
+        "placement": {
+          "passed": true,
+          "production_gate_copied_unchanged": true,
+          "before_old_installation_rename_or_removal": true,
+          "before_staged_installation_publish": true
+        },
+        "invalid_cases_preserving_existing_installation": 8,
+        "accepted_exact_size_case_preserves_previous_installation_in_backup": true,
+        "sha256_validation_claimed": false,
+        "cases": [
+          {
+            "case": "exit_zero_without_final_model",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_partial_only",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_truncated_model",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_oversized_model",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_directory_as_model",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_reparse_parent",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_reparse_final_path",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_exact_size_file",
+            "expected_allowed": true,
+            "actual_allowed": true,
+            "helper_exit": "0",
+            "commit_started": true,
+            "old_installation_untouched": false,
+            "old_installation_preserved_in_backup": true,
+            "passed": true,
+            "sha256_validation_claimed": false
+          },
+          {
+            "case": "exit_zero_with_low_32_bits_only",
+            "expected_allowed": false,
+            "actual_allowed": false,
+            "helper_exit": "0",
+            "commit_started": false,
+            "old_installation_untouched": true,
+            "old_installation_preserved_in_backup": false,
+            "passed": true,
+            "sha256_validation_claimed": false
+          }
+        ]
+      }
+    },
+    "native_executables": {
+      "OpenCodeLocal.exe": {
+        "bytes": 3506302,
+        "sha256": "194f6e6db6b77d52ff4435acccb3b7c8462cb313bbdf01b1c8e9c255024680ee",
+        "product_version": "1.2.2",
+        "authenticode": "NotSigned",
+        "exact_setup_payload_match": true
+      },
+      "AssembleModel.exe": {
+        "bytes": 2738636,
+        "sha256": "5eb148e0e62ac7a2979bd531e1d814c8438e2631344467e54f901f9d2996250d",
+        "product_version": "1.2.2",
+        "authenticode": "NotSigned",
+        "exact_setup_payload_match": true
+      },
+      "Uninstall.exe": {
+        "bytes": 179800,
+        "sha256": "4b45eb1991cecf0f6cc5c570609d902bb1b8a199609972fb84eb674e3f1e22a4",
+        "product_version": "1.2.2",
+        "authenticode": "NotSigned",
+        "exact_setup_payload_match": true
+      }
+    },
+    "setup": {
+      "bytes": 127293783,
+      "sha256": "7e7afacbd91e126ff22b33e89ffb3bf1a4cbb9d45d114280dd4de2ebd170f191",
+      "authenticode": "NotSigned",
+      "archive_entries": 3823,
+      "exact_embedded_native_matches": 3
+    },
+    "windows_finalize_zip": {
+      "bytes": 127293899,
+      "sha256": "40b49c21baeb4e9b4810a8626513e0f8cd9707f854217669f51f3ec7b2f38a96",
+      "contains": [
+        "Setup.exe"
+      ],
+      "scope": "ZIP constructed and checked in the Windows validation job. This is not a claim that the separately constructed public release ZIP has identical bytes.",
+      "downloaded_for_this_summary": false
+    }
+  },
+  "limits": {
+    "model_downloaded": false,
+    "model_loaded": false,
+    "production_installation_executed": false,
+    "model_or_ram_qualification": false,
+    "endpoint_protection_changed": false,
+    "tehtris_compatibility": "not_validated",
+    "public_release_verification_included": false
+  }
+}

@@ -67,10 +67,12 @@ ce code de sortie ou que ce scénario s'est produit sur le poste signalé.
 La maintenance 1.2.2 ajoute un contrôle du modèle préparé avant tout renommage
 de l'installation existante : présence, type ordinaire, absence de reparse
 point et taille exacte sur 64 bits. Le SHA-256 du contenu reste vérifié par
-l'assembleur. Les tests doivent reproduire le code de retour réussi sans
-sortie et vérifier que les anciens fichiers restent intacts. Les résultats
-Windows effectifs sont consignés dans [VALIDATION.md](../VALIDATION.md) après
-exécution. **Cette garde ne résout pas les détections TEHTRIS signalées.**
+l'assembleur. Les neuf nouveaux cas ont réussi sous Windows sur le commit
+`4e81349256fb63bc1a06ad61e54bcaa111d19d0b`, notamment le code de retour réussi
+sans sortie : les anciens fichiers restent intacts dans les huit refus.
+Les [résultats détaillés](../validation/windows-unsigned-1.2.2.json) et leur
+[synthèse](../VALIDATION.md) précisent la portée des tests. **Cette garde ne
+résout pas les détections TEHTRIS signalées.**
 
 ## Correctif 1.2.1 — publié après validation Windows
 

@@ -1,5 +1,74 @@
 # Validation du pack unique MoE
 
+## Version 1.2.2 — garde de l'installation avant remplacement
+
+La [maintenance 1.2.2](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.2)
+est publiée pour le commit `4e81349256fb63bc1a06ad61e54bcaa111d19d0b`.
+Le [run Windows 42079620191](https://github.com/M4D135/OpenCode-Local/actions/runs/42079620191)
+et le [run de publication 42080166524](https://github.com/M4D135/OpenCode-Local/actions/runs/42080166524)
+ont réussi. **Le blocage TEHTRIS signalé reste non résolu.** Cette maintenance
+protège la transaction d'installation ; elle ne garantit pas l'absence de
+détection et n'est pas qualifiée sur le poste utilisateur.
+
+### Résultats de la nouvelle garde
+
+Un sous-processus de test retourne réellement `0` via le même plugin de
+lancement que le setup. Le bloc de contrôle du retour et la fonction
+`ValidatePreparedModel` sont extraits du code de production sans modification.
+Les cas exécutés sous Windows utilisent des fichiers creux pour représenter
+les tailles exactes du modèle et de petits fichiers témoins pour l'ancienne
+installation. Ils ne valident pas le contenu SHA-256 de ces données synthétiques.
+
+| Préparation après le retour `0` | Résultat attendu et obtenu |
+| --- | --- |
+| Aucun fichier final | Refus ; anciens fichiers inchangés |
+| Un fichier `.partial` seulement | Refus ; anciens fichiers inchangés |
+| Modèle tronqué | Refus ; anciens fichiers inchangés |
+| Modèle trop grand | Refus ; anciens fichiers inchangés |
+| Taille correspondant seulement aux 32 bits bas | Refus ; anciens fichiers inchangés |
+| Dossier à la place du modèle | Refus ; anciens fichiers inchangés |
+| Jonction dans le dossier parent | Refus ; anciens fichiers inchangés |
+| Jonction au chemin final | Refus ; anciens fichiers inchangés |
+| Fichier ordinaire de taille exacte | Autorisation ; préparation renommée, ancienne installation conservée en sauvegarde |
+
+Les **9/9 cas passent**. Dans les huit refus, `commit_started` est faux et
+`old_installation_untouched` est vrai. Le contrôle de placement vérifie que
+la garde précède le renommage ou retrait de l'installation précédente et la
+publication du dossier préparé. Le SHA-256 du vrai modèle reste contrôlé par
+l'assembleur pendant une installation réelle ; cette garde ajoute un contrôle
+de présence, de type, de chemin et de taille avant le remplacement.
+
+Les autres contrôles repassent : **9/9 groupes Windows**, **30/30 cas du
+lanceur**, **38+5 cas de l'assembleur**, **16 chemins d'installation** et
+**17 cas de sélection/métadonnées du modèle**. Le
+[rapport Windows complet](validation/windows-unsigned-1.2.2.json) et sa
+[synthèse de provenance](validation/windows-unsigned-summary-1.2.2.json)
+conservent le commit, la version, les résultats et les empreintes des sources.
+Environnement : Microsoft Windows NT 10.0.20348.0, PowerShell 7.6.9.
+Les valeurs des JSON originaux sont préservées dans les copies UTF-8/LF.
+
+### Vérification du téléchargement public
+
+Le [ZIP public retéléchargé](validation/release-download-1.2.2.json) a un CRC
+valide et contient uniquement `Setup.exe`, identique au setup validé sous
+Windows. Le [manifeste de distribution](validation/release-manifest-1.2.2.json)
+référence le modèle de 1.2.0, conservé sans téléchargement ou duplication des
+poids pour cette maintenance.
+
+| Fichier | Octets | SHA-256 |
+| --- | ---: | --- |
+| `Setup.zip` public | 127 293 899 | `9002591dc86060460b3f0109d90bfec3e65c7eb2e3535433da264618ba901b9d` |
+| `Setup.exe` dans le ZIP | 127 293 783 | `7e7afacbd91e126ff22b33e89ffb3bf1a4cbb9d45d114280dd4de2ebd170f191` |
+
+Le [rapport de finalisation Windows](validation/finalize-unsigned-1.2.2.json)
+concerne le conteneur ZIP produit par ce job. Le conteneur publié a été créé
+séparément ; les empreintes ZIP diffèrent, mais leur `Setup.exe` est identique.
+
+Les exécutables restent non signés. Aucune nouvelle inférence, mesure de RAM,
+installation complète avec les poids réels sur Windows ou validation TEHTRIS
+n'est revendiquée. Le [signalement persistant](docs/TEHTRIS.md) et les résultats
+historiques ci-dessous sont conservés avec leur portée respective.
+
 ## Version 1.2.1 — résultats fonctionnels du lanceur et de l'installateur
 
 La [release 1.2.1](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.1)
