@@ -7,8 +7,9 @@ packs 16/32 Go par un seul pack, réglé pour un PC de 32 Gio disposant d'enviro
 
 ## Télécharger et installer hors ligne
 
-La [page des releases](https://github.com/M4D135/OpenCode-Local/releases) publie
-la version 1.2.0 après validation Windows et exécution réelle du modèle.
+La [release 1.2.0](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0)
+est publiée après validation Windows et exécution réelle du modèle.
+[Télécharger directement Setup.zip — 127,3 Mo](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Setup.zip).
 
 1. Télécharger **Setup.zip** et les **huit fichiers Modele-MoE-01.bin à Modele-MoE-08.bin** de la même release.
 2. Extraire `Setup.exe` du ZIP : **il contient uniquement cet exécutable**.
@@ -47,6 +48,14 @@ Les résultats mesurés sont fournis dans les rapports `VALIDATION-MODELE.json`
 et `VALIDATION-WINDOWS.json` de la release. Une mesure Linux ne constitue pas
 une qualification de toutes les configurations Windows.
 
+L'essai complet sur le runner Linux à quatre threads a mesuré **10,97 Gio de
+RSS combiné moteur/OpenCode**, sans swap observé pour ces processus. Génération,
+lecture réelle avec OpenCode et refus d'écriture sans autorisation ont réussi.
+Le premier échange OpenCode de ce scénario a pris **316 secondes**, puis le
+contrôle d'autorisation **19 secondes** : un premier échange sur CPU peut donc
+prendre plusieurs minutes. Ces durées ne prédisent pas celles de chaque portable.
+Les mesures, paramètres et limites sont conservés dans [VALIDATION.md](VALIDATION.md).
+
 ## Utilisation et données
 
 - **Ouvrir OpenCode** : le modèle écoute uniquement sur `127.0.0.1`, avec une clé de session aléatoire.
@@ -83,6 +92,7 @@ ne promet pas son acceptation et ne modifie aucune protection du poste.
 · [Modèle et sources](docs/MODELES.md) · [Licences tierces](THIRD_PARTY.md)
 
 Le workflow de publication attend les tests Windows, vérifie l'inférence et les
-appels d'outils, puis transfère le modèle par parties. Les anciennes releases
-1.0.0, 1.0.1 et 1.1.0 sont supprimées uniquement après publication vérifiée du
-remplaçant ; leurs tags et l'historique du code sont conservés.
+appels d'outils, puis transfère le modèle par parties. Après publication vérifiée,
+les anciennes releases 1.0.0, 1.0.1 et 1.1.0 ont été supprimées : **19,84 Go de
+fichiers**, plus **769 Mo d'anciens artefacts Actions**. Leurs tags et l'historique
+du code sont conservés.

@@ -2,47 +2,47 @@
   "schema_version": 1,
   "version": "1.2.0",
   "pack": "moe",
-  "retrieved_utc": "2026-11-05T08:27:57.939331+00:00",
+  "retrieved_utc": "2026-11-05T08:46:41.710027+00:00",
   "scope": "Unsigned Windows executable, installer archive, path and assembly validation; not model or target-PC RAM qualification",
   "repository": "M4D135/OpenCode-Local",
   "artifact": {
-    "id": 13399083144,
-    "name": "unsigned-windows-reports-41993863228-1",
-    "size_in_bytes": 9453,
-    "url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13399083144",
-    "archive_download_url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13399083144/zip",
+    "id": 13400686869,
+    "name": "unsigned-windows-reports-41996391326-1",
+    "size_in_bytes": 9436,
+    "url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13400686869",
+    "archive_download_url": "https://api.github.com/repos/M4D135/OpenCode-Local/actions/artifacts/13400686869/zip",
     "expired": false,
-    "created_at": "2026-11-05T08:24:28Z",
-    "expires_at": "2026-11-06T08:24:27Z",
-    "updated_at": "2026-11-05T08:24:28Z",
-    "digest": "sha256:714da1448e6a472c12203ccafbdfc6fed9200ce283265ae4fe7b295f8ea5854f",
+    "created_at": "2026-11-05T08:44:11Z",
+    "expires_at": "2026-11-06T08:44:10Z",
+    "updated_at": "2026-11-05T08:44:11Z",
+    "digest": "sha256:10e95ef1b9454572fcac14a2bb9930040147abd36a0e828f7cc56601ddc587ef",
     "workflow_run": {
-      "id": 41993863228,
+      "id": 41996391326,
       "repository_id": 1445408791,
       "head_repository_id": 1445408791,
       "head_branch": "main",
-      "head_sha": "c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c"
+      "head_sha": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1"
     }
   },
   "workflow": {
-    "id": 41993863228,
+    "id": 41996391326,
     "name": "Build and Windows validation (unsigned)",
     "path": ".github/workflows/validate-unsigned.yml",
     "head_branch": "main",
-    "head_sha": "c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c",
+    "head_sha": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1",
     "event": "push",
     "status": "completed",
     "conclusion": "success",
-    "run_number": 7,
+    "run_number": 8,
     "run_attempt": 1,
-    "created_at": "2026-11-05T08:21:45Z",
-    "updated_at": "2026-11-05T08:24:32Z",
-    "run_started_at": "2026-11-05T08:21:45Z",
-    "html_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/41993863228"
+    "created_at": "2026-11-05T08:41:14Z",
+    "updated_at": "2026-11-05T08:44:16Z",
+    "run_started_at": "2026-11-05T08:41:14Z",
+    "html_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/41996391326"
   },
   "jobs": [
     {
-      "id": 127132240489,
+      "id": 127140492014,
       "name": "build",
       "status": "completed",
       "conclusion": "success",
@@ -140,7 +140,7 @@
       ]
     },
     {
-      "id": 127133023745,
+      "id": 127141284295,
       "name": "windows",
       "status": "completed",
       "conclusion": "success",
@@ -221,13 +221,13 @@
     }
   ],
   "runtime_validation": {
-    "id": 41994232790,
-    "html_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/41994232790",
-    "head_sha": "c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c",
+    "id": 41996782971,
+    "html_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/41996782971",
+    "head_sha": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1",
     "status": "in_progress",
     "conclusion": null,
-    "created_at": "2026-11-05T08:24:36Z",
-    "updated_at": "2026-11-05T08:24:59Z",
+    "created_at": "2026-11-05T08:44:19Z",
+    "updated_at": "2026-11-05T08:44:32Z",
     "run_attempt": 1
   },
   "artifact_zip_sha256_verified": true,
@@ -235,13 +235,27 @@
   "saved_reports": {
     "windows-unsigned-1.2.0.json": {
       "archive_path": "validation/windows-unsigned.json",
-      "bytes": 78017,
-      "sha256": "ca4e9555528ecb656b22af116a7a270a99bf312125d7bee8a77fedf749431aed"
+      "bytes": 78047,
+      "sha256": "afb9524bf070d0d4129141144097c59497be1d9a0b1239411cfa395b518febe1",
+      "source_encoding": "UTF-8 (strict)",
+      "utf8_bom_removed": false,
+      "checked_in_encoding": "UTF-8",
+      "checked_in_line_endings": "LF",
+      "bytes_checked_in_utf8_lf": 76426,
+      "sha256_checked_in_utf8_lf": "d9e89f3456b83b9ba96f90afac0c6dfe6e34f8a55e91503b746012221cff5a94",
+      "json_value_unchanged": true
     },
     "finalize-unsigned-1.2.0.json": {
       "archive_path": "signing/finalize-manifest.json",
       "bytes": 2267,
-      "sha256": "14a7cab1cbf5d39cdcfe3ba190323cd9f21775dd3d5718789802c7b45cbcd450"
+      "sha256": "d05e801e4d8fbf5b5f2d8280189fbe9d1b48b502d3a77c6cccefe67488ee816a",
+      "source_encoding": "UTF-8 (strict)",
+      "utf8_bom_removed": false,
+      "checked_in_encoding": "UTF-8",
+      "checked_in_line_endings": "LF",
+      "bytes_checked_in_utf8_lf": 2203,
+      "sha256_checked_in_utf8_lf": "45742200932341d6ba80bce8613a299dcdc16f0e7fba4cde0d06c8341a9f19f1",
+      "json_value_unchanged": true
     }
   },
   "passed": true,
@@ -275,20 +289,28 @@
     "platform": "Microsoft Windows NT 10.0.20348.0",
     "powershell": "7.6.9"
   },
-  "validation_started_utc": "2026-11-05T08:23:59.1822982Z",
-  "validation_finished_utc": "2026-11-05T08:24:24.2440391Z",
+  "validation_started_utc": "2026-11-05T08:43:36.7763281Z",
+  "validation_finished_utc": "2026-11-05T08:44:07.9257792Z",
   "setup": {
-    "bytes": 127278384,
-    "sha256": "8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291",
+    "bytes": 127279637,
+    "sha256": "db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209",
     "authenticode": "NotSigned",
     "archive_entries": 3821
   },
   "setup_zip": {
-    "bytes": 127278500,
-    "sha256": "28aea3662a0f1f21e8a716e5db60704a9c7ceb6db4fcc2770afce57188f5646b",
+    "bytes": 127279753,
+    "sha256": "248172a7688ddcbe75b1024ac951d5baa3f633667ac87de9ac16306a35c0f11f",
     "contains": [
       "Setup.exe"
     ]
+  },
+  "memory_configuration": {
+    "context_tokens": 8192,
+    "estimated_session_mib": 13075,
+    "reserve_mib": 6144,
+    "minimum_available_mib": 19219,
+    "context_checkpoints": 4,
+    "general_prompt_cache_mib": 0
   },
   "qualifications": {
     "model_downloaded": false,
@@ -296,5 +318,51 @@
     "production_installation_executed": false,
     "model_or_ram_qualification": false
   },
-  "tehtris_compatibility": "not_validated"
+  "tehtris_compatibility": "not_validated",
+  "previous_windows_validation": {
+    "source_sha": "c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c",
+    "run_id": 41993863228,
+    "run_url": "https://github.com/M4D135/OpenCode-Local/actions/runs/41993863228",
+    "passed": true,
+    "counts": {
+      "main_checks": {
+        "passed": 8,
+        "total": 8
+      },
+      "assembler_small_cases": {
+        "passed": 38,
+        "total": 38
+      },
+      "assembler_production_cases": {
+        "passed": 5,
+        "total": 5
+      },
+      "installer_path_cases": {
+        "passed": 16,
+        "total": 16
+      },
+      "installer_metadata_cases": {
+        "passed": 8,
+        "total": 8
+      },
+      "exact_embedded_native_matches": {
+        "passed": 3,
+        "total": 3
+      }
+    },
+    "setup": {
+      "bytes": 127278384,
+      "sha256": "8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291",
+      "authenticode": "NotSigned",
+      "archive_entries": 3821
+    },
+    "artifact_id": 13399083144,
+    "artifact_digest": "sha256:714da1448e6a472c12203ccafbdfc6fed9200ce283265ae4fe7b295f8ea5854f",
+    "saved_report_original_digests": {
+      "windows-unsigned-1.2.0.json": "ca4e9555528ecb656b22af116a7a270a99bf312125d7bee8a77fedf749431aed",
+      "finalize-unsigned-1.2.0.json": "14a7cab1cbf5d39cdcfe3ba190323cd9f21775dd3d5718789802c7b45cbcd450"
+    },
+    "first_model_attempt_report": "validation/model-runtime-first-attempt-1.2.0.json",
+    "model_qualification": false
+  }
 }

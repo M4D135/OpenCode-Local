@@ -5,8 +5,8 @@
     "moe"
   ],
   "passed": true,
-  "started_utc": "2026-11-05T08:23:59.1822982Z",
-  "finished_utc": "2026-11-05T08:24:24.2440391Z",
+  "started_utc": "2026-11-05T08:43:36.7763281Z",
+  "finished_utc": "2026-11-05T08:44:07.9257792Z",
   "platform": "Microsoft Windows NT 10.0.20348.0",
   "powershell": "7.6.9",
   "native_root": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native",
@@ -26,7 +26,7 @@
       "passed": true,
       "details": {
         "path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\native\\moe\\OpenCodeLocal.exe",
-        "sha256": "8e2d1579474d901f1dfaa9b7f9ad0e70a83810ebb3883dbe7f7007de46d84373",
+        "sha256": "ed0f93d403253f6c8779312e1f97851d303f552276e4330da4ea902b7b6f7ac0",
         "metadata": {
           "machine": "0x8664",
           "architecture": "x64",
@@ -41,7 +41,7 @@
           "file_description": "OpenCode Local - MoE léger",
           "company_name": "M4D135",
           "certificate_table_bytes": 0,
-          "file_bytes": 3498202
+          "file_bytes": 3498714
         },
         "authenticode": {
           "required": false,
@@ -148,10 +148,10 @@
           "timed_out": false,
           "stdout": "",
           "stderr": "",
-          "seconds": 0.05,
+          "seconds": 0.057,
           "peak_working_set_bytes": null
         },
-        "diagnostic": "OpenCode Local — MoE léger 1.2.0 — DIAGNOSTIC\r\n\r\nDate : 20261105-082359-549\r\nApplication : C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\launcher-only\r\nDonnées utilisateur : C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\r\nJournaux OpenCode : C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\\data\\opencode\\log\r\nProjet : C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE\r\n\r\nRAM installée : 16384 Mo (inventaire matériel)\r\nRAM utilisable : 16378 Mo\r\nRAM disponible : 13759 Mo\r\nSession estimée (tous les experts, contexte, moteur et OpenCode) : 12819 Mo\r\nMarge visée pour les autres logiciels : 6144 Mo\r\nRAM disponible demandée au démarrage, marge incluse : 18963 Mo\r\nCe budget est une estimation ; la consommation dépend de la session et des autres applications.\r\nModèle : Qwen3.6-35B-A3B UD-IQ2_XXS\r\nFichier du modèle : Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf\r\nSHA-256 attendu du modèle : 2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef\r\nProcesseurs logiques : 4\r\nCœurs physiques : 2\r\nThreads de calcul / préremplissage : 2 / 2\r\nArchitecture du système : x64\r\nContexte OpenCode : 8192 tokens\r\nRéponse maximale par tour : 2048 tokens\r\nPoids : mémoire mappée ; repacking désactivé\r\nCache KV K/V : bf16 / bf16\r\nFlash Attention : activée\r\nBatch / micro-batch : 256 / 64\r\nServeur : une séquence ; cache de prompts RAM désactivé ; un checkpoint récurrent\r\nDiscussion directe : une séquence, sans cache de prompts serveur\r\n\r\n[ERREUR] Moteur API\r\n[ERREUR] Discussion directe\r\n[ERREUR] OpenCode\r\n[ERREUR] Recherche de fichiers\r\n[ERREUR] Qwen3.6-35B-A3B UD-IQ2_XXS\r\n[ERREUR] Configuration\r\n\r\nFichier requis absent ou vide : C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\launcher-only\\wad\\engine\\llama-server.exe. Relancez Setup.exe depuis le pack complet.\r\n\r\nMémoire insuffisante pour OpenCode Local — MoE léger : 16,0 Go détectés, 23,0 Go installés nécessaires.\r\n\r\nPort de cette session : aucun moteur API actif\r\n\r\nLe mode OpenCode utilise uniquement un serveur local pour le modèle.\r\nLe mode Discussion directe ne lance aucun serveur HTTP.\r\nAucune règle de pare-feu, aucun service Windows et aucun réglage système\r\nne sont modifiés par le lanceur.\r\n\r\nCe contrôle vérifie la présence et le format des fichiers ; l'installateur\r\nréalise la vérification SHA-256 du contenu livré.\r\n",
+        "diagnostic": "OpenCode Local — MoE léger 1.2.0 — DIAGNOSTIC\r\n\r\nDate : 20261105-084337-419\r\nApplication : C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\launcher-only\r\nDonnées utilisateur : C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\r\nJournaux OpenCode : C:\\Users\\runneradmin\\AppData\\Local\\OpenCodeLocalMoE\\data\\opencode\\log\r\nProjet : C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE\r\n\r\nRAM installée : 16384 Mo (inventaire matériel)\r\nRAM utilisable : 16378 Mo\r\nRAM disponible : 13780 Mo\r\nSession estimée (tous les experts, contexte, moteur et OpenCode) : 13075 Mo\r\nMarge visée pour les autres logiciels : 6144 Mo\r\nRAM disponible demandée au démarrage, marge incluse : 19219 Mo\r\nCe budget est une estimation ; la consommation dépend de la session et des autres applications.\r\nModèle : Qwen3.6-35B-A3B UD-IQ2_XXS\r\nFichier du modèle : Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf\r\nSHA-256 attendu du modèle : 2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef\r\nProcesseurs logiques : 4\r\nCœurs physiques : 2\r\nThreads de calcul / préremplissage : 2 / 2\r\nArchitecture du système : x64\r\nContexte OpenCode : 8192 tokens\r\nRéponse maximale par tour : 2048 tokens\r\nPoids : mémoire mappée ; repacking désactivé\r\nCache KV K/V : bf16 / bf16\r\nFlash Attention : activée\r\nBatch / micro-batch : 256 / 64\r\nServeur : une séquence ; cache de prompts RAM désactivé ; quatre checkpoints récurrents\r\nDiscussion directe : une séquence, sans cache de prompts serveur\r\n\r\n[ERREUR] Moteur API\r\n[ERREUR] Discussion directe\r\n[ERREUR] OpenCode\r\n[ERREUR] Recherche de fichiers\r\n[ERREUR] Qwen3.6-35B-A3B UD-IQ2_XXS\r\n[ERREUR] Configuration\r\n\r\nFichier requis absent ou vide : C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\launcher-only\\wad\\engine\\llama-server.exe. Relancez Setup.exe depuis le pack complet.\r\n\r\nMémoire insuffisante pour OpenCode Local — MoE léger : 16,0 Go détectés, 23,0 Go installés nécessaires.\r\n\r\nPort de cette session : aucun moteur API actif\r\n\r\nLe mode OpenCode utilise uniquement un serveur local pour le modèle.\r\nLe mode Discussion directe ne lance aucun serveur HTTP.\r\nAucune règle de pare-feu, aucun service Windows et aucun réglage système\r\nne sont modifiés par le lanceur.\r\n\r\nCe contrôle vérifie la présence et le format des fichiers ; l'installateur\r\nréalise la vérification SHA-256 du contenu livré.\r\n",
         "expected_exit": 2,
         "outcome": "Incomplete-package diagnostic; model intentionally absent",
         "model_loaded": false,
@@ -173,7 +173,7 @@
           "timed_out": false,
           "stdout": "{\"passed\": true, \"platform\": \"win32\", \"small_cases\": 38, \"production_cases\": 5, \"production_pe_execution\": \"executed\", \"error\": null}\r\n",
           "stderr": "",
-          "seconds": 13.624,
+          "seconds": 15.685,
           "peak_working_set_bytes": null
         },
         "report_path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\validation\\windows-unsigned.assembler.json",
@@ -181,7 +181,7 @@
           "schema_version": 1,
           "platform": "win32",
           "source_sha256": "7d714f7717d17255b177d6c108490c1b46ed786ba5b7c475375e2c4fcaea95ce",
-          "production_config_sha256": "f21528eb4a0609bb7ad7b4ec2c42adf82c94a3527b6f3fcf658ca27dbed7f9fd",
+          "production_config_sha256": "dcf6b72489bb6ce066ec22e3a998cf8eeefaa5aa3ebdd9c7bd6f445a27abe38d",
           "model_loaded": false,
           "fixture_model_bytes": 262168,
           "small_fixtures": [
@@ -190,9 +190,9 @@
               "compilation": {
                 "exit_code": 0,
                 "timed_out": false,
-                "stdout": "assemble_model.cpp\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-j_ylkl9f\\fixture-2\\assemble_model.cpp(46): warning C4127: conditional expression is constant\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-j_ylkl9f\\fixture-2\\assemble_model.cpp(46): note: consider using 'if constexpr' statement instead\n",
+                "stdout": "assemble_model.cpp\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-7qtbzw8b\\fixture-2\\assemble_model.cpp(46): warning C4127: conditional expression is constant\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-7qtbzw8b\\fixture-2\\assemble_model.cpp(46): note: consider using 'if constexpr' statement instead\n",
                 "stderr": "",
-                "seconds": 9.344
+                "seconds": 10.375
               },
               "test_header_sha256": "cbf7ecf55984d8f726b2744d7a65d68ceca53330a3cf0879629f2dcb8bc58184",
               "cases": [
@@ -205,7 +205,7 @@
                     "timed_out": false,
                     "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.015
+                    "seconds": 0.031
                   },
                   "passed": true,
                   "problems": []
@@ -219,7 +219,7 @@
                     "timed_out": false,
                     "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.032
+                    "seconds": 0.031
                   },
                   "passed": true,
                   "problems": []
@@ -233,7 +233,7 @@
                     "timed_out": false,
                     "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.015
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -247,7 +247,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -261,7 +261,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour Setup-2.bin. Le fichier doit contenir 251057 octets.\n",
-                    "seconds": 0.016
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -275,7 +275,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour Setup-2.bin. Le fichier doit contenir 251057 octets.\n",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -289,7 +289,7 @@
                     "timed_out": false,
                     "stdout": "Source : 2 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 4 %\nModele : 100 %\n",
                     "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
-                    "seconds": 0.0
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -303,7 +303,7 @@
                     "timed_out": false,
                     "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.047
+                    "seconds": 0.032
                   },
                   "passed": true,
                   "problems": []
@@ -317,7 +317,7 @@
                     "timed_out": false,
                     "stdout": "Source : fichier GGUF complet fixture-2.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.031
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -345,7 +345,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour fixture-2.gguf. Le fichier doit contenir 262168 octets.\n",
-                    "seconds": 0.015
+                    "seconds": 0.0
                   },
                   "passed": true,
                   "problems": []
@@ -373,7 +373,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
-                    "seconds": 0.0
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -387,7 +387,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 4 : La destination ne peut pas remplacer une partie originale du modele.\n",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -415,7 +415,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source.\n",
-                    "seconds": 0.016
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -429,7 +429,7 @@
                     "timed_out": false,
                     "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.\n",
                     "stderr": "",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -442,7 +442,7 @@
                     "timed_out": false,
                     "stdout": "PASS SHA-256 : 4 vecteurs, blocs incrementaux et un million d'octets.\n",
                     "stderr": "",
-                    "seconds": 0.016
+                    "seconds": 0.0
                   },
                   "passed": true
                 },
@@ -454,7 +454,7 @@
                     "timed_out": false,
                     "stdout": "4ae661d0684a4208d891200892c10329dcdc1f9bc7928a75baef9f1ac3a2d1b3\n",
                     "stderr": "",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true
                 }
@@ -466,9 +466,9 @@
               "compilation": {
                 "exit_code": 0,
                 "timed_out": false,
-                "stdout": "assemble_model.cpp\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-j_ylkl9f\\fixture-11\\assemble_model.cpp(46): warning C4127: conditional expression is constant\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-j_ylkl9f\\fixture-11\\assemble_model.cpp(46): note: consider using 'if constexpr' statement instead\n",
+                "stdout": "assemble_model.cpp\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-7qtbzw8b\\fixture-11\\assemble_model.cpp(46): warning C4127: conditional expression is constant\nC:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-assembler-fixtures-7qtbzw8b\\fixture-11\\assemble_model.cpp(46): note: consider using 'if constexpr' statement instead\n",
                 "stderr": "",
-                "seconds": 1.562
+                "seconds": 1.921
               },
               "test_header_sha256": "9ed9e44e6c1c13ffaca074dd98bfe6dac7f457a891d871aaee07951f46b8ad7c",
               "cases": [
@@ -481,7 +481,7 @@
                     "timed_out": false,
                     "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.203
+                    "seconds": 0.047
                   },
                   "passed": true,
                   "problems": []
@@ -509,7 +509,7 @@
                     "timed_out": false,
                     "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.031
+                    "seconds": 0.172
                   },
                   "passed": true,
                   "problems": []
@@ -523,7 +523,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -537,7 +537,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour Setup-Fixture-11.bin. Le fichier doit contenir 258113 octets.\n",
-                    "seconds": 0.0
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -551,7 +551,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour Setup-Fixture-11.bin. Le fichier doit contenir 258113 octets.\n",
-                    "seconds": 0.016
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -565,7 +565,7 @@
                     "timed_out": false,
                     "stdout": "Source : 11 parties du modele.\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 0 %\nModele : 100 %\n",
                     "stderr": "ERREUR 7 : Le SHA-256 du modele ne correspond pas. Le fichier temporaire a ete abandonne ; la destination existante est conservee.\n",
-                    "seconds": 0.016
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -579,7 +579,7 @@
                     "timed_out": false,
                     "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.016
+                    "seconds": 0.031
                   },
                   "passed": true,
                   "problems": []
@@ -593,7 +593,7 @@
                     "timed_out": false,
                     "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\nModele : 100 %\nModele installe : 262168 octets, SHA-256 confirme.\n",
                     "stderr": "",
-                    "seconds": 0.032
+                    "seconds": 0.031
                   },
                   "passed": true,
                   "problems": []
@@ -621,7 +621,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour fixture-11.gguf. Le fichier doit contenir 262168 octets.\n",
-                    "seconds": 0.015
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -635,7 +635,7 @@
                     "timed_out": false,
                     "stdout": "Source : fichier GGUF complet fixture-11.gguf\nAssemblage du modele hors ligne et verification SHA-256...\n",
                     "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes.\n",
-                    "seconds": 0.015
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -649,7 +649,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Impossible d'ouvrir un fichier du modele : code Windows 2\n",
-                    "seconds": 0.016
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -663,7 +663,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 4 : La destination ne peut pas remplacer une partie originale du modele.\n",
-                    "seconds": 0.015
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -677,7 +677,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 4 : La destination ne peut pas remplacer le fichier GGUF source.\n",
-                    "seconds": 0.016
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "problems": []
@@ -705,7 +705,7 @@
                     "timed_out": false,
                     "stdout": "Verification du modele deja present...\nModele existant valide : SHA-256 confirme, aucune copie necessaire.\n",
                     "stderr": "",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "problems": []
@@ -794,7 +794,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf. Le fichier doit contenir 10756586464 octets.\n",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "destination_preserved": true,
@@ -817,7 +817,7 @@
                     "timed_out": false,
                     "stdout": "Source : fichier GGUF complet Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf\nAssemblage du modele hors ligne et verification SHA-256...\n",
                     "stderr": "ERREUR 7 : La source n'est pas un fichier GGUF brut. Les archives et fichiers de quarantaine ne sont pas acceptes.\n",
-                    "seconds": 0.0
+                    "seconds": 0.015
                   },
                   "passed": true,
                   "destination_preserved": true,
@@ -842,7 +842,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "ERREUR 3 : Taille incorrecte pour Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf. Le fichier doit contenir 10756586464 octets.\n",
-                    "seconds": 0.0
+                    "seconds": 0.016
                   },
                   "passed": true,
                   "destination_preserved": true,
@@ -868,7 +868,7 @@
           "timed_out": false,
           "stdout": "{\"passed\": true, \"compilation_passed\": true, \"runtime\": \"executed\", \"error\": null}\r\n",
           "stderr": "",
-          "seconds": 1.615,
+          "seconds": 2.326,
           "peak_working_set_bytes": null
         },
         "report_path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\validation\\windows-unsigned.installer-paths.json",
@@ -914,14 +914,14 @@
                   "timed_out": false,
                   "stdout": "",
                   "stderr": "",
-                  "seconds": 0.281
+                  "seconds": 0.297
                 },
                 {
                   "exit_code": 0,
                   "timed_out": false,
                   "stdout": "warning 6001: Variable \"Owned\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"HasContent\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"FixtureDir\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"ReportPath\" not referenced or never set, wasting memory!\nwarning 6001: Variable \"Failures\" not referenced or never set, wasting memory!\n\n5 warnings:\n  6001: Variable \"Owned\" not referenced or never set, wasting memory!\n  6001: Variable \"HasContent\" not referenced or never set, wasting memory!\n  6001: Variable \"FixtureDir\" not referenced or never set, wasting memory!\n  6001: Variable \"ReportPath\" not referenced or never set, wasting memory!\n  6001: Variable \"Failures\" not referenced or never set, wasting memory!\n",
                   "stderr": "",
-                  "seconds": 0.032
+                  "seconds": 0.046
                 }
               ],
               "runtime_passed": true,
@@ -930,15 +930,15 @@
                 "timed_out": false,
                 "stdout": "",
                 "stderr": "",
-                "seconds": 0.609
+                "seconds": 1.219
               },
               "path_results": [
                 {
                   "case": "missing_nested",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
                   "problem": "",
                   "passed": true
                 },
@@ -946,8 +946,8 @@
                   "case": "missing_nested_trailing_separator",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\new\\nested\\OpenCodeLocal\\",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\new\\nested\\OpenCodeLocal",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\new\\nested\\OpenCodeLocal\\",
                   "problem": "",
                   "passed": true
                 },
@@ -955,8 +955,8 @@
                   "case": "missing_spaces_and_unicode",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\Projet Ã©tÃ©\\assistant local",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\Projet Ã©tÃ©\\assistant local",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\Projet Ã©tÃ©\\assistant local",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\Projet Ã©tÃ©\\assistant local",
                   "problem": "",
                   "passed": true
                 },
@@ -964,8 +964,8 @@
                   "case": "default_location",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-gxq62cj8",
-                  "input": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-gxq62cj8",
+                  "normalized": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-25m4ydat",
+                  "input": "C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-25m4ydat",
                   "problem": "",
                   "passed": true
                 },
@@ -973,8 +973,8 @@
                   "case": "documents_nested",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-gxq62cj8\\IA\\OpenCodeLocal",
-                  "input": "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-gxq62cj8\\IA\\OpenCodeLocal",
+                  "normalized": "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-25m4ydat\\IA\\OpenCodeLocal",
+                  "input": "C:\\Users\\runneradmin\\Documents\\OpenCodeLocalMoE-PathRegression-opencode-installer-functions-25m4ydat\\IA\\OpenCodeLocal",
                   "problem": "",
                   "passed": true
                 },
@@ -982,8 +982,8 @@
                   "case": "existing_empty",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\empty",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\empty",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\empty",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\empty",
                   "problem": "",
                   "passed": true
                 },
@@ -991,8 +991,8 @@
                   "case": "existing_empty_trailing_separator",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\empty",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\empty\\",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\empty",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\empty\\",
                   "problem": "",
                   "passed": true
                 },
@@ -1000,7 +1000,7 @@
                   "case": "drive_root",
                   "expected_allowed": false,
                   "actual_allowed": false,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe",
                   "input": "C:\\",
                   "problem": "Le dossier contient dÃ©jÃ  des fichiers et ne correspond pas Ã  une installation reconnue de OpenCode Local. Choisissez un dossier vide ou le dossier proposÃ©.",
                   "passed": true
@@ -1018,8 +1018,8 @@
                   "case": "unowned_nonempty",
                   "expected_allowed": false,
                   "actual_allowed": false,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\nonempty",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\nonempty",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\nonempty",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\nonempty",
                   "problem": "Le dossier contient dÃ©jÃ  des fichiers et ne correspond pas Ã  une installation reconnue de OpenCode Local. Choisissez un dossier vide ou le dossier proposÃ©.",
                   "passed": true
                 },
@@ -1027,8 +1027,8 @@
                   "case": "existing_file",
                   "expected_allowed": false,
                   "actual_allowed": false,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\nonempty\\keep.txt",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\nonempty\\keep.txt",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\nonempty\\keep.txt",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\nonempty\\keep.txt",
                   "problem": "Choisissez un dossier local dÃ©diÃ© au programme, par exemple C:\\Users\\runneradmin\\AppData\\Local\\Programs\\OpenCodeLocalMoE.",
                   "passed": true
                 },
@@ -1063,8 +1063,8 @@
                   "case": "owned_installation",
                   "expected_allowed": true,
                   "actual_allowed": true,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\owned",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\owned",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\owned",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\owned",
                   "problem": "",
                   "passed": true
                 },
@@ -1072,8 +1072,8 @@
                   "case": "other_pack_installation",
                   "expected_allowed": false,
                   "actual_allowed": false,
-                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\other-owned",
-                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-gxq62cj8\\current-moe\\paths\\other-owned",
+                  "normalized": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\other-owned",
+                  "input": "C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\opencode-installer-functions-25m4ydat\\current-moe\\paths\\other-owned",
                   "problem": "Le dossier contient dÃ©jÃ  des fichiers et ne correspond pas Ã  une installation reconnue de OpenCode Local. Choisissez un dossier vide ou le dossier proposÃ©.",
                   "passed": true
                 }
@@ -1087,7 +1087,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.062
+                    "seconds": 0.078
                   },
                   "fixtures": [
                     {
@@ -1109,7 +1109,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.063
+                    "seconds": 0.062
                   },
                   "fixtures": [
                     {
@@ -1131,7 +1131,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.046
+                    "seconds": 0.078
                   },
                   "fixtures": [
                     {
@@ -1153,7 +1153,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.063
+                    "seconds": 0.062
                   },
                   "fixtures": [
                     {
@@ -1217,7 +1217,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.047
+                    "seconds": 0.062
                   },
                   "fixtures": [
                     {
@@ -1275,7 +1275,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.062
+                    "seconds": 0.063
                   },
                   "fixtures": [
                     {
@@ -1339,7 +1339,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.063
+                    "seconds": 0.062
                   },
                   "fixtures": [
                     {
@@ -1409,7 +1409,7 @@
                     "timed_out": false,
                     "stdout": "",
                     "stderr": "",
-                    "seconds": 0.094
+                    "seconds": 0.062
                   },
                   "fixtures": [
                     {
@@ -1436,7 +1436,7 @@
       "passed": true,
       "details": {
         "path": "D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe",
-        "sha256": "8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291",
+        "sha256": "db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209",
         "metadata": {
           "machine": "0x014C",
           "architecture": "x86",
@@ -1451,7 +1451,7 @@
           "file_description": "Installation hors ligne de OpenCode Local",
           "company_name": "M4D135",
           "certificate_table_bytes": 0,
-          "file_bytes": 127278384
+          "file_bytes": 127279637
         },
         "authenticode": {
           "required": false,
@@ -1475,25 +1475,25 @@
       "passed": true,
       "details": {
         "passed": true,
-        "archive_sha256": "8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291",
+        "archive_sha256": "db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209",
         "archive_entries": 3821,
         "integrity": {
           "exit_code": 0,
           "timed_out": false,
-          "stdout": "\r\n7-Zip 26.05 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-10-21\r\n\r\nScanning the drive for archives:\r\n1 file, 127278384 bytes (122 MiB)\r\n\r\nTesting archive: D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe\r\n--\r\nPath = D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe\r\nType = Nsis\r\nPhysical Size = 127278384\r\nMethod = Deflate\r\nSolid = -\r\nHeaders Size = 1778768\r\nEmbedded Stub Size = 116224\r\nSubType = NSIS-3 Unicode\r\n\r\nEverything is Ok\r\n\r\nFiles: 3821\r\nSize:       4574\r\nCompressed: 127278384\r\n",
+          "stdout": "\r\n7-Zip 26.05 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-10-21\r\n\r\nScanning the drive for archives:\r\n1 file, 127279637 bytes (122 MiB)\r\n\r\nTesting archive: D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe\r\n--\r\nPath = D:\\a\\OpenCode-Local\\OpenCode-Local\\signing\\setup\\moe\\Setup.exe\r\nType = Nsis\r\nPhysical Size = 127279637\r\nMethod = Deflate\r\nSolid = -\r\nHeaders Size = 1778768\r\nEmbedded Stub Size = 116224\r\nSubType = NSIS-3 Unicode\r\n\r\nEverything is Ok\r\n\r\nFiles: 3821\r\nSize:       4574\r\nCompressed: 127279637\r\n",
           "stderr": "",
-          "seconds": 1.855,
+          "seconds": 2.141,
           "peak_working_set_bytes": null
         },
         "embedded_home_built_executables": [
           {
             "member": "$_53_/OpenCodeLocal.exe",
-            "extracted_sha256": "8e2d1579474d901f1dfaa9b7f9ad0e70a83810ebb3883dbe7f7007de46d84373",
-            "native_sha256": "8e2d1579474d901f1dfaa9b7f9ad0e70a83810ebb3883dbe7f7007de46d84373",
+            "extracted_sha256": "ed0f93d403253f6c8779312e1f97851d303f552276e4330da4ea902b7b6f7ac0",
+            "native_sha256": "ed0f93d403253f6c8779312e1f97851d303f552276e4330da4ea902b7b6f7ac0",
             "exact_native_match": true,
             "inspection": {
-              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\extracted\\OpenCodeLocal.exe\\OpenCodeLocal.exe",
-              "sha256": "8e2d1579474d901f1dfaa9b7f9ad0e70a83810ebb3883dbe7f7007de46d84373",
+              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\extracted\\OpenCodeLocal.exe\\OpenCodeLocal.exe",
+              "sha256": "ed0f93d403253f6c8779312e1f97851d303f552276e4330da4ea902b7b6f7ac0",
               "metadata": {
                 "machine": "0x8664",
                 "architecture": "x64",
@@ -1508,12 +1508,12 @@
                 "file_description": "OpenCode Local - MoE léger",
                 "company_name": "M4D135",
                 "certificate_table_bytes": 0,
-                "file_bytes": 3498202
+                "file_bytes": 3498714
               },
               "authenticode": {
                 "required": false,
                 "status": "NotSigned",
-                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\extracted\\OpenCodeLocal.exe\\OpenCodeLocal.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\extracted\\OpenCodeLocal.exe\\OpenCodeLocal.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
                 "signature_type": "None",
                 "publisher": null,
                 "signer_certificate_sha256": null,
@@ -1534,7 +1534,7 @@
             "native_sha256": "9a9162c7d0471020c387909459ffbb3b2ab32ed9d6300f9f51f5a351161f14db",
             "exact_native_match": true,
             "inspection": {
-              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\extracted\\AssembleModel.exe\\AssembleModel.exe",
+              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\extracted\\AssembleModel.exe\\AssembleModel.exe",
               "sha256": "9a9162c7d0471020c387909459ffbb3b2ab32ed9d6300f9f51f5a351161f14db",
               "metadata": {
                 "machine": "0x8664",
@@ -1555,7 +1555,7 @@
               "authenticode": {
                 "required": false,
                 "status": "NotSigned",
-                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\extracted\\AssembleModel.exe\\AssembleModel.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\extracted\\AssembleModel.exe\\AssembleModel.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
                 "signature_type": "None",
                 "publisher": null,
                 "signer_certificate_sha256": null,
@@ -1576,7 +1576,7 @@
             "native_sha256": "4e97207ca3d1b0d74b2882e5d359d7ff83c4a67c5d96e7600323ddc21f258d71",
             "exact_native_match": true,
             "inspection": {
-              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\extracted\\Uninstall.exe\\Uninstall.exe",
+              "path": "C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\extracted\\Uninstall.exe\\Uninstall.exe",
               "sha256": "4e97207ca3d1b0d74b2882e5d359d7ff83c4a67c5d96e7600323ddc21f258d71",
               "metadata": {
                 "machine": "0x014C",
@@ -1597,7 +1597,7 @@
               "authenticode": {
                 "required": false,
                 "status": "NotSigned",
-                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-3ecb9ddb1899414787190c7cd76f166c\\moe\\extracted\\Uninstall.exe\\Uninstall.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
+                "status_message": "The file C:\\Users\\runneradmin\\AppData\\Local\\Temp\\OpenCodeLocalValidation-1b6a91749e70451c828ceac90e068a30\\moe\\extracted\\Uninstall.exe\\Uninstall.exe is not digitally signed. You cannot run this script on the current system. For more information about running scripts and setting execution policy, see about_Execution_Policies at https://go.microsoft.com/fwlink/?LinkID=135170",
                 "signature_type": "None",
                 "publisher": null,
                 "signer_certificate_sha256": null,

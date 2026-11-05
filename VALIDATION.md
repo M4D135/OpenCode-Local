@@ -1,10 +1,16 @@
 # Validation du pack unique MoE 1.2.0
 
+La [release 1.2.0](https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0)
+est publiée. La construction Windows, les essais réels du modèle et d'OpenCode,
+la publication et le retrait des anciennes versions ont réussi pour le commit
+`4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1`. Les résultats et leurs limites sont
+conservés ci-dessous ; les exécutables distribués restent non signés.
+
 ## Contrôles Windows réussis — 5 novembre 2026
 
-Le [run GitHub Actions 41993863228](https://github.com/M4D135/OpenCode-Local/actions/runs/41993863228)
+Le [run GitHub Actions 41996391326](https://github.com/M4D135/OpenCode-Local/actions/runs/41996391326)
 a terminé avec succès ses jobs de construction et de validation Windows sur le
-commit `c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c`, pour le seul profil `moe`.
+commit `4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1`, pour le seul profil `moe`.
 Les contrôles ont été exécutés sous Windows NT 10.0.20348 avec PowerShell 7.6.9.
 Le [rapport Windows complet](validation/windows-unsigned-1.2.0.json) conserve
 les résultats détaillés, dont les cas de refus attendus.
@@ -19,13 +25,16 @@ les résultats détaillés, dont les cas de refus attendus.
 | Archive du setup | Réussie | 3 821 entrées ; intégrité vérifiée et correspondance SHA-256 exacte des trois exécutables maison embarqués |
 | ZIP final | Réussi | Un seul `Setup.exe`, identique au setup validé ; empreintes et provenance enregistrées |
 
-Le setup validé contient **127 278 384 octets** et porte le SHA-256
-`8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291`.
+Le setup validé contient **127 279 637 octets** et porte le SHA-256
+`db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209`.
 Le [manifeste de finalisation](validation/finalize-unsigned-1.2.0.json) conserve
 aussi l'empreinte du ZIP. La [synthèse de provenance](validation/windows-unsigned-summary-1.2.0.json)
 relie les rapports à ce commit, aux jobs et à l'artefact GitHub téléchargé ; son
 empreinte ZIP a été vérifiée contre le digest annoncé par GitHub. Seul le petit
-artefact de rapports a été récupéré pour cette synthèse.
+artefact de rapports a été récupéré pour cette synthèse. Les rapports du dépôt
+sont enregistrés en UTF-8 avec fins de ligne LF ; la provenance conserve les
+SHA-256 des octets originaux et ceux des fichiers normalisés, sans changement
+des valeurs JSON.
 
 Ces contrôles Windows n'ont téléchargé ni chargé le modèle. Les vérifications
 de grandes tailles utilisent des fichiers creux ; le diagnostic du lanceur
@@ -33,23 +42,81 @@ vérifie le refus attendu d'un paquet volontairement incomplet. Ils ne qualifien
 donc ni une session de modèle ni sa consommation de RAM. L'installation complète
 du pack avec les vrais poids sur un poste Windows 10/11 reste à vérifier.
 
-## Modèle et mémoire — validation en cours
+## Modèle et mémoire — essais réels réussis
 
-Lors de ce relevé, le [run de validation et publication 41994232790](https://github.com/M4D135/OpenCode-Local/actions/runs/41994232790)
-est encore en cours pour le même commit. L'exécution réelle du GGUF
-Qwen3.6-35B-A3B UD-IQ2_XXS, les appels d'outils, la session OpenCode et les mesures
-de mémoire ne disposent pas encore d'un résultat final conservé ici. Aucun
-résultat du modèle 27B historique ci-dessous ne qualifie ce modèle IQ2.
+Le [run de validation et publication 41996782971](https://github.com/M4D135/OpenCode-Local/actions/runs/41996782971)
+a réussi les quatre groupes de tests du modèle Qwen3.6-35B-A3B UD-IQ2_XXS puis
+la publication. Le [rapport complet](validation/model-runtime-1.2.0.json)
+couvre une exécution Linux CPU à **8 192 tokens de contexte**, avec quatre
+threads de calcul. Les [entrées vérifiées](validation/runtime-inputs-1.2.0.json)
+identifient le GGUF complet, llama.cpp b12089, OpenCode 1.19.5 et le cache hors
+ligne extrait du setup validé. Le SHA-256 du modèle a été contrôlé avant
+l'exécution ; le validateur ne répète pas ce hachage.
 
-Le budget estimé reste de **13 075 Mio à 8K**, avec **6 144 Mio de réserve**.
-Les mesures doivent confirmer ce budget avant publication ; elles préciseront
-le RSS, les paramètres et leurs limites. Les exécutables de ce run sont
-explicitement **non signés** (`NotSigned`) ; aucun certificat réel n'a été
-utilisé et la compatibilité TEHTRIS reste non validée.
+| Contrôle réel | Résultat | Durée observée |
+| --- | --- | --- |
+| Génération de texte | Réussie | 1,534 s |
+| Appel structuré d'un outil | Réussi | 16,810 s |
+| Utilisation du résultat de l'outil | Réussie ; preuve absente de la demande initiale | 5,346 s |
+| Configuration effective OpenCode | Fournisseur local, prompt de production et permissions vérifiés | 1,017 s |
+| Session OpenCode avec `read` | Fichier réellement lu et preuve retrouvée dans la réponse | 316,380 s |
+| Session OpenCode avec demande d'écriture | Permission refusée et fichier témoin inchangé | 18,914 s |
+
+L'essai complet a duré **362,506 secondes**. Après la lecture, OpenCode a
+réutilisé **5 585 tokens** de cache de préfixe pour sa réponse, avec 99 nouveaux
+tokens en entrée. La lecture de 316 secondes inclut le premier préremplissage
+du prompt d'outils ; ces temps concernent le runner de validation et ne
+prédisent pas la vitesse d'un portable.
+
+Le pic RSS combiné du moteur et des processus OpenCode est de
+**11 779 534 848 octets, soit 10,97 Gio**. L'estimation incluant tous les octets
+du GGUF en mémoire est de **11 790 523 360 octets, soit 10,98 Gio**. Les deux
+valeurs respectent le plafond de **14 Gio** du contrôle. Le moniteur a observé
+**zéro octet de swap** pour les processus suivis et n'a enregistré aucune erreur.
+Il échantillonne `/proc` toutes les 0,5 seconde ; la somme des RSS peut compter
+certaines pages partagées plusieurs fois. L'estimation de résidence complète
+et ces mesures Linux ne constituent pas un pic mémoire mesuré sous Windows.
+
+Le budget estimé reste de **13 075 Mio à 8K**, avec **6 144 Mio de réserve**,
+soit **19 219 Mio disponibles exigés au démarrage**. La configuration conserve
+**quatre checkpoints récurrents** et désactive le cache général de prompts RAM.
+L'essai fonctionnel et mémoire est réussi pour cette configuration. Il ne
+constitue pas une évaluation générale de la qualité du modèle ni une
+qualification de l'installation complète sur le PC cible. Les exécutables de
+ce run sont explicitement **non signés** (`NotSigned`) ; aucun certificat réel
+n'a été utilisé et la compatibilité TEHTRIS reste non validée.
+
+## Publication et retrait des anciennes versions
+
+Le [rapport de publication](validation/publication-1.2.0.json) confirme les
+empreintes des fichiers distribués et le nettoyage après vérification de la
+nouvelle release. Le [Setup.zip publié](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Setup.zip)
+contient 127 279 753 octets et porte le SHA-256
+`10191cfb9329f5238cd19cb0aace38796e9d49ad7b5f52e843f0aa575c18287e`.
+Le ZIP produit pendant le contrôle Windows avait le SHA-256
+`248172a7688ddcbe75b1024ac951d5baa3f633667ac87de9ac16306a35c0f11f` ;
+cette empreinte appartient à cet artefact de validation. L'empreinte du
+`Setup.exe` validé reste
+`db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209`.
+La [vérification du téléchargement public](validation/public-download-1.2.0.json)
+confirme le SHA-256 et le CRC du ZIP, son unique entrée `Setup.exe` et
+l'identité de cet exécutable avec celui validé sous Windows.
+Le [manifeste public](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/MANIFEST-DISTRIBUTION.json)
+et les [sommes de contrôle](https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/SHA256SUMS.txt)
+décrivent la distribution publiée.
+
+Les releases **1.0.0, 1.0.1 et 1.1.0** ont été supprimées avec
+**19 841 861 453 octets** d'anciens fichiers. Le nettoyage a aussi supprimé
+**11 artefacts Actions**, soit **769 411 832 octets**. L'historique Git et les
+tags ont été conservés. Le rapport brut conserve les URL d'assets observées
+pendant le brouillon ; les liens de téléchargement ci-dessus utilisent la
+release publique `v1.2.0`, vérifiée par l'API GitHub.
 
 ### Premier essai réel et correction du délai
 
-Le [premier essai Linux](validation/model-runtime-first-attempt-1.2.0.json),
+Le [premier essai Linux](validation/model-runtime-first-attempt-1.2.0.json)
+du commit `c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c`, exécuté dans le
+[run 41994232790](https://github.com/M4D135/OpenCode-Local/actions/runs/41994232790),
 avec la configuration précédente à un checkpoint et le prompt OpenCode standard,
 a réussi la génération, l'appel d'outil et la restitution d'une preuve lue dans
 un fichier. Il **n'a pas validé le harnais complet** : le préremplissage continu
@@ -61,7 +128,7 @@ La nouvelle configuration raccourcit le prompt général sans retirer les outils
 conserve quatre checkpoints et réserve 2,25 Gio de surcoût. Le validateur distingue
 les PID disparus des vraies erreurs et autorise 800 secondes par session, dans une
 limite totale de 30 minutes. Tous les contrôles de lecture, de refus d'écriture et
-de mémoire restent exigés. Le retest complet est encore nécessaire.
+de mémoire sont restés exigés. Le nouvel essai complet décrit ci-dessus a réussi.
 
 ---
 

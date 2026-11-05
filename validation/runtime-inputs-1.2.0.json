@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "passed": true,
+  "pack": "moe",
+  "version": "1.2.0",
+  "outputs": {
+    "engine": "/home/runner/work/OpenCode-Local/OpenCode-Local/qa/runtime-inputs/engine/llama-b12089/llama-server",
+    "model": "/home/runner/work/OpenCode-Local/OpenCode-Local/downloads/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+    "opencode": "/home/runner/work/OpenCode-Local/OpenCode-Local/qa/runtime-inputs/opencode/opencode",
+    "offline_seed": "/home/runner/work/OpenCode-Local/OpenCode-Local/qa/runtime-inputs/setup/$_53_/wad/offline-cache"
+  },
+  "runtimes": {
+    "engine": {
+      "file": "llama-b12089-bin-ubuntu-x64.tar.gz",
+      "bytes": 22963302,
+      "sha256": "f3cd7d5d34dee97be7137b749723ac10228055b85336fb56f1d5d0c80ebb737d",
+      "version": "b12089",
+      "entries": 62,
+      "expanded_bytes": 57977702
+    },
+    "opencode": {
+      "file": "opencode-linux-x64-baseline.tar.gz",
+      "bytes": 79651821,
+      "sha256": "17c200fd4b2289954cc01552559f9b6d03ec157b2ddfb5eb54144f491656333d",
+      "version": "v1.19.5",
+      "entries": 1,
+      "expanded_bytes": 214386864
+    }
+  },
+  "setup": {
+    "entries": 3821,
+    "expanded_bytes": 406849392,
+    "listed_expanded_bytes": 4574,
+    "unknown_size_entries": 3694,
+    "extracted_entries": 4109,
+    "setup_sha256": "db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209"
+  },
+  "model": {
+    "file": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+    "url": "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+    "size": 10756586464,
+    "sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef"
+  },
+  "disk_space_before_model": {
+    "free_bytes": 90939969536,
+    "required_free_bytes": 14404070112,
+    "verified_model_already_cached": false,
+    "slice_bytes": 1500000000,
+    "reserve_bytes": 2147483648
+  },
+  "model_loaded": false,
+  "publication_performed": false
+}

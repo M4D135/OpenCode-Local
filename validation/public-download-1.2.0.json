@@ -1,0 +1,15 @@
+{
+  "public_url": "https://github.com/M4D135/OpenCode-Local/releases/download/v1.2.0/Setup.zip",
+  "passed": true,
+  "archive_bytes": 127279753,
+  "archive_sha256": "10191cfb9329f5238cd19cb0aace38796e9d49ad7b5f52e843f0aa575c18287e",
+  "members": [
+    "Setup.exe"
+  ],
+  "exe_bytes": 127279637,
+  "exe_sha256": "db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209",
+  "crc_valid": true,
+  "zip_creator_system": 3,
+  "seconds": 23.98,
+  "source_commit": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1"
+}

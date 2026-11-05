@@ -6,8 +6,8 @@
     {
       "pack": "moe",
       "version": "1.2.0",
-      "source_commit": "c2e190e6c2fc9ef55a0a5290b67e3ce082d0ba2c",
-      "source_inputs_sha256": "5c8bf534222f7a152e8f21854338897d57d2131834e5601a6473ad500f265625",
+      "source_commit": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1",
+      "source_inputs_sha256": "ca14c69e96f8f687b352a316e02f3c4d56c3e4392dd8c98f2a97fe83ffc66f56",
       "signing": "unsigned",
       "model": {
         "filename": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
@@ -24,19 +24,19 @@
       "zip_contains": [
         "Setup.exe"
       ],
-      "zip_bytes": 127278500,
-      "zip_sha256": "28aea3662a0f1f21e8a716e5db60704a9c7ceb6db4fcc2770afce57188f5646b",
+      "zip_bytes": 127279753,
+      "zip_sha256": "248172a7688ddcbe75b1024ac951d5baa3f633667ac87de9ac16306a35c0f11f",
       "setup": {
-        "sha256": "8baa7b5eb32b03afd825b1cb69bac5764aa799b24c0d2b459aa7f39bf6e57291",
-        "bytes": 127278384,
+        "sha256": "db3d1f62533774864ee2da25aa92a469f7addb3961b62cc6a380c87aca123209",
+        "bytes": 127279637,
         "signature": {
           "status": "unsigned"
         }
       },
       "native_validation": {
         "moe/OpenCodeLocal.exe": {
-          "sha256": "8e2d1579474d901f1dfaa9b7f9ad0e70a83810ebb3883dbe7f7007de46d84373",
-          "bytes": 3498202,
+          "sha256": "ed0f93d403253f6c8779312e1f97851d303f552276e4330da4ea902b7b6f7ac0",
+          "bytes": 3498714,
           "signature": {
             "status": "unsigned"
           }

@@ -1,0 +1,218 @@
+{
+  "release_url": "https://github.com/M4D135/OpenCode-Local/releases/tag/v1.2.0",
+  "source_commit": "4a6f4ffa4ab6388bacc2f85adb7b74e31562d9e1",
+  "windows_run_id": 41996391326,
+  "signing": "unsigned",
+  "assets": [
+    {
+      "name": "Setup.zip",
+      "id": 712718094,
+      "bytes": 127279753,
+      "sha256": "10191cfb9329f5238cd19cb0aace38796e9d49ad7b5f52e843f0aa575c18287e",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Setup.zip"
+    },
+    {
+      "name": "Modele-MoE-01.bin",
+      "id": 712718449,
+      "bytes": 1500000000,
+      "sha256": "3fc8b9e31d6fdc90053c9f5e116dec46494546eb562bb59cda419a0a2e6109e6",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-01.bin"
+    },
+    {
+      "name": "Modele-MoE-02.bin",
+      "id": 712721426,
+      "bytes": 1500000000,
+      "sha256": "75a37f6b7f8a26329a196967f27a1e475a547dd1297d71a5d69e8d25aa47a492",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-02.bin"
+    },
+    {
+      "name": "Modele-MoE-03.bin",
+      "id": 712724548,
+      "bytes": 1500000000,
+      "sha256": "8eb89b6c33242a1702845aa26c89439eedefc7fe053b45778f5535f13b6178d2",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-03.bin"
+    },
+    {
+      "name": "Modele-MoE-04.bin",
+      "id": 712727599,
+      "bytes": 1500000000,
+      "sha256": "154beabbcf23053e6f748963a402f23bc114fb3250174b5cbc652cdae501a668",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-04.bin"
+    },
+    {
+      "name": "Modele-MoE-05.bin",
+      "id": 712730511,
+      "bytes": 1500000000,
+      "sha256": "ff887943ed477b9375b01851994658580d090dc139c38a66d71440f2cf65c606",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-05.bin"
+    },
+    {
+      "name": "Modele-MoE-06.bin",
+      "id": 712733328,
+      "bytes": 1500000000,
+      "sha256": "ee40d1c61edb9857ae8162e08967fa3ffffdc22b66b6018688f98e76d674681c",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-06.bin"
+    },
+    {
+      "name": "Modele-MoE-07.bin",
+      "id": 712736368,
+      "bytes": 1500000000,
+      "sha256": "9bedeb7207b2c583bcb16c3ddd2c45357a31b2e98905182911f1660c0c64069d",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-07.bin"
+    },
+    {
+      "name": "Modele-MoE-08.bin",
+      "id": 712739269,
+      "bytes": 256586464,
+      "sha256": "eae89e17be4d46659368d74c96218624c8e782f962e43775137e8baae170963e",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/Modele-MoE-08.bin"
+    },
+    {
+      "name": "VALIDATION-MODELE.json",
+      "id": 712739707,
+      "bytes": 66145,
+      "sha256": "e1170e9e5201b6969908b8219045532268687a0722f0d39bc65fa04fa772ef52",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/VALIDATION-MODELE.json"
+    },
+    {
+      "name": "VALIDATION-WINDOWS.json",
+      "id": 712739760,
+      "bytes": 78047,
+      "sha256": "afb9524bf070d0d4129141144097c59497be1d9a0b1239411cfa395b518febe1",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/VALIDATION-WINDOWS.json"
+    },
+    {
+      "name": "MODELE.json",
+      "id": 712739824,
+      "bytes": 1785,
+      "sha256": "81c777f5fa3e41c42f8620d5faef4e60971b914b846c0eeab7df97adda306e9c",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/MODELE.json"
+    },
+    {
+      "name": "LISEZ-MOI.txt",
+      "id": 712739892,
+      "bytes": 2539,
+      "sha256": "dd4d406a49e6d74b930cf46fa9c0568c722c716f09c27481dfe3b9a18ef72eca",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/LISEZ-MOI.txt"
+    },
+    {
+      "name": "SIGNATURES.json",
+      "id": 712739962,
+      "bytes": 3155,
+      "sha256": "1fe9c8fed696db025d9f80cb01a086c716868341f4a225d0ef8236e9086ebf29",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/SIGNATURES.json"
+    },
+    {
+      "name": "SHA256SUMS.txt",
+      "id": 712740011,
+      "bytes": 1341,
+      "sha256": "c45b52e32a69f601bffbcf9dc86bfdc6c8e1fc44626ae757855ae99b8e7079c9",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/SHA256SUMS.txt"
+    },
+    {
+      "name": "MANIFEST-DISTRIBUTION.json",
+      "id": 712740055,
+      "bytes": 4918,
+      "sha256": "80119c6d29fd192360b0ec07cc4466092b6cf84455ac262eac51175a69ffb262",
+      "url": "https://github.com/M4D135/OpenCode-Local/releases/download/untagged-884d667c7dda9bda5dca/MANIFEST-DISTRIBUTION.json"
+    }
+  ],
+  "model_sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+  "publication_verified": true,
+  "cleanup": {
+    "releases": [
+      {
+        "id": 434154553,
+        "tag": "v1.1.0",
+        "expected_asset_bytes": 16719338955,
+        "status": "deleted",
+        "bytes_removed": 16719338955
+      },
+      {
+        "id": 434102363,
+        "tag": "v1.0.1",
+        "expected_asset_bytes": 127193766,
+        "status": "deleted",
+        "bytes_removed": 127193766
+      },
+      {
+        "id": 433732596,
+        "tag": "v1.0.0",
+        "expected_asset_bytes": 2995328732,
+        "status": "deleted",
+        "bytes_removed": 2995328732
+      }
+    ],
+    "actions_artifacts": [
+      {
+        "id": 13367487744,
+        "name": "unsigned-candidates-41922735490-1",
+        "status": "deleted",
+        "bytes_removed": 256453231
+      },
+      {
+        "id": 13367537728,
+        "name": "unsigned-linux-reports-41922735490-1",
+        "status": "deleted",
+        "bytes_removed": 2743
+      },
+      {
+        "id": 13368760209,
+        "name": "unsigned-windows-reports-41922735490-1",
+        "status": "deleted",
+        "bytes_removed": 11328
+      },
+      {
+        "id": 13367103138,
+        "name": "unsigned-candidates-41921388473-1",
+        "status": "deleted",
+        "bytes_removed": 256453286
+      },
+      {
+        "id": 13367002404,
+        "name": "unsigned-linux-reports-41921388473-1",
+        "status": "deleted",
+        "bytes_removed": 2711
+      },
+      {
+        "id": 13366463753,
+        "name": "unsigned-windows-reports-41921388473-1",
+        "status": "deleted",
+        "bytes_removed": 7467
+      },
+      {
+        "id": 13366267845,
+        "name": "unsigned-candidates-41920332543-1",
+        "status": "deleted",
+        "bytes_removed": 256472130
+      },
+      {
+        "id": 13367191274,
+        "name": "unsigned-linux-reports-41920332543-1",
+        "status": "deleted",
+        "bytes_removed": 2679
+      },
+      {
+        "id": 13367835438,
+        "name": "unsigned-windows-reports-41920332543-1",
+        "status": "deleted",
+        "bytes_removed": 954
+      },
+      {
+        "id": 13367116049,
+        "name": "unsigned-linux-reports-41919334149-1",
+        "status": "deleted",
+        "bytes_removed": 2638
+      },
+      {
+        "id": 13365434273,
+        "name": "unsigned-linux-reports-41918468512-1",
+        "status": "deleted",
+        "bytes_removed": 2665
+      }
+    ],
+    "release_bytes_removed": 19841861453,
+    "actions_bytes_removed": 769411832,
+    "git_history_and_tags_deleted": false
+  }
+}
