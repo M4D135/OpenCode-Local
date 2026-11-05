@@ -57,7 +57,6 @@ constexpr const wchar_t* kClass = PackConfig::ProfileName;
 constexpr const wchar_t* kModelFile = PackConfig::ModelFileW;
 constexpr const wchar_t* kAlias = PackConfig::ModelAliasW;
 constexpr uint64_t kModelBytes = PackConfig::ModelBytes;
-constexpr bool kDisableRepack = kModelBytes > 8ULL * 1024 * 1024 * 1024;
 constexpr UINT WM_STATUS = WM_APP + 1;
 constexpr UINT WM_FINISHED = WM_APP + 2;
 constexpr int kDefaultContext = PackConfig::DefaultContext;
@@ -71,6 +70,10 @@ constexpr bool IsAllowedContext(int context) {
     return false;
 }
 static_assert(IsAllowedContext(kDefaultContext), "Default context must be offered by this pack");
+static_assert(PackConfig::MemoryReserveMB >= 0 && PackConfig::RuntimeOverheadMB >= 0 &&
+              PackConfig::CacheMemoryPer4096MB > 0, "Memory estimates must be non-negative");
+static_assert(PackConfig::MicroBatchSize > 0 && PackConfig::BatchSize >= PackConfig::MicroBatchSize &&
+              PackConfig::MaxCpuThreads > 0, "Invalid CPU inference settings");
 
 enum Control : int {
     ID_PROJECT = 101, ID_BROWSE, ID_START, ID_DIRECT, ID_STOP,
@@ -425,7 +428,7 @@ MemoryBudget ReadMemoryBudget() {
     budget.availableMB = memory.ullAvailPhys / (1024ULL * 1024);
     ULONGLONG installedKB = 0;
     budget.physicalInventory = GetPhysicallyInstalledSystemMemory(&installedKB) && installedKB > 0;
-    // Firmware and integrated graphics can reserve part of a 16/32 Go machine.
+    // Firmware and integrated graphics can reserve part of the installed RAM.
     // Prefer installed RAM, falling back to usable RAM with the pack's margin.
     budget.installedMB = budget.physicalInventory ? installedKB / 1024 : budget.usableMB;
     return budget;
@@ -439,15 +442,77 @@ std::wstring MemoryGiB(uint64_t megabytes) {
     return text;
 }
 
-void CheckMemoryBudget() {
+uint64_t EstimatedSessionMemoryMB(int context) {
+    if (!IsAllowedContext(context))
+        throw std::runtime_error("La taille de contexte n’est pas proposée par ce pack.");
+    // Count every expert's mapped weights, not just the experts active for a
+    // token. The allowance also covers the engine, OpenCode and one recurrent
+    // checkpoint. This is a startup estimate, not a Windows memory limit.
+    const uint64_t weights = (kModelBytes + 1024ULL * 1024 - 1) / (1024ULL * 1024);
+    const uint64_t contextBlocks = (static_cast<uint64_t>(context) + 4095) / 4096;
+    return weights + static_cast<uint64_t>(PackConfig::RuntimeOverheadMB) +
+           contextBlocks * static_cast<uint64_t>(PackConfig::CacheMemoryPer4096MB);
+}
+
+uint64_t RequiredAvailableMemoryMB(int context) {
+    return EstimatedSessionMemoryMB(context) + static_cast<uint64_t>(PackConfig::MemoryReserveMB);
+}
+
+void CheckMemoryBudget(int context) {
     const MemoryBudget memory = ReadMemoryBudget();
+    const uint64_t estimatedMB = EstimatedSessionMemoryMB(context);
+    const uint64_t requiredMB = RequiredAvailableMemoryMB(context);
     if (memory.installedMB < static_cast<uint64_t>(PackConfig::MinInstalledMemoryMB))
         throw std::runtime_error(Utf8(std::wstring(L"Mémoire insuffisante pour ") + kProduct +
-            L" : " + MemoryGiB(memory.installedMB) + L" Go détectés. Choisissez le pack adapté à ce PC."));
-    if (memory.availableMB < static_cast<uint64_t>(PackConfig::MinFreeMemoryMB))
-        throw std::runtime_error(Utf8(L"RAM libre : " + MemoryGiB(memory.availableMB) +
-            L" Go ; " + MemoryGiB(PackConfig::MinFreeMemoryMB) + L" Go nécessaires pour " + kProduct +
-            L". Fermez d’autres applications puis réessayez."));
+            L" : " + MemoryGiB(memory.installedMB) + L" Go détectés, " +
+            MemoryGiB(PackConfig::MinInstalledMemoryMB) + L" Go installés nécessaires."));
+    if (memory.availableMB < requiredMB)
+        throw std::runtime_error(Utf8(L"RAM disponible : " + MemoryGiB(memory.availableMB) +
+            L" Go ; " + MemoryGiB(requiredMB) + L" Go nécessaires à " + std::to_wstring(context) +
+            L" tokens, dont " + MemoryGiB(PackConfig::MemoryReserveMB) +
+            L" Go de marge pour vos autres logiciels. Fermez des applications puis réessayez."));
+    Log(L"Budget RAM au démarrage : disponible=" + MemoryGiB(memory.availableMB) +
+        L" Go, session estimée=" + MemoryGiB(estimatedMB) + L" Go, réserve=" +
+        MemoryGiB(PackConfig::MemoryReserveMB) + L" Go. Estimation, sans plafond système imposé.");
+}
+
+struct CpuBudget {
+    unsigned logical = 1;
+    unsigned physical = 0;
+    int threads = 1;
+};
+
+int InferenceThreadCount(unsigned physical, unsigned logical) {
+    const unsigned available = std::max(1U, physical ? physical : logical);
+    const unsigned headroom = available >= 4 ? 1U : 0U;
+    return static_cast<int>(std::min(available - headroom,
+                                    static_cast<unsigned>(PackConfig::MaxCpuThreads)));
+}
+
+CpuBudget ReadCpuBudget() {
+    CpuBudget budget;
+    SYSTEM_INFO system{};
+    GetNativeSystemInfo(&system);
+    budget.logical = std::max(1U, static_cast<unsigned>(system.dwNumberOfProcessors));
+    DWORD size = 0;
+    GetLogicalProcessorInformationEx(RelationProcessorCore, nullptr, &size);
+    if (size >= 2 * sizeof(DWORD) && size <= 4 * 1024 * 1024) {
+        std::vector<unsigned char> data(size);
+        auto first = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(data.data());
+        if (GetLogicalProcessorInformationEx(RelationProcessorCore, first, &size)) {
+            size_t offset = 0;
+            unsigned cores = 0;
+            while (offset + 2 * sizeof(DWORD) <= size) {
+                auto entry = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX>(data.data() + offset);
+                if (entry->Size < 2 * sizeof(DWORD) || entry->Size > size - offset) break;
+                if (entry->Relationship == RelationProcessorCore) ++cores;
+                offset += entry->Size;
+            }
+            if (offset == size) budget.physical = cores;
+        }
+    }
+    budget.threads = InferenceThreadCount(budget.physical, budget.logical);
+    return budget;
 }
 
 void PrepareProfile() {
@@ -774,18 +839,51 @@ void WaitForEngine(const Process& engine, unsigned short port, const std::string
     }
 }
 
-Process StartEngine(HANDLE job, unsigned short port, const std::string& token, int context) {
-    std::vector<std::wstring> args = {
-        L"--model", g.paths.model.wstring(), L"--alias", kAlias,
+std::vector<std::wstring> InferenceArguments(int context, int threads) {
+    // b12089 uses --load-mode mmap, not the historical --mmap switch.
+    // Both entry points share the same bounded context, CPU work and KV type.
+    // Keep mapped weights without a second, repacked copy of every expert.
+    return {
+        L"--model", g.paths.model.wstring(),
         L"--ctx-size", std::to_wstring(context), L"--n-gpu-layers", L"0",
-        L"--parallel", L"1", L"--jinja", L"--reasoning", L"off", L"--offline", L"--no-webui",
+        L"--load-mode", L"mmap", L"--no-repack",
+        L"--threads", std::to_wstring(threads), L"--threads-batch", std::to_wstring(threads),
+        L"--batch-size", std::to_wstring(PackConfig::BatchSize),
+        L"--ubatch-size", std::to_wstring(PackConfig::MicroBatchSize),
+        L"--cache-type-k", PackConfig::CacheTypeK, L"--cache-type-v", PackConfig::CacheTypeV,
+        L"--flash-attn", PackConfig::FlashAttention ? L"on" : L"off",
+        L"--parallel", L"1", L"--n-predict", std::to_wstring(std::min(kOutputTokens, context / 2)),
+        L"--jinja", L"--reasoning", L"off", L"--reasoning-budget", L"0", L"--offline"
+    };
+}
+
+std::wstring InferenceSummary(int context, const CpuBudget& cpu) {
+    return L"contexte=" + std::to_wstring(context) + L", threads=" + std::to_wstring(cpu.threads) +
+        L", batch=" + std::to_wstring(PackConfig::BatchSize) +
+        L", ubatch=" + std::to_wstring(PackConfig::MicroBatchSize) +
+        L", cache KV=" + PackConfig::CacheTypeK + L"/" + PackConfig::CacheTypeV +
+        L", flash attention=" + (PackConfig::FlashAttention ? std::wstring(L"oui") : std::wstring(L"non")) +
+        L", poids mappés sans repacking, une seule séquence";
+}
+
+Process StartEngine(HANDLE job, unsigned short port, const std::string& token, int context) {
+    // First-launch profile preparation may take time; check available RAM again
+    // immediately before starting the model. Other applications can still grow
+    // later, so this check does not claim to reserve memory from Windows.
+    CheckMemoryBudget(context);
+    const CpuBudget cpu = ReadCpuBudget();
+    auto args = InferenceArguments(context, cpu.threads);
+    args.insert(args.end(), {
+        L"--alias", kAlias, L"--no-webui",
+        // The upstream 8 GiB prompt-cache default is separate from the KV
+        // buffers. Disable it and retain only one recurrent-state checkpoint.
+        L"--cache-ram", L"0", L"--ctx-checkpoints", L"1",
         L"--host", L"127.0.0.1", L"--port", std::to_wstring(port),
         L"--api-key", Wide(token)
-    };
-    // Large CPU packs must not allocate repacked weights beside the mapped GGUF.
-    if constexpr (kDisableRepack) args.emplace_back(L"--no-repack");
+    });
     fs::path output = g.paths.logs / (L"moteur-" + TimeStamp() + L".log");
-    Log(L"Démarrage du moteur CPU. Contexte=" + std::to_wstring(context) +
+    Log(L"Démarrage du moteur CPU : " + InferenceSummary(context, cpu) +
+        L", cache de prompts RAM=0 Mo, checkpoints=1" +
         L", adresse=127.0.0.1:" + std::to_wstring(port) + L", journal=" + output.filename().wstring());
     auto process = StartProcess(g.paths.engine, args, g.paths.install, ChildEnvironment(), job, false, output);
     WaitForEngine(process, port, token);
@@ -806,7 +904,7 @@ void RunSession(bool direct, fs::path project, int context) {
     try {
         CheckStop();
         ValidateFiles(direct);
-        CheckMemoryBudget();
+        CheckMemoryBudget(context);
         if (!IsAllowedContext(context))
             throw std::runtime_error("La taille de contexte n’est pas proposée par ce pack.");
         if (!fs::is_directory(project)) throw std::runtime_error("Le dossier de projet n'existe plus.");
@@ -815,9 +913,10 @@ void RunSession(bool direct, fs::path project, int context) {
         SetJobForUi(job.value);
         if (direct) {
             Status(L"Ouverture de la discussion directe, sans serveur réseau…");
-            std::vector<std::wstring> args = { L"--model", g.paths.model.wstring(), L"--ctx-size", std::to_wstring(context),
-                L"--n-gpu-layers", L"0", L"--jinja", L"--conversation", L"--reasoning", L"off", L"--offline" };
-            if constexpr (kDisableRepack) args.emplace_back(L"--no-repack");
+            const CpuBudget cpu = ReadCpuBudget();
+            auto args = InferenceArguments(context, cpu.threads);
+            args.emplace_back(L"--conversation");
+            Log(L"Discussion directe CPU : " + InferenceSummary(context, cpu) + L", sans cache de prompts serveur.");
             auto chat = StartProcess(g.paths.completion, args, project, ChildEnvironment(), job.value, true);
             Status(L"Discussion ouverte dans sa console. Fermez-la pour terminer.");
             while (WaitForSingleObject(chat.handle.value, 250) == WAIT_TIMEOUT) CheckStop();
@@ -880,16 +979,32 @@ std::wstring DiagnosticReport(bool* valid = nullptr) {
            << (memory.physicalInventory ? L" (inventaire matériel)" : L" (mémoire utilisable, valeur de repli)") << L"\r\n";
     report << L"RAM utilisable : " << memory.usableMB << L" Mo\r\n";
     report << L"RAM disponible : " << memory.availableMB << L" Mo\r\n";
-    report << L"RAM libre requise par le pack : " << PackConfig::MinFreeMemoryMB << L" Mo\r\n";
+    report << L"Session estimée (tous les experts, contexte, moteur et OpenCode) : "
+           << EstimatedSessionMemoryMB(g.selectedContext) << L" Mo\r\n";
+    report << L"Marge visée pour les autres logiciels : " << PackConfig::MemoryReserveMB << L" Mo\r\n";
+    report << L"RAM disponible demandée au démarrage, marge incluse : "
+           << RequiredAvailableMemoryMB(g.selectedContext) << L" Mo\r\n";
+    report << L"Ce budget est une estimation ; la consommation dépend de la session et des autres applications.\r\n";
     report << L"Modèle : " << PackConfig::ModelLabel << L"\r\n";
     report << L"Fichier du modèle : " << kModelFile << L"\r\n";
     report << L"SHA-256 attendu du modèle : " << Wide(PackConfig::ModelSha256) << L"\r\n";
     SYSTEM_INFO system{}; GetNativeSystemInfo(&system);
-    report << L"Processeurs logiques : " << system.dwNumberOfProcessors << L"\r\n";
+    const CpuBudget cpu = ReadCpuBudget();
+    report << L"Processeurs logiques : " << cpu.logical << L"\r\n";
+    if (cpu.physical) report << L"Cœurs physiques : " << cpu.physical << L"\r\n";
+    else report << L"Cœurs physiques : inventaire indisponible, repli sur les processeurs logiques\r\n";
+    report << L"Threads de calcul / préremplissage : " << cpu.threads << L" / " << cpu.threads << L"\r\n";
     report << L"Architecture du système : " <<
         (system.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64 ? L"x64" :
          system.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_ARM64 ? L"ARM64 (x64 émulé)" : L"autre") << L"\r\n";
-    report << L"Contexte OpenCode : " << g.selectedContext << L" tokens\r\n\r\n";
+    report << L"Contexte OpenCode : " << g.selectedContext << L" tokens\r\n";
+    report << L"Réponse maximale par tour : " << std::min(kOutputTokens, g.selectedContext / 2) << L" tokens\r\n";
+    report << L"Poids : mémoire mappée ; repacking désactivé\r\n";
+    report << L"Cache KV K/V : " << PackConfig::CacheTypeK << L" / " << PackConfig::CacheTypeV << L"\r\n";
+    report << L"Flash Attention : " << (PackConfig::FlashAttention ? L"activée" : L"désactivée") << L"\r\n";
+    report << L"Batch / micro-batch : " << PackConfig::BatchSize << L" / " << PackConfig::MicroBatchSize << L"\r\n";
+    report << L"Serveur : une séquence ; cache de prompts RAM désactivé ; un checkpoint récurrent\r\n";
+    report << L"Discussion directe : une séquence, sans cache de prompts serveur\r\n\r\n";
     bool allValid = true;
     const std::vector<std::pair<std::wstring, fs::path>> files = {
         {L"Moteur API", g.paths.engine}, {L"Discussion directe", g.paths.completion},
@@ -906,7 +1021,7 @@ std::wstring DiagnosticReport(bool* valid = nullptr) {
         report << L"\r\n";
     }
     try { ValidateFiles(); } catch (const std::exception& ex) { allValid = false; report << L"\r\n" << Wide(ex.what()) << L"\r\n"; }
-    try { CheckMemoryBudget(); } catch (const std::exception& ex) { allValid = false; report << L"\r\n" << Wide(ex.what()) << L"\r\n"; }
+    try { CheckMemoryBudget(g.selectedContext); } catch (const std::exception& ex) { allValid = false; report << L"\r\n" << Wide(ex.what()) << L"\r\n"; }
     report << L"\r\nPort de cette session : ";
     if (g.activePort.load()) report << L"127.0.0.1:" << g.activePort.load(); else report << L"aucun moteur API actif";
     report << L"\r\n\r\nLe mode OpenCode utilise uniquement un serveur local pour le modèle.\r\n"
@@ -1283,9 +1398,15 @@ LRESULT CALLBACK WindowProcedure(HWND window, UINT message, WPARAM wp, LPARAM lp
 int SmokeTest() {
     Handle job;
     try {
-        ValidateFiles(); CheckMemoryBudget(); PrepareProfile();
-        unsigned short port = ChoosePort(); std::string token = RandomToken();
         const int context = *std::min_element(std::begin(PackConfig::AllowedContexts), std::end(PackConfig::AllowedContexts));
+        // The validation entry point must not load a second model beside a
+        // running interactive session for this profile.
+        g.profileLock.reset(CreateFileW((g.paths.profile / L"launcher.lock").c_str(), GENERIC_READ | GENERIC_WRITE,
+                                         0, nullptr, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr));
+        if (!g.profileLock.valid())
+            throw std::runtime_error("Une session est déjà ouverte, ou le dossier du profil est inaccessible. Fermez la session avant le test.");
+        ValidateFiles(); CheckMemoryBudget(context); PrepareProfile();
+        unsigned short port = ChoosePort(); std::string token = RandomToken();
         WriteConfig(port, token, context);
         job = CreateOwnedJob(); SetJobForUi(job.value);
         auto engine = StartEngine(job.value, port, token, context);

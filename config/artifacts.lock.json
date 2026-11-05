@@ -27,15 +27,6 @@
     "size": 1810687
   },
   {
-    "file": "Qwen3.5-4B-Q4_K_M.gguf",
-    "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf",
-    "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
-    "upstream": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF",
-    "version": "e87f176479d0855a907a41277aca2f8ee7a09523",
-    "actual_sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
-    "size": 2740937888
-  },
-  {
     "file": "llama-b12089-bin-ubuntu-x64.tar.gz",
     "url": "https://github.com/ggml-org/llama.cpp/releases/download/b12089/llama-b12089-bin-ubuntu-x64.tar.gz",
     "sha256": "f3cd7d5d34dee97be7137b749723ac10228055b85336fb56f1d5d0c80ebb737d",
@@ -60,5 +51,13 @@
     "size": 18731856,
     "version": "VC14 official x64 retrieved 2026-11-04",
     "upstream": "https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist"
+  },
+  {
+    "file": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+    "url": "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+    "sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+    "upstream": "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF",
+    "version": "a483e9e6cbd595906af30beda3187c2663a1118c",
+    "size": 10756586464
   }
 ]

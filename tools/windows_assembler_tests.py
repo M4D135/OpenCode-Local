@@ -18,7 +18,7 @@ import struct
 import sys
 import tempfile
 
-from pack_profiles import load_pack
+from pack_profiles import load_pack, pack_names
 from windows_test_support import run_process, sparse_file
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,7 +33,7 @@ def compile_fixture(work: Path, count: int, payload: bytes, compiler: str) -> di
     if count != 2:
         sizes.append(len(payload) - sum(sizes))
     names = (["Setup-1.bin", "Setup-2.bin"] if count == 2 else
-             [f"Setup-32Go-{number:02d}.bin" for number in range(1, count + 1)])
+             [f"Setup-Fixture-{number:02d}.bin" for number in range(1, count + 1)])
     model = f"fixture-{count}.gguf"
     entries = ",\n".join(f'    {{"{name}", {size}ULL}}' for name, size in zip(names, sizes))
     header = f'''// TEST FIXTURE ONLY. Not a production model or production configuration.
@@ -241,7 +241,7 @@ def exercise_production(work: Path, exe: Path, pack: dict) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--native-root", type=Path)
-    parser.add_argument("--pack", choices=("16go", "32go"), action="append")
+    parser.add_argument("--pack", choices=pack_names(), action="append")
     parser.add_argument("--cxx", default="cl" if os.name == "nt" else "g++")
     parser.add_argument("--fixtures-only", action="store_true",
                         help="For local source testing; does not claim validation of production PEs")
@@ -267,7 +267,7 @@ def main() -> int:
                                                  "test_header_sha256": profile["header_sha256"],
                                                  "cases": rows, "passed": all(row["passed"] for row in rows)})
             if not args.fixtures_only:
-                for name in args.pack or ("16go", "32go"):
+                for name in args.pack or pack_names():
                     exe = (args.native_root / name / "AssembleModel.exe").resolve(strict=True)
                     report["production"].append(exercise_production(work, exe, load_pack(name)))
                 report["production_pe_execution"] = "executed"
@@ -280,6 +280,7 @@ def main() -> int:
     args.report.write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(json.dumps({"passed": report["passed"], "platform": sys.platform,
                       "small_cases": sum(len(row["cases"]) for row in report["small_fixtures"]),
+                      "production_cases": sum(len(row["cases"]) for row in report["production"]),
                       "production_pe_execution": report["production_pe_execution"],
                       "error": report.get("error")}, ensure_ascii=False))
     return 0 if report["passed"] else 1

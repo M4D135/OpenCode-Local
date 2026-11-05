@@ -2,7 +2,7 @@
 """Validate the real assembler with small pinned two-part and eleven-part models.
 
 The native Linux tests cover the actual streaming and publication code; a
-MinGW build also verifies that both production headers compile for Windows.
+MinGW build also verifies that each configured production header compiles for Windows.
 No production model is downloaded, joined, rewritten, or opened by this test.
 """
 from __future__ import annotations
@@ -18,6 +18,8 @@ import subprocess
 import tempfile
 import time
 import zipfile
+
+from pack_profiles import pack_names
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "src/assemble_model.cpp"
@@ -37,7 +39,7 @@ def compile_fixture(root: Path, count: int, payload: bytes, cxx: str):
         # Split the GGUF magic across three parts to exercise boundary reads.
         sizes = [1, 2, 7, 23, 61, 127, 257, 509, 1021, 2047]
         sizes.append(len(payload) - sum(sizes))
-        names = [f"Setup-32Go-{i:02d}.bin" for i in range(1, count + 1)]
+        names = [f"Setup-Fixture-{i:02d}.bin" for i in range(1, count + 1)]
     model_name = f"fixture-{count}.gguf"
     entries = ",\n".join(f'    {{"{name}", {size}ULL}}' for name, size in zip(names, sizes))
     header = f'''#pragma once
@@ -245,7 +247,7 @@ def main():
         for count in (2, 11):
             profile = compile_fixture(folder, count, payload, args.cxx)
             report["native_cases"].extend(exercise(folder, profile, payload))
-        for pack in ("16go", "32go"):
+        for pack in pack_names():
             header = args.work_root / pack / "generated" / "pack_config.h"
             if not header.is_file():
                 report["windows_compilation"].append({"pack": pack, "status": "header_missing"})

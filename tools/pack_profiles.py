@@ -11,6 +11,15 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 
 
+def pack_names() -> tuple[str, ...]:
+    document = json.loads((ROOT / "config/packs.json").read_text(encoding="utf-8"))
+    names = tuple(document["packs"])
+    if document.get("schema_version") != 1 or not names or any(
+            not re.fullmatch(r"[a-z0-9_-]+", name) for name in names):
+        raise ValueError("Invalid pack configuration")
+    return names
+
+
 def load_pack(name: str) -> dict:
     document = json.loads((ROOT / "config/packs.json").read_text(encoding="utf-8"))
     if document.get("schema_version") != 1 or name not in document["packs"]:
@@ -27,6 +36,18 @@ def load_pack(name: str) -> dict:
         raise ValueError("Default context must be an allowed context")
     if not 0 < pack["output_tokens"] < pack["default_context"]:
         raise ValueError("Output budget must be smaller than default context")
+    if any(not isinstance(value, int) or value <= 0 for value in pack["allowed_contexts"]):
+        raise ValueError("Context lengths must be positive integers")
+    for field in ("memory_reserve_mb", "runtime_overhead_mb", "cache_memory_per_4096_mb",
+                  "batch_size", "micro_batch_size", "max_cpu_threads"):
+        if not isinstance(pack[field], int) or pack[field] <= 0:
+            raise ValueError("Invalid runtime budget: " + field)
+    if pack["micro_batch_size"] > pack["batch_size"]:
+        raise ValueError("Micro-batch cannot exceed batch size")
+    if pack["cache_type_k"] not in ("bf16", "f16", "q8_0") or pack["cache_type_v"] not in ("bf16", "f16", "q8_0"):
+        raise ValueError("Unsupported cache format")
+    if not isinstance(pack["flash_attention"], bool):
+        raise ValueError("Flash Attention must be explicit")
     part_size = int(document["slice_bytes"])
     if not 0 < part_size < 2**31:
         raise ValueError("Slices must fit signed 32-bit installer file offsets")
@@ -61,6 +82,8 @@ def generate(pack: dict, output: Path, non_model_bytes: int = 450_000_000) -> di
         "ModelLabel": model["label"],
         "ModelAliasW": model["alias"],
         "VersionW": pack["app_version"],
+        "CacheTypeK": pack["cache_type_k"],
+        "CacheTypeV": pack["cache_type_v"],
     }
     header = ["// Generated from config/packs.json; do not edit.", "#pragma once",
               "#include <cstdint>", "#include <cstddef>", "namespace PackConfig {"]
@@ -73,8 +96,14 @@ def generate(pack: dict, output: Path, non_model_bytes: int = 450_000_000) -> di
     for key, value in {"DefaultContext": pack["default_context"], "OutputTokens": pack["output_tokens"],
                        "MinInstalledMemoryMB": pack["min_installed_memory_mb"],
                        "MinFreeMemoryMB": pack["min_free_memory_mb"],
+                       "MemoryReserveMB": pack["memory_reserve_mb"],
+                       "RuntimeOverheadMB": pack["runtime_overhead_mb"],
+                       "CacheMemoryPer4096MB": pack["cache_memory_per_4096_mb"],
+                       "BatchSize": pack["batch_size"], "MicroBatchSize": pack["micro_batch_size"],
+                       "MaxCpuThreads": pack["max_cpu_threads"],
                        "LoadTimeoutSeconds": pack["load_timeout_seconds"]}.items():
         header.append(f"inline constexpr int {key} = {value};")
+    header.append("inline constexpr bool FlashAttention = " + str(pack["flash_attention"]).lower() + ";")
     header.append("inline constexpr int AllowedContexts[] = {" + ", ".join(map(str, pack["allowed_contexts"])) + "};")
     header += ["struct Part { const char* name; uint64_t bytes; };", "inline constexpr Part Parts[] = {"]
     for part in pack["parts"]:
@@ -82,8 +111,7 @@ def generate(pack: dict, output: Path, non_model_bytes: int = 450_000_000) -> di
     header += ["};", "inline constexpr size_t PartCount = sizeof(Parts) / sizeof(Parts[0]);", "}", ""]
     (output / "pack_config.h").write_text("\n".join(header), encoding="utf-8")
 
-    minimum_gib = 5 if pack["ram_gib"] == 16 else 20
-    needed_gib = max(minimum_gib, math.ceil((model["bytes"] + non_model_bytes + 2**30) / 2**30))
+    needed_gib = math.ceil((model["bytes"] + non_model_bytes + 2**30) / 2**30)
     values = {
         "PACK_ID": pack["id"], "PACK_DISPLAY_NAME": pack["display_name"],
         "PACK_VERSION": pack["app_version"], "PACK_PROFILE_NAME": pack["profile_name"],
@@ -122,7 +150,7 @@ def configure_opencode(template: str, pack: dict) -> str:
     if len(models) != 1:
         raise ValueError("Expected one local model template")
     settings = next(iter(models.values()))
-    settings["name"] = pack["model"]["label"] + f' — {pack["ram_gib"]} Go'
+    settings["name"] = pack["model"]["label"] + " — MoE local"
     data["provider"]["local"]["models"] = {alias: settings}
     data["compaction"]["reserved"] = "__COMPACTION_RESERVED__"
     data["compaction"]["preserve_recent_tokens"] = "__COMPACTION_PRESERVE__"
@@ -134,7 +162,7 @@ def configure_opencode(template: str, pack: dict) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--pack", choices=("16go", "32go"), required=True)
+    parser.add_argument("--pack", choices=pack_names(), required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     print(json.dumps(generate(load_pack(args.pack), args.output), ensure_ascii=False))

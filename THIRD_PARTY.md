@@ -6,8 +6,7 @@ Ce pack assemble des composants indépendants. Il n’est pas une distribution o
 |---|---|---|
 | OpenCode | MIT, copyright OpenCode ; exécutable autonome officiel non modifié | https://github.com/anomalyco/opencode |
 | llama.cpp | MIT, The ggml authors | https://github.com/ggml-org/llama.cpp |
-| Modèle Qwen3.8-27B | Apache 2.0, Qwen ; quantification GGUF par Unsloth | https://huggingface.co/Qwen/Qwen3.8-27B et https://huggingface.co/unsloth/Qwen3.8-27B-GGUF |
-| Modèle Qwen3.5-4B | Apache 2.0, Qwen ; quantification GGUF par Unsloth | https://huggingface.co/Qwen/Qwen3.5-4B et https://huggingface.co/unsloth/Qwen3.5-4B-GGUF |
+| Modèle Qwen3.6-35B-A3B | Apache 2.0, Qwen ; quantification GGUF IQ2_XXS par Unsloth | https://huggingface.co/Qwen/Qwen3.6-35B-A3B et https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF |
 | ripgrep | MIT / Unlicense, Andrew Gallant et contributeurs | https://github.com/BurntSushi/ripgrep |
 | LLVM OpenMP fourni avec le moteur | Apache 2.0 avec exceptions LLVM ; texte original dans `LICENSE-LLVM-OpenMP` | https://github.com/llvm/llvm-project |
 | Microsoft Visual C++ Runtime | Conditions de redistribution Microsoft ; DLL officielles x64 placées à côté du moteur | https://aka.ms/VCRedistLicense |

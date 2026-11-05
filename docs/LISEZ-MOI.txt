@@ -1,92 +1,53 @@
-OPENCODE LOCAL — GUIDE RAPIDE
-Version 1.0.0 — Windows 10/11 Intel/AMD x64 — 16 Go de RAM
+OpenCode Local — MoE léger — version 1.2.0
 
-INSTALLATION SANS INTERNET
+INSTALLATION HORS LIGNE
+1. Extraire Setup.exe de Setup.zip. Le ZIP contient uniquement cet exécutable.
+2. Placer dans le même dossier SOIT le modèle complet :
+   Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf
+   SOIT toutes ses 8 parties :
+  Modele-MoE-01.bin
+  Modele-MoE-02.bin
+  Modele-MoE-03.bin
+  Modele-MoE-04.bin
+  Modele-MoE-05.bin
+  Modele-MoE-06.bin
+  Modele-MoE-07.bin
+  Modele-MoE-08.bin
+3. Lancer Setup.exe et choisir un dossier dédié au programme.
+4. Ouvrir le raccourci « OpenCode Local MoE ».
 
-Télécharger Setup.exe, Setup-1.bin et Setup-2.bin depuis la même version
-GitHub, puis les placer ensemble dans un même dossier. Double-cliquer sur
-Setup.exe. Aucun téléchargement n'est demandé sur le PC cible.
+Aucun téléchargement n'est effectué par l'installateur ou le lanceur.
+Les parties des anciens modèles ne sont pas compatibles avec ce nouveau pack.
+Le setup vérifie la taille et le SHA-256 complet du modèle avant publication.
+Un modèle complet présent mais invalide provoque une erreur explicite.
 
-Le programme s'installe pour votre utilisateur Windows. Prévoir environ
-12 Go libres pendant le téléchargement et l'installation. Le modèle est
-assemblé automatiquement et son empreinte SHA-256 est vérifiée.
+MODÈLE
+Qwen3.6-35B-A3B UD-IQ2_XXS
+Taille : 10756586464 octets
+SHA-256 : 2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef
+Source figée : https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf
+Contexte initial : 8192 tokens. Une session de calcul à la fois.
+Profil mémoire : poids mappés, aucune copie de repacking, cache de conversations
+désactivé, un seul checkpoint, petits lots et cache KV BF16.
+Le lanceur vérifie un budget estimé pour le modèle et les outils, auquel il
+ajoute 6 Gio de réserve pour vos autres applications.
+Prévoir environ 20 Gio disponibles avant lancement sur un PC de 32 Gio.
+Ce budget est une estimation de démarrage ; il ne constitue pas un plafond RAM.
+La quantification IQ2 privilégie la mémoire et peut diminuer la qualité.
 
-PREMIÈRE SESSION
+DOSSIERS
+Programme : %LOCALAPPDATA%\Programs\OpenCodeLocalMoE
+Données : %LOCALAPPDATA%\OpenCodeLocalMoE
+Ce pack utilise son propre profil. Les données des anciennes versions sont
+conservées ; leur suppression locale n'est pas automatique.
 
-1. Ouvrir OpenCode Local depuis le menu Démarrer.
-2. Choisir le dossier du projet sur lequel travailler.
-3. Conserver le contexte 32K au premier essai, puis cliquer sur OpenCode.
-4. Attendre le chargement du modèle. La console OpenCode s'ouvre.
-5. Écrire par exemple : « Lis le README et explique-moi ce projet. »
+PROTECTION DU POSTE
+VERSION NON SIGNÉE : les exécutables maison n'ont pas de signature Authenticode.
+Une détection TEHTRIS a été observée sur le lanceur 1.0.0/1.0.1 ;
+sa cause n'est pas encore qualifiée.
+Consulter wad\docs\TEHTRIS.md et les empreintes du pack pour l'analyse.
+Ce pack ne modifie pas l'antivirus, le pare-feu ou leurs exclusions.
 
-Les modifications et commandes demandent confirmation. Le modèle 4B reste
-limité : vérifiez ses propositions et conservez une sauvegarde du projet.
-Les compilateurs, environnements de projet et Git ne sont pas inclus.
-L'interface d'OpenCode reste celle de sa version officielle ; vos demandes
-peuvent être rédigées en français.
-
-PORTS BLOQUÉS
-
-OpenCode communique avec le modèle sur 127.0.0.1, un port local compris
-entre 18741 et 18780. Aucune écoute sur le réseau et aucune règle de
-pare-feu ne sont ajoutées. La clé de l'API locale change à chaque session.
-
-Si les accès Internet sont bloqués mais que 127.0.0.1 reste autorisé, ce
-mode peut fonctionner. Si la liaison locale est elle-même interdite,
-utilisez Discussion directe : le modèle fonctionne sans serveur HTTP.
-Cette discussion ne possède pas les outils de modification d'OpenCode.
-Dans cette version du moteur direct, du texte entre balises <think> peut
-apparaître avant la réponse. Attendre la réponse finale ; cette particularité
-ne concerne pas le mode OpenCode avec son serveur local.
-
-Le programme respecte les restrictions du PC. Si l'exécution d'un programme
-est bloquée par l'organisation, faire autoriser l'installation.
-
-ARRÊT, MÉMOIRE ET DÉPANNAGE
-
-Fermer la console termine la session. Le bouton Arrêter ferme le moteur et
-les processus de la session ; sauvegarder au préalable le travail en cours.
-Fermer le lanceur arrête aussi sa session.
-
-Fermer les applications lourdes avant utilisation. Le contexte 16K réduit
-la consommation de mémoire, mais les outils occupent déjà une partie
-importante du contexte. Le réglage 8K convient surtout aux tâches courtes.
-La discussion directe utilise 4K. Aucune performance précise n'est garantie
-sur votre processeur.
-
-En cas d'erreur, ouvrir Diagnostic et Journaux. L'absence d'Internet n'est
-pas une erreur. Les mises à jour, plugins externes, serveurs de langage,
-recherche web et fournisseurs cloud sont désactivés dans le profil livré.
-Une commande que vous autorisez peut toutefois accéder au réseau : le pack
-n'est pas un système d'isolation réseau.
-
-L'installateur et le lanceur d'intégration ne sont pas signés avec un
-certificat commercial. Le fichier SHA256SUMS.txt de la release permet de
-vérifier les téléchargements. Ne désactivez pas les protections du PC.
-
-DONNÉES
-
-Installation par défaut :
-%LOCALAPPDATA%\Programs\OpenCodeLocal
-
-Conversations, configuration et journaux :
-%LOCALAPPDATA%\OpenCodeLocal
-
-La désinstallation Windows conserve vos projets et le profil. Pour effacer
-l'historique, fermer le lanceur puis supprimer volontairement ce profil.
-
-VERSIONS
-
-OpenCode 1.19.5, llama.cpp b12089, ripgrep 15.1.0.
-Modèle texte Qwen3.5-4B Q4_K_M, quantifié par Unsloth.
-Le fichier GGUF fait 2 740 937 888 octets.
-SHA-256 : 00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4
-
-Licences et notices : dossier wad\licenses de l'installation.
-Sources et versions : https://github.com/M4D135/OpenCode-Local
-
-ÉTAT DE VALIDATION
-
-Les essais locaux du modèle et du dialogue avec les outils sont détaillés
-dans VALIDATION.md du dépôt. L'exécution réelle de l'installateur et du
-lanceur doit encore être qualifiée sur une machine Windows.
+OpenCode nécessite une connexion locale à 127.0.0.1. Le mode Discussion
+directe est disponible lorsque les connexions localhost sont interdites.
+Les droits d'écriture et d'exécution restent ceux de la session Windows.

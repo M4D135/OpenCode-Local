@@ -1,38 +1,57 @@
-# Modèles des packs 16 Go et 32 Go
+# Modèle du pack unique 1.2.0
 
-Les deux packs utilisent OpenCode et le moteur CPU llama.cpp. Chaque pack contient son propre modèle ; les fichiers de modèle des deux packs ne sont pas interchangeables. La configuration figée se trouve dans [config/packs.json](../config/packs.json).
+Le modèle retenu est **Qwen3.6-35B-A3B UD-IQ2_XXS**, un MoE avec 35 milliards
+de paramètres au total et environ 3 milliards actifs par token. Le pack utilise
+uniquement le texte ; aucun projecteur d'images ni modèle auxiliaire n'est chargé.
 
-| Pack | Modèle texte | Quantification | Taille exacte du GGUF | Contexte par défaut | Sortie maximale |
-| --- | --- | --- | ---: | ---: | ---: |
-| 16 Go | Qwen3.5-4B | Q4_K_M | 2 740 937 888 octets | 8 192 tokens | 2 048 tokens |
-| 32 Go | Qwen3.8-27B | UD-Q4_K_M | 16 464 440 224 octets | 16 384 tokens | 4 096 tokens |
+## Source figée
 
-## Choix et mémoire
+- Auteur du modèle : [Qwen](https://huggingface.co/Qwen/Qwen3.6-35B-A3B).
+- Conversion GGUF : [Unsloth](https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF).
+- Révision : `a483e9e6cbd595906af30beda3187c2663a1118c`.
+- Fichier : `Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf`.
+- Taille : **10 756 586 464 octets**.
+- SHA-256 : `2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef`.
+- Licence : Apache-2.0.
 
-Le pack 16 Go conserve exactement le modèle déjà livré en version 1.0.0/1.0.1, avec la même révision et la même empreinte. Ses deux fichiers `Setup-1.bin` et `Setup-2.bin` restent donc réutilisables.
+Les métadonnées LFS ont été vérifiées auprès de Hugging Face le 5 novembre 2026.
+Le téléchargement complet et chaque partie publiée sont contrôlés par SHA-256.
+Le fichier complet est 5 707 853 760 octets plus petit que l'ancien
+Qwen3.8-27B UD-Q4_K_M. Cette différence de taille ne promet pas une baisse
+strictement identique du pic de RAM.
 
-Le pack 32 Go propose un modèle dense de 27 milliards de paramètres. Qwen décrit des améliorations en code et en tâches agentiques pour la génération 3.8. Son architecture reste `qwen3_5`, également utilisée par Qwen3.5. La compatibilité architecturale ne remplace pas un essai effectif du modèle et des appels d'outils avec la version embarquée du moteur.
+## Pourquoi ce choix
 
-Unsloth indique environ 5,5 Go de mémoire d'inférence pour Qwen3.5-4B en 4 bits et 17 à 19 Go pour Qwen3.8-27B en 4 bits. Ce sont des indications générales de l'éditeur des quantifications, pas des mesures de ces packs sur le poste cible, et elles n'incluent pas une garantie sur la mémoire consommée par Windows, OpenCode et les autres applications.
+La cible est un PC avec **20 Gio disponibles**. Une quantification plus forte
+laisse une marge au moteur, à OpenCode et aux applications du poste. IQ2_XXS
+privilégie donc la mémoire ; elle peut dégrader la précision et la fiabilité des
+outils par rapport aux quantifications plus larges. Aucun score de benchmark du
+modèle original n'est revendiqué pour cette conversion.
 
-Le contexte est volontairement limité et une seule séquence doit être exécutée simultanément. Le pack 32 Go réserve une marge en exigeant 22 528 Mio de mémoire disponible avant chargement. Pour le pack 16 Go, ce seuil est de 6 144 Mio. Le suffixe `_mb` des champs de configuration correspond ici à des Mio (1 024 × 1 024 octets). Ces seuils sont des choix de fonctionnement prudents, à ajuster uniquement à partir de mesures réelles.
+Le MoE réduit les calculs par token. Il ne dispense pas de conserver l'ensemble
+des poids. Les tailles de modèle, la mémoire des experts actifs et la consommation
+totale du processus sont trois mesures différentes.
 
-Sur CPU, le modèle 27B doit traiter beaucoup plus de poids que le 4B : une réponse et un parcours d'agent peuvent donc prendre sensiblement plus de temps. Aucun débit en tokens par seconde n'est garanti sans connaître le processeur et mesurer le fonctionnement réel. Les capacités de contexte maximales annoncées par les modèles ne sont pas les réglages de ces packs.
+## Réglages mémoire
 
-Le pack 32 Go est distribué en onze parties de modèle : dix parties de 1 500 000 000 octets, puis une dernière de 1 464 440 224 octets, nommées `Setup-32Go-01.bin` à `Setup-32Go-11.bin`. Les modèles sont destinés ici au texte et au code ; aucun projecteur visuel ni modèle MTP supplémentaire n'est requis.
+Le cache serveur de prompts est désactivé (`--cache-ram 0`), les checkpoints
+récurrents sont limités à un, et le chargement utilise `--load-mode mmap
+--no-repack`. Le runtime b12089 pourrait sinon consacrer par défaut jusqu'à
+8 Gio au cache de prompts, indépendamment du cache KV.
 
-## Sources et provenance
+Le contexte initial est **8 192 tokens** ; 4 096 reste disponible. Le modèle
+hybride n'a que dix couches d'attention complète : le cache KV BF16 théorique
+est d'environ 160 Mio à 8K, hors états récurrents et buffers. Réduire ce contexte
+à 4K n'économise qu'environ 80 Mio, mais retire de la place aux instructions et
+schémas d'outils OpenCode. BF16 est conservé pour éviter une quantification
+supplémentaire du cache pour un gain limité.
 
-Sources consultées le 4 novembre 2026 :
+Le budget de démarrage compte les poids complets, 2 Gio de surcoût moteur/outils
+et 256 Mio par bloc de 4K pour les caches/buffers, puis ajoute 6 Gio de réserve.
+À 8K : 12 819 Mio estimés pour la session, 18 963 Mio libres demandés au total.
+Ce calcul est une précaution de démarrage, **pas une réservation de RAM** et
+pas un maximum imposé par Windows.
 
-- [Modèle officiel Qwen3.5-4B](https://huggingface.co/Qwen/Qwen3.5-4B).
-- [Modèle officiel Qwen3.8-27B : architecture, capacités et paramètres](https://huggingface.co/Qwen/Qwen3.8-27B).
-- [Guide Unsloth Qwen3.5 : indications de mémoire](https://unsloth.ai/docs/models/qwen3.5).
-- [Qwen3.8-27B chez Unsloth : indications de mémoire](https://unsloth.ai/models/qwen3.8-27b).
-- [GGUF 16 Go à la révision figée](https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/blob/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf).
-- [GGUF 32 Go à la révision figée](https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/blob/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_M.gguf).
-
-Les deux modèles sont distribués sous licence Apache-2.0. Les GGUF sont des quantifications publiées par Unsloth à partir des modèles Qwen ; les modèles d'origine sont publiés par Qwen.
-
-Les tailles et empreintes du modèle 32 Go ont été relevées dans les métadonnées de son dépôt. Le téléchargement doit toujours être contrôlé contre la taille et le SHA-256 figés dans `config/packs.json`. La sélection d'un modèle, la compilation du pack, la validation d'une archive et un essai d'inférence sont des vérifications distinctes : seuls les essais effectivement exécutés doivent être annoncés comme réussis.
-
+Sources techniques : [configuration officielle du modèle](https://huggingface.co/Qwen/Qwen3.6-35B-A3B/blob/main/config.json),
+[valeurs par défaut llama.cpp b12089](https://github.com/ggml-org/llama.cpp/blob/b12089/common/common.h),
+[options du moteur](https://github.com/ggml-org/llama.cpp/blob/b12089/common/arg.cpp).

@@ -34,7 +34,7 @@ param(
     [string]$NativeRoot = 'signing/native',
     [Alias('OutputRoot')][string]$SetupRoot = 'signing/setup',
     [string]$WorkRoot = 'build/signing',
-    [ValidateSet('16go', '32go')][string[]]$Pack = @('16go', '32go'),
+    [string[]]$Pack = @(),
     [string]$ReportPath = 'validation/windows-validation.json',
     [switch]$RequireSigned,
     [string]$ExpectedPublisher = '',
@@ -439,6 +439,20 @@ try {
     if (-not $IsWindows) { throw 'This validation entry point must run on Windows; use the Python --fixtures-only/--build-only checks on Linux' }
     if (-not [Environment]::Is64BitProcess -or -not [Environment]::Is64BitOperatingSystem) { throw 'Use x64 PowerShell on an x64 Windows runner' }
     $script:Configuration = Get-Content -LiteralPath (Join-Path $script:Repository 'config/packs.json') -Raw | ConvertFrom-Json -AsHashtable
+    if ($script:Configuration.schema_version -ne 1 -or
+        $script:Configuration.packs -isnot [Collections.IDictionary] -or
+        $script:Configuration.packs.Count -eq 0) {
+        throw 'config/packs.json must declare at least one pack with schema_version 1'
+    }
+    $availablePacks = @($script:Configuration.packs.Keys | Sort-Object)
+    foreach ($configuredName in $availablePacks) {
+        if ($configuredName -cnotmatch '^[a-z0-9][a-z0-9_-]*$') { throw "Invalid configured pack identifier: $configuredName" }
+    }
+    if ($Pack.Count -eq 0) { $Pack = $availablePacks }
+    if (@($Pack | Select-Object -Unique).Count -ne $Pack.Count) { throw 'A pack may only be selected once' }
+    foreach ($requestedName in $Pack) {
+        if ($requestedName -cnotin $availablePacks) { throw "Unknown pack: $requestedName" }
+    }
     if ($RequireSigned) {
         if (-not $ExpectedPublisher) { throw '-RequireSigned requires the exact approved -ExpectedPublisher subject' }
         if ($ExpectedSignerSha256 -notmatch '^[0-9A-Fa-f]{64}$') { throw '-RequireSigned requires -ExpectedSignerSha256 (64 hex characters, SHA-256 of the DER certificate)' }

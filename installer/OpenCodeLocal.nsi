@@ -42,7 +42,7 @@ InstallDir "$LOCALAPPDATA\Programs\${PACK_INSTALL_DIR}"
 InstallDirRegKey HKCU "${UNINSTALL_KEY}" "InstallLocation"
 BrandingText "${PACK_DISPLAY_NAME} | Installation hors ligne"
 VIProductVersion "${AppVersion}.0"
-; One signing product identity for both RAM profiles and all house binaries.
+; One signing product identity for all project-owned binaries.
 VIAddVersionKey /LANG=1036 "ProductName" "OpenCode Local"
 VIAddVersionKey /LANG=1036 "ProductVersion" "${AppVersion}"
 !ifdef ExportUninstallerPath
@@ -76,7 +76,7 @@ AutoCloseWindow false
 
 !define MUI_ABORTWARNING
 !define MUI_WELCOMEPAGE_TITLE "Bienvenue dans ${PACK_DISPLAY_NAME}"
-!define MUI_WELCOMEPAGE_TEXT "Votre assistant de code, directement sur votre PC.$\r$\n$\r$\nPack pour ${PACK_RAM_GIB} Go de RAM : ${PACK_MODEL_LABEL}. Aucun téléchargement n’est lancé par l’installation.$\r$\n$\r$\nPlacez Setup.exe et le fichier GGUF du modèle (ou toutes ses parties .bin) dans le même dossier.$\r$\n$\r$\nL’installation se fait dans votre session Windows. Vos projets, conversations et réglages restent séparés."
+!define MUI_WELCOMEPAGE_TEXT "Votre assistant de code, directement sur votre PC.$\r$\n$\r$\nModèle MoE : ${PACK_MODEL_LABEL}. Réglé pour un PC disposant d’environ 20 Go de RAM libres, en conservant une marge pour vos autres applications.$\r$\n$\r$\nPlacez Setup.exe et le fichier GGUF du modèle (ou toutes ses parties .bin) dans le même dossier. Aucun téléchargement n’est lancé par l’installation.$\r$\n$\r$\nL’installation se fait dans votre session Windows. Vos projets, conversations et réglages restent séparés."
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_COMPONENTS
 !define MUI_PAGE_CUSTOMFUNCTION_LEAVE DirectoryLeave

@@ -1,18 +1,19 @@
 # Privacy policy
 
-Updated 4 November 2026. This policy describes the OpenCode Local integration
+Updated 5 November 2026. This policy describes the OpenCode Local integration
 distributed by [M4D135/OpenCode-Local](https://github.com/M4D135/OpenCode-Local).
 It does not describe a hosted AI service or establish a relationship with the
 upstream OpenCode, llama.cpp, Qwen or Microsoft projects.
 
 ## Local application data
 
-The packs run a language model on the user's computer. The chosen project,
+The pack runs a language model on the user's computer. The chosen project,
 prompts, conversation history, files read by approved tools and their outputs
 can contain personal or confidential information. The integration stores its
-settings, logs and the upstream application's state locally. The separate
-profile roots are `%LOCALAPPDATA%\OpenCodeLocal` and
-`%LOCALAPPDATA%\OpenCodeLocal32Go`. The user's project may be elsewhere.
+settings, logs and the upstream application's state locally in
+`%LOCALAPPDATA%\OpenCodeLocalMoE`. Historical profiles in
+`%LOCALAPPDATA%\OpenCodeLocal` and `%LOCALAPPDATA%\OpenCodeLocal32Go` are
+not deleted by this version. The user's project may be elsewhere.
 
 Logs and diagnostics can include local paths, model names, process identifiers,
 error messages and system information. A user who exports or posts these files

@@ -20,10 +20,15 @@ import shutil
 import sys
 import tempfile
 
-from pack_profiles import generate, load_pack, nsis_escape
+from pack_profiles import generate, load_pack, nsis_escape, pack_names
 from windows_test_support import run_process, sparse_file
 
 ROOT = Path(__file__).resolve().parents[1]
+# An unrelated installation is a test identity, not an obsolete production
+# pack. Legacy user-data paths remain protected and are exercised separately.
+FOREIGN_INSTALLATION = {
+    "installation_marker": "OpenCodeLocalForeignFixture:{C8716759-ED28-4744-863D-B6D657B608B6}",
+}
 CASES = {
     "missing_nested": True,
     "missing_nested_trailing_separator": True,
@@ -37,7 +42,8 @@ CASES = {
     "unowned_nonempty": False,
     "existing_file": False,
     "personal_data": False,
-    "other_pack_personal_data": False,
+    "legacy_personal_data": False,
+    "legacy_32go_personal_data": False,
     "owned_installation": True,
     "other_pack_installation": False,
 }
@@ -82,13 +88,11 @@ Var Failures
 
 
 def path_harness(source: str, executable: Path, config: Path, fixture: Path,
-                 other_pack: dict, suffix: str) -> str:
+                 suffix: str) -> str:
     functions = "\n\n".join(nsis_function(source, name) for name in (
         "${PREFIX}CheckAncestors", "${PREFIX}CheckTree", "${PREFIX}ReadOwner", "ValidateTarget"))
     header = shared_header(source, executable, config)
-    header += f'''!define OTHER_PROFILE_DIRECTORY "{nsis_escape(other_pack["profile_name"])}"
-!define OTHER_PRODUCT_MARKER "{nsis_escape(other_pack["installation_marker"])}"
-!define TEST_SUFFIX "{suffix}"
+    header += f'''!define TEST_SUFFIX "{suffix}"
 !macro TestPath NAME PATH EXPECTED
   StrCpy $R9 "${{PATH}}"
   StrCpy $INSTDIR $R9
@@ -127,7 +131,8 @@ Section
   !insertmacro TestPath "unowned_nonempty" "$FixtureDir\nonempty" 0
   !insertmacro TestPath "existing_file" "$FixtureDir\nonempty\keep.txt" 0
   !insertmacro TestPath "personal_data" "$LOCALAPPDATA\${PROFILE_DIRECTORY}\nested" 0
-  !insertmacro TestPath "other_pack_personal_data" "$LOCALAPPDATA\${OTHER_PROFILE_DIRECTORY}\nested" 0
+  !insertmacro TestPath "legacy_personal_data" "$LOCALAPPDATA\OpenCodeLocal\nested" 0
+  !insertmacro TestPath "legacy_32go_personal_data" "$LOCALAPPDATA\OpenCodeLocal32Go\nested" 0
   !insertmacro TestPath "owned_installation" "$FixtureDir\owned" 1
   !insertmacro TestPath "other_pack_installation" "$FixtureDir\other-owned" 0
 
@@ -235,8 +240,8 @@ def exercise_metadata(folder: Path, exe: Path, pack: dict, wine: str | None) -> 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path, default=ROOT / "installer/OpenCodeLocal.nsi")
-    parser.add_argument("--baseline", type=Path, help="Optional older source; reported separately")
-    parser.add_argument("--pack", choices=("16go", "32go"), action="append")
+    parser.add_argument("--baseline", type=Path, help="Optional older source with current profiles; reported separately")
+    parser.add_argument("--pack", choices=pack_names(), action="append")
     parser.add_argument("--makensis", default="makensis")
     parser.add_argument("--build-only", action="store_true")
     parser.add_argument("--runtime-blocker")
@@ -248,16 +253,19 @@ def main() -> int:
               "runtime_blocker": args.runtime_blocker, "model_loaded": False,
               "path_cases": CASES, "artifacts": {}, "passed": False}
     try:
-        profiles = {name: load_pack(name) for name in ("16go", "32go")}
-        sources = [("current-" + name, args.source, name) for name in (args.pack or ("16go", "32go"))]
+        selected = args.pack or pack_names()
+        profiles = {name: load_pack(name) for name in selected}
+        sources = [("current-" + name, args.source, name) for name in selected]
         if args.baseline:
-            sources.insert(0, ("baseline-16go", args.baseline, "16go"))
+            sources = [("baseline-" + name, args.baseline, name) for name in selected] + sources
         with tempfile.TemporaryDirectory(prefix="opencode-installer-functions-") as temporary:
             work = Path(temporary)
             for label, source_path, name in sources:
                 folder = work / label
                 folder.mkdir()
-                pack, other = profiles[name], profiles["32go" if name == "16go" else "16go"]
+                pack, other = profiles[name], FOREIGN_INSTALLATION
+                if pack["installation_marker"] == other["installation_marker"]:
+                    raise ValueError("The foreign fixture identity must differ from the production installation")
                 generated = folder / "generated"
                 generate(pack, generated)  # Real production model sizes and identities.
                 config = generated / "pack-profile.nsh"
@@ -266,7 +274,7 @@ def main() -> int:
                 prepare_paths(fixture, pack, other)
                 path_exe = folder / "PathHarness.exe"
                 data_exe = folder / "MetadataHarness.exe"
-                texts = [path_harness(source, path_exe, config, fixture, other, work.name),
+                texts = [path_harness(source, path_exe, config, fixture, work.name),
                          metadata_harness(source, data_exe, config)]
                 compiled = [compile_harness(text, exe.with_suffix(".nsi"), args.makensis)
                             for text, exe in zip(texts, (path_exe, data_exe))]

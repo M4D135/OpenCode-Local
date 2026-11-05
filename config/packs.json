@@ -1,70 +1,46 @@
 {
   "schema_version": 1,
-  "app_version": "1.1.1",
+  "app_version": "1.2.0",
   "slice_bytes": 1500000000,
   "packs": {
-    "16go": {
-      "display_name": "OpenCode Local — 16 Go",
-      "profile_name": "OpenCodeLocal",
-      "install_dir_name": "OpenCodeLocal",
-      "shortcut_name": "OpenCode Local",
-      "uninstall_key": "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenCodeLocal_87D8D49F",
-      "installation_marker": "OpenCodeLocal:{87D8D49F-3966-4D2F-B299-E47847637881}",
-      "ram_gib": 16,
+    "moe": {
+      "display_name": "OpenCode Local — MoE léger",
+      "profile_name": "OpenCodeLocalMoE",
+      "install_dir_name": "OpenCodeLocalMoE",
+      "shortcut_name": "OpenCode Local MoE",
+      "uninstall_key": "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenCodeLocalMoE_9C12A74B",
+      "installation_marker": "OpenCodeLocalMoE:{9C12A74B-6B0F-4A11-AF14-C1D4C7178372}",
+      "ram_gib": 24,
       "default_context": 8192,
       "allowed_contexts": [
         4096,
-        8192,
-        16384
+        8192
       ],
       "output_tokens": 2048,
-      "min_installed_memory_mb": 15360,
-      "min_free_memory_mb": 6144,
-      "load_timeout_seconds": 300,
-      "part_prefix": "Setup-",
-      "part_zero_pad": 0,
-      "model": {
-        "filename": "Qwen3.5-4B-Q4_K_M.gguf",
-        "label": "Qwen3.5-4B Q4_K_M",
-        "alias": "qwen3.5-4b",
-        "bytes": 2740937888,
-        "sha256": "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4",
-        "url": "https://huggingface.co/unsloth/Qwen3.5-4B-GGUF/resolve/e87f176479d0855a907a41277aca2f8ee7a09523/Qwen3.5-4B-Q4_K_M.gguf",
-        "license": "Apache-2.0",
-        "repository": "unsloth/Qwen3.5-4B-GGUF",
-        "revision": "e87f176479d0855a907a41277aca2f8ee7a09523"
-      }
-    },
-    "32go": {
-      "display_name": "OpenCode Local — 32 Go",
-      "profile_name": "OpenCodeLocal32Go",
-      "install_dir_name": "OpenCodeLocal32Go",
-      "shortcut_name": "OpenCode Local 32 Go",
-      "uninstall_key": "Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\OpenCodeLocal32Go_49609C11",
-      "installation_marker": "OpenCodeLocal32Go:{49609C11-D113-4D39-93F5-920F94A53B28}",
-      "ram_gib": 32,
-      "default_context": 16384,
-      "allowed_contexts": [
-        4096,
-        8192,
-        16384
-      ],
-      "output_tokens": 4096,
-      "min_installed_memory_mb": 30720,
-      "min_free_memory_mb": 22528,
-      "load_timeout_seconds": 900,
-      "part_prefix": "Setup-32Go-",
+      "min_installed_memory_mb": 23552,
+      "min_free_memory_mb": 18963,
+      "load_timeout_seconds": 600,
+      "memory_reserve_mb": 6144,
+      "runtime_overhead_mb": 2048,
+      "cache_memory_per_4096_mb": 256,
+      "batch_size": 256,
+      "micro_batch_size": 64,
+      "max_cpu_threads": 8,
+      "cache_type_k": "bf16",
+      "cache_type_v": "bf16",
+      "flash_attention": true,
+      "part_prefix": "Modele-MoE-",
       "part_zero_pad": 2,
       "model": {
-        "filename": "Qwen3.8-27B-UD-Q4_K_M.gguf",
-        "label": "Qwen3.8-27B UD-Q4_K_M",
-        "alias": "qwen3.8-27b",
-        "bytes": 16464440224,
-        "sha256": "322e194ff79741c7baa497c240f677f54b201b0efab44ca8e50f122b39123482",
-        "url": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF/resolve/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q4_K_M.gguf",
+        "filename": "Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
+        "label": "Qwen3.6-35B-A3B UD-IQ2_XXS",
+        "alias": "qwen3.6-35b-a3b",
+        "bytes": 10756586464,
+        "sha256": "2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef",
+        "url": "https://huggingface.co/unsloth/Qwen3.6-35B-A3B-GGUF/resolve/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-UD-IQ2_XXS.gguf",
         "license": "Apache-2.0",
-        "repository": "unsloth/Qwen3.8-27B-GGUF",
-        "revision": "4ca720788d1e01f1bff70c033e0d0028fd02e502"
+        "repository": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "revision": "a483e9e6cbd595906af30beda3187c2663a1118c"
       }
     }
   }

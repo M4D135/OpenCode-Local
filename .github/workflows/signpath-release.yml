@@ -77,12 +77,12 @@ jobs:
       - name: Prepare only pinned upstream dependencies, without models
         run: python tools/build.py --prepare-only --setup-only --signing unsigned
 
-      - name: Compile our six executables from this source commit
+      - name: Compile our three MoE pack executables from this source commit
         run: >-
           python tools/build_packs.py --phase native --signing unsigned --pack all
           --base-payload build/payload --work-root build/signing --artifact-root signing --setup-only
 
-      - name: Restrict the first signing input to our six PE files
+      - name: Restrict the first signing input to our three PE files
         run: python .signpath/ci_gate.py layout native signing/native --max-bytes 50000000
 
       - name: Upload native input for verified GitHub provenance
@@ -113,7 +113,7 @@ jobs:
           parameters: |
             version: ${{ toJSON(steps.preflight.outputs.version) }}
 
-      - name: Verify returned signatures and assemble installers with signed natives
+      - name: Verify returned signatures and assemble the installer with signed natives
         env:
           SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
         run: |
@@ -132,7 +132,7 @@ jobs:
           compression-level: 0
           archive: true
 
-      - name: Request approval and signature of the two outer installers
+      - name: Request approval and signature of the outer installer
         id: sign_setup
         uses: SignPath/github-action-submit-signing-request@f6d04783b4569d051e0c80105fe66e82819d0092 # v3
         with:
@@ -162,7 +162,7 @@ jobs:
           python .signpath/ci_gate.py budget signed/native signed/setup signing/native-manifest.json signing/setup-manifest.json signing/workflow-provenance.json
 
       # This artifact is a candidate until the dependent Windows job succeeds.
-      # That job replaces it with validated ZIPs, avoiding a duplicate final upload.
+      # That job replaces it with the validated ZIP, avoiding a duplicate final upload.
       - name: Transfer signed candidates and provenance to Windows
         id: upload_candidates
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -217,9 +217,9 @@ jobs:
           SIGNPATH_EXPECTED_PUBLISHER: ${{ vars.SIGNPATH_EXPECTED_PUBLISHER }}
           SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
         run: |
-          & ./tools/windows_validate.ps1 -Phase All -NativeRoot signed/native -SetupRoot signed/setup -WorkRoot build/signing -Pack @('16go', '32go') -ReportPath validation/windows-signed.json -RequireSigned -ExpectedPublisher $env:SIGNPATH_EXPECTED_PUBLISHER -ExpectedSignerSha256 $env:SIGNPATH_EXPECTED_SIGNER_SHA256
+          & ./tools/windows_validate.ps1 -Phase All -NativeRoot signed/native -SetupRoot signed/setup -WorkRoot build/signing -ReportPath validation/windows-signed.json -RequireSigned -ExpectedPublisher $env:SIGNPATH_EXPECTED_PUBLISHER -ExpectedSignerSha256 $env:SIGNPATH_EXPECTED_SIGNER_SHA256
 
-      - name: Package the exact verified setups, with fresh checksums
+      - name: Package the exact verified setup, with fresh checksums
         env:
           SIGNPATH_EXPECTED_SIGNER_SHA256: ${{ vars.SIGNPATH_EXPECTED_SIGNER_SHA256 }}
         run: >-
@@ -236,7 +236,7 @@ jobs:
           $record | ConvertTo-Json -Depth 10 | Set-Content -Encoding utf8 dist/verification/workflow-provenance.json
           python .signpath/ci_gate.py budget dist
 
-      - name: Replace the candidate artifact with the validated ZIPs and reports
+      - name: Replace the candidate artifact with the validated ZIP and reports
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: signpath-output-${{ github.run_id }}-${{ github.run_attempt }}
@@ -250,7 +250,7 @@ jobs:
       - name: Describe the completed validation
         if: success()
         run: |
-          'Both installer ZIPs contain only Setup.exe. Native and installer signatures, publisher, certificate pin, timestamps, embedded-file identity, and small Windows fixtures passed. No GitHub release was published; model parts were unchanged. TEHTRIS acceptance on the target computer remains unverified.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          'The MoE installer ZIP contains only Setup.exe. Native and installer signatures, publisher, certificate pin, timestamps, embedded-file identity, and small Windows fixtures passed. No GitHub release was published; model parts were unchanged. TEHTRIS acceptance on the target computer remains unverified.' | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
 
       - name: Keep the Windows report even if validation fails
         if: always()

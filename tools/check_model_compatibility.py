@@ -62,7 +62,7 @@ def inspect_header(path):
         metadata = {}
         for _ in range(entries):
             key, kind = string(), scalar("I")
-            keep = (key.startswith(("general.", "qwen35."))
+            keep = (key.startswith(("general.", "qwen35.", "qwen35moe."))
                     or key == "tokenizer.chat_template" or key.endswith("_token_id"))
             item = value(kind, keep)
             if keep:

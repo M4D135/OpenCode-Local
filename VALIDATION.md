@@ -1,3 +1,19 @@
+# Validation du pack unique MoE 1.2.0
+
+État de préparation au 5 novembre 2026 : les sources ont été adaptées au profil
+unique `moe`. La publication doit attendre les contrôles Windows, l'exécution
+réelle du nouveau GGUF et une session OpenCode. Aucun résultat du modèle 27B
+historique ci-dessous ne qualifie le nouveau modèle IQ2.
+
+Le budget estimé est de 12 819 Mio à 8K, avec 6 144 Mio de réserve. Les rapports
+mesurés de la release préciseront le RSS, les paramètres et leurs limites.
+Le contrôle d'intégrité des signatures reste testé en mode non signé ; aucun
+certificat réel n'est disponible et la compatibilité TEHTRIS reste non validée.
+
+---
+
+## Historique des validations précédentes
+
 # Validation des packs et de la chaîne de signature
 
 ## Préparation 1.1.1 — état au 4 novembre 2026

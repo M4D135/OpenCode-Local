@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "repository": "M4D135/OpenCode-Local",
+  "version": "1.2.0",
+  "pack": "moe",
+  "signing": "unsigned",
+  "request": "Replace the two packs with one lighter MoE pack, then remove obsolete releases and their downloads. Keep Git history and tags.",
+  "requested_on": "2026-11-05",
+  "remove_releases_after_verified_publication": [
+    {"id": 434154553, "tag": "v1.1.0", "expected_asset_bytes": 16719338955},
+    {"id": 434102363, "tag": "v1.0.1", "expected_asset_bytes": 127193766},
+    {"id": 433732596, "tag": "v1.0.0", "expected_asset_bytes": 2995328732}
+  ],
+  "remove_obsolete_actions_artifacts": [
+    13367487744, 13367537728, 13368760209,
+    13367103138, 13367002404, 13366463753,
+    13366267845, 13367191274, 13367835438,
+    13367116049, 13365434273
+  ]
+}

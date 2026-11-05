@@ -2,13 +2,14 @@
 
 ## Current status
 
-**Signing is not active.** The published 1.0.0, 1.0.1 and 1.1.0 Windows packs
-are unsigned. The 1.1.1 build work prepares a verifiable signing pipeline and
+**Signing is not active.** The historical 1.0.0, 1.0.1 and 1.1.0 Windows packs
+were unsigned. The single MoE 1.2.0 distribution is also explicitly unsigned.
+The integration prepares a verifiable signing pipeline and
 a SignPath Foundation application. Preparing the integration is not acceptance
 by the Foundation, certificate issuance or a completed signing operation.
 
-The application has not been submitted at the time of this policy update
-(4 November 2026). No signing certificate or SignPath API credential has been
+The last confirmed application state on 4 November 2026 was prepared, not
+submitted. This source update does not assert a later submission or acceptance. No signing certificate or SignPath API credential has been
 provided to this repository. Only a release whose signature verification
 report succeeds may be described as signed.
 
@@ -44,8 +45,7 @@ or silently replace a failed production signature with a test certificate.
 ## Files covered by this project
 
 Only the following artifacts built from this repository's source code are
-submitted for this project's signatures, separately for the 16 Go and 32 Go
-profiles:
+submitted for this project's signatures in the single `moe` profile:
 
 | File | Purpose |
 | --- | --- |
@@ -77,16 +77,21 @@ the repository's lock files.
 The build sequence is:
 
 1. Compile the launchers and assemblers; generate the uninstallers from NSIS.
-2. Upload only these six project-owned binaries and their build metadata as
+2. Upload only these three project-owned binaries and their build metadata as
    the native-artifact signing request.
 3. Obtain the signed binaries after the service's approval and verify the
    expected signer, valid Authenticode signatures, timestamps and preservation
    of the executable content.
-4. Recompute the payload manifests using the signed inputs and build the two
-   installers with the signed uninstallers embedded unchanged.
-5. Submit the final installers as a separate signing request.
-6. Verify the final signatures and packaging, then create each ZIP containing
+4. Recompute the payload manifests using the signed inputs and build the
+   installer with the signed uninstaller embedded unchanged.
+5. Submit the final installer as a separate signing request.
+6. Verify the final signatures and packaging, then create the ZIP containing
    exactly one `Setup.exe` and regenerate distribution hashes.
+
+The separate `publish-moe.yml` workflow can publish an explicitly unsigned
+release after Windows and real model/harness validation. It cannot claim
+SignPath approval or access signing secrets. The release plan records the
+maintainer-requested cleanup of old downloads only after replacement checks.
 
 The signed path must fail if credentials, an approved policy, a required
 signature, the expected certificate identity or any required verification are

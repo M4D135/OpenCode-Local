@@ -32,7 +32,7 @@ Offline Windows packs for running OpenCode with local language models.
 
 OpenCode Local is an independent open-source Windows integration project that
 packages a native launcher, a per-user offline installer and upstream components
-for local AI-assisted coding. It provides separate memory profiles, local model
+for local AI-assisted coding. It provides one memory-conscious MoE profile, local model
 integrity checks, an OpenCode coding session and a direct chat mode. Projects
 and conversations remain on the local computer by default. The application does
 not change antivirus, firewall or endpoint protection settings. It is not

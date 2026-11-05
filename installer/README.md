@@ -3,31 +3,19 @@
 La compilation utilise **NSIS 3.09 ou ultérieur**, disponible nativement sous
 Linux. Elle ne nécessite ni Wine ni GitHub Actions.
 
-Le pack est composé de trois fichiers à conserver ensemble :
-
-- `Setup.exe` : lanceur, OpenCode, moteur et dépendances.
-- `Setup-1.bin` : les 1 500 000 000 premiers octets du modèle.
-- `Setup-2.bin` : les 1 240 937 888 octets suivants.
+Le pack unique est composé de `Setup.zip` contenant seulement `Setup.exe`,
+et de huit parties `Modele-MoE-01.bin` à `Modele-MoE-08.bin` : sept parties de
+1 500 000 000 octets, puis une de 256 586 464 octets. Le fichier GGUF complet
+peut remplacer les parties. Garder le setup extrait et les parties ensemble.
 
 L’utilisateur lance uniquement `Setup.exe`. Les segments ne nécessitent aucune
 décompression manuelle. Aucun téléchargement n’est effectué sur le poste cible.
 
 ## Compilation
 
-Après préparation et validation du payload, générer la liste exacte des
-fichiers à installer et à retirer :
-
-```sh
-python3 installer/generate_payload_include.py \
-  --payload /chemin/build/payload \
-  --output /chemin/build/payload-files.nsh
-
-makensis \
-  -DPayloadDir=/chemin/build/payload \
-  -DHelperPath=/chemin/build/AssembleModel.exe \
-  -DOutputPath=/chemin/dist/Setup.exe \
-  installer/OpenCodeLocal.nsi
-```
+Utiliser les trois phases décrites dans [BUILD.md](../BUILD.md). Elles génèrent
+l'en-tête C++, les variables NSIS, la liste des fichiers et le désinstalleur
+à partir de la configuration unique `config/packs.json`.
 
 Le générateur refuse les liens symboliques, les noms incompatibles avec Windows
 et les collisions de casse. Le modèle GGUF est exclu de `Setup.exe`. Les
@@ -39,10 +27,10 @@ licences, caches hors ligne et dépendances doivent déjà se trouver dans `wad`
 AssembleModel.exe SOURCE_DIR DEST_MODEL_PATH
 ```
 
-Le helper vérifie la taille exacte des deux segments et le SHA-256 du modèle :
+Le helper vérifie la taille exacte des huit segments et le SHA-256 du modèle :
 
 ```text
-00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4
+2e8f5f705355c56311432d0a8a5d14a696dbb7e4b197d05c75ba805fc1857bef
 ```
 
 Le code retour `0` signifie que le modèle final a été vérifié. Toute autre
@@ -54,7 +42,7 @@ jamais effacé récursivement à l’aveugle.
 ## Installation et préservation des données
 
 L’installation concerne l’utilisateur courant, sans élévation, dans
-`%LOCALAPPDATA%\Programs\OpenCodeLocal` par défaut. Le répertoire est
+`%LOCALAPPDATA%\Programs\OpenCodeLocalMoE` par défaut. Le répertoire est
 personnalisable. Le menu Démarrer reçoit un raccourci ; celui du Bureau est
 facultatif. Le désinstalleur est dans `wad\support`.
 
@@ -70,7 +58,7 @@ restauration est tentée ; même en cas d’échec, ses fichiers restent en sauv
 
 La suppression utilise la liste explicite des fichiers livrés, puis retire les
 dossiers uniquement s’ils sont vides. Aucun `RMDir /r` n’est utilisé. Les fichiers
-ajoutés par l’utilisateur et les données dans `%LOCALAPPDATA%\OpenCodeLocal`
+ajoutés par l’utilisateur et les données dans `%LOCALAPPDATA%\OpenCodeLocalMoE`
 sont conservés. Aucun pare-feu, PATH système ou paramètre de sécurité Windows
 n’est modifié.
 

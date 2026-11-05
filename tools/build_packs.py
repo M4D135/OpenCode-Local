@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build separate, pinned 16/32 GiB offline installers from a prepared payload.
+"""Build the pinned offline MoE installer from a prepared payload.
 
 All large build outputs are completed before atomic publication. The Windows
 installer does not download models or bypass endpoint security.
@@ -19,7 +19,7 @@ import sys
 import tempfile
 import zipfile
 
-from pack_profiles import ROOT, configure_opencode, generate, load_pack
+from pack_profiles import ROOT, configure_opencode, generate, load_pack, pack_names
 from signing import HOUSE_FILES, check_source, image_record, source_identity, validate_files
 
 
@@ -73,8 +73,6 @@ def verify_base(base: Path) -> dict:
 def make_readme(pack: dict, signing: str = "unsigned") -> str:
     model = pack["model"]
     parts = "\n".join("  " + p["name"] for p in pack["parts"])
-    reuse = "Les fichiers Setup-1.bin et Setup-2.bin de la version 1.0.0 restent compatibles.\n" if pack["id"] == "16go" else ""
-    speed = "Le modèle 27B demande plus de temps de chargement et de calcul sur CPU.\n" if pack["id"] == "32go" else ""
     signature = ("Les exécutables maison intégrés ont une signature Authenticode vérifiée.\n"
                  "La signature ne garantit pas l'acceptation par l'antivirus de votre poste.\n"
                  if signing == "signed" else
@@ -82,7 +80,7 @@ def make_readme(pack: dict, signing: str = "unsigned") -> str:
     return f'''{pack["display_name"]} — version {pack["app_version"]}
 
 INSTALLATION HORS LIGNE
-1. Extraire Setup.exe de Setup-{pack["ram_gib"]}Go-{pack["app_version"]}.zip.
+1. Extraire Setup.exe de Setup.zip. Le ZIP contient uniquement cet exécutable.
 2. Placer dans le même dossier SOIT le modèle complet :
    {model["filename"]}
    SOIT toutes ses {len(pack["parts"])} parties :
@@ -90,7 +88,8 @@ INSTALLATION HORS LIGNE
 3. Lancer Setup.exe et choisir un dossier dédié au programme.
 4. Ouvrir le raccourci « {pack["shortcut_name"]} ».
 
-{reuse}Aucun téléchargement n'est effectué par l'installateur ou le lanceur.
+Aucun téléchargement n'est effectué par l'installateur ou le lanceur.
+Les parties des anciens modèles ne sont pas compatibles avec ce nouveau pack.
 Le setup vérifie la taille et le SHA-256 complet du modèle avant publication.
 Un modèle complet présent mais invalide provoque une erreur explicite.
 
@@ -100,18 +99,25 @@ Taille : {model["bytes"]} octets
 SHA-256 : {model["sha256"]}
 Source figée : {model["url"]}
 Contexte initial : {pack["default_context"]} tokens. Une session de calcul à la fois.
-{speed}
+Profil mémoire : poids mappés, aucune copie de repacking, cache de conversations
+désactivé, un seul checkpoint, petits lots et cache KV BF16.
+Le lanceur vérifie un budget estimé pour le modèle et les outils, auquel il
+ajoute {pack["memory_reserve_mb"] // 1024} Gio de réserve pour vos autres applications.
+Prévoir environ 20 Gio disponibles avant lancement sur un PC de 32 Gio.
+Ce budget est une estimation de démarrage ; il ne constitue pas un plafond RAM.
+La quantification IQ2 privilégie la mémoire et peut diminuer la qualité.
+
 DOSSIERS
 Programme : %LOCALAPPDATA%\\Programs\\{pack["install_dir_name"]}
 Données : %LOCALAPPDATA%\\{pack["profile_name"]}
-Le pack 32 Go possède son propre profil ; les conversations du pack 16 Go
-ne sont pas supprimées lors de son installation.
+Ce pack utilise son propre profil. Les données des anciennes versions sont
+conservées ; leur suppression locale n'est pas automatique.
 
 PROTECTION DU POSTE
 {signature}Une détection TEHTRIS a été observée sur le lanceur 1.0.0/1.0.1 ;
 sa cause n'est pas encore qualifiée.
 Consulter wad\\docs\\TEHTRIS.md et les empreintes du pack pour l'analyse.
-Ces packs ne modifient pas l'antivirus, le pare-feu ou leurs exclusions.
+Ce pack ne modifie pas l'antivirus, le pare-feu ou leurs exclusions.
 
 OpenCode nécessite une connexion locale à 127.0.0.1. Le mode Discussion
 directe est disponible lorsque les connexions localhost sont interdites.
@@ -304,7 +310,7 @@ def native_phase(names: tuple[str, ...], base: Path, work_root: Path, artifacts:
                 "profiles": profiles, "base_manifest_sha256": digest(base / "wad/support/payload-manifest.json"),
                 "files": records, "signing": "unsigned", "model_downloads": False}
     save_json(artifacts / "native-manifest.json", manifest)
-    print("NATIVE SIGNING INPUT", target, "(unsigned; six files for both packs)", flush=True)
+    print("NATIVE SIGNING INPUT", target, f"(unsigned; {len(records)} project executables)", flush=True)
     return manifest
 
 
@@ -388,7 +394,7 @@ def finalize_phase(names: tuple[str, ...], artifacts: Path, output_root: Path, m
         output = output_root / name
         output.mkdir(parents=True, exist_ok=True)
         setup = setup_root / name / "Setup.exe"
-        zip_name = f'Setup-{pack["ram_gib"]}Go-{pack["app_version"]}.zip'
+        zip_name = 'Setup.zip'
         with tempfile.TemporaryDirectory(prefix="opencode-final-") as temporary:
             archive = Path(temporary) / zip_name
             with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_STORED) as zipped:
@@ -400,8 +406,8 @@ def finalize_phase(names: tuple[str, ...], artifacts: Path, output_root: Path, m
                     if hashlib.file_digest(extracted, "sha256").hexdigest() != digest(setup):
                         raise ValueError("ZIP does not contain the exact final Setup.exe")
             atomic_copy(archive, output / zip_name)
-        (output / f'LISEZ-MOI-{pack["ram_gib"]}Go.txt').write_text(make_readme(pack, mode), encoding="utf-8")
-        save_json(output / f'PACK-{pack["ram_gib"]}Go.json', pack)
+        (output / 'LISEZ-MOI.txt').write_text(make_readme(pack, mode), encoding="utf-8")
+        save_json(output / 'PACK.json', pack)
         save_json(output / "MODELE.json", {**pack["model"], "parts": pack["parts"]})
         parts = []
         if include_parts:
@@ -410,11 +416,8 @@ def finalize_phase(names: tuple[str, ...], artifacts: Path, output_root: Path, m
             parts = split_model(model_dir / pack["model"]["filename"], pack, output)
         checksums = {zip_name: digest(output / zip_name), "Setup.exe": digest(setup)}
         checksums.update({part["name"]: part["sha256"] for part in parts})
-        if name == "16go" and not parts:
-            checksums.update({"Setup-1.bin": "416e11f3cf0391279546e73fd7a3658c368ae4328f0a94d34b6d7d6d0394964f",
-                              "Setup-2.bin": "d4761367a069f853868471b7c11cd9a65c6112e5d9476b9c3ac2bd32bcebacfb"})
         checksums[pack["model"]["filename"]] = pack["model"]["sha256"]
-        (output / f'SHA256SUMS-{pack["ram_gib"]}Go.txt').write_text("".join(f"{sha}  {filename}\n" for filename, sha in checksums.items()), encoding="ascii")
+        (output / 'SHA256SUMS.txt').write_text("".join(f"{sha}  {filename}\n" for filename, sha in checksums.items()), encoding="ascii")
         result = {"pack": name, "version": pack["app_version"], "source_commit": native["source"]["commit"],
                   "source_inputs_sha256": native["source"]["inputs_sha256"], "signing": mode,
                   "model": pack["model"], "zip": str(output / zip_name), "zip_contains": ["Setup.exe"],
@@ -434,7 +437,7 @@ def main(argv: list[str] | None = None) -> None:
     parser.add_argument("--phase", choices=("native", "setup", "finalize", "all"), default="all")
     parser.add_argument("--signing", choices=("unsigned", "signed"), required=True,
                         help="Explicit unsigned development build, or fail-closed signed import")
-    parser.add_argument("--pack", choices=("16go", "32go", "all"), default="all")
+    parser.add_argument("--pack", choices=(*pack_names(), "all"), default="all")
     parser.add_argument("--base-payload", type=Path)
     parser.add_argument("--work-root", type=Path, default=ROOT / "build/signing")
     parser.add_argument("--artifact-root", type=Path, default=ROOT / "signing")
@@ -453,7 +456,7 @@ def main(argv: list[str] | None = None) -> None:
         parser.error("Native compilation is unsigned; use explicit native -> signing service -> setup -> signing service -> finalize phases")
     if args.phase in ("native", "setup", "all") and args.base_payload is None:
         parser.error("--base-payload is required for native/setup phases")
-    names = ("16go", "32go") if args.pack == "all" else (args.pack,)
+    names = pack_names() if args.pack == "all" else (args.pack,)
     artifacts = args.artifact_root.resolve()
     work = args.work_root.resolve()
     base = args.base_payload.resolve(strict=True) if args.base_payload else None

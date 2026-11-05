@@ -10,14 +10,11 @@ import struct
 import subprocess
 import sys
 import zipfile
+from pack_profiles import pack_names
 
 ROOT = Path(__file__).resolve().parents[1]
 PAYLOAD = ROOT / "build/payload"
 DIST = ROOT / "dist"
-MODEL = "Qwen3.5-4B-Q4_K_M.gguf"
-MODEL_SIZE = 2740937888
-MODEL_SHA = "00fe7986ff5f6b463e62455821146049db6f9313603938a70800d1fb69ef11a4"
-SLICE_SIZE = 1500000000
 
 
 def run(args):
@@ -75,7 +72,7 @@ def stage_runtime():
 
 def stage(offline):
     # A setup-only/base preparation never downloads a GGUF, including the
-    # legacy 4B entry in artifacts.lock.json. The runtime comes directly from
+    # model entry in artifacts.lock.json. The runtime comes directly from
     # pinned upstream archives; no previous Setup.exe is reused.
     from fetch_payload import fetch
     items = json.loads((ROOT / "config/artifacts.lock.json").read_text(encoding="utf-8"))
@@ -140,7 +137,7 @@ def main():
     parser.add_argument("--prepared", action="store_true", help="Reuse build/payload without downloads")
     parser.add_argument("--phase", choices=("native", "setup", "finalize", "all"), default="all")
     parser.add_argument("--signing", choices=("unsigned", "signed"), required=True)
-    parser.add_argument("--pack", choices=("16go", "32go", "all"), default="all")
+    parser.add_argument("--pack", choices=(*pack_names(), "all"), default="all")
     parser.add_argument("--base-payload", type=Path)
     parser.add_argument("--work-root", type=Path, default=ROOT / "build/signing")
     parser.add_argument("--artifact-root", type=Path, default=ROOT / "signing")
@@ -177,7 +174,7 @@ def main():
     if args.include_parts:
         if args.phase not in ("all", "finalize"):
             parser.error("--include-parts is only supported when finalizing")
-        for name in (("16go", "32go") if args.pack == "all" else (args.pack,)):
+        for name in (pack_names() if args.pack == "all" else (args.pack,)):
             model = load_pack(name)["model"]
             fetch({"file": model["filename"], "url": model["url"],
                    "size": model["bytes"], "sha256": model["sha256"]}, args.offline)

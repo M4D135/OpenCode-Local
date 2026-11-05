@@ -68,12 +68,12 @@ jobs:
       - name: Prepare only pinned upstream dependencies, without models
         run: python tools/build.py --prepare-only --setup-only --signing unsigned
 
-      - name: Compile our six executables from source
+      - name: Compile our three MoE pack executables from source
         run: >-
           python tools/build_packs.py --phase native --signing unsigned --pack all
           --base-payload build/payload --work-root build/signing --artifact-root signing --setup-only
 
-      - name: Assemble both unsigned installers and check their archives
+      - name: Assemble the unsigned installer and check its archive
         run: >-
           python tools/build_packs.py --phase setup --signing unsigned --pack all
           --base-payload build/payload --work-root build/signing --artifact-root signing
@@ -95,7 +95,7 @@ jobs:
           python .signpath/ci_gate.py provenance signing/workflow-provenance.json
           python .signpath/ci_gate.py budget signing/native signing/setup signing/native-manifest.json signing/setup-manifest.json signing/workflow-provenance.json
 
-      # One transfer bundle, at most 300 MB; no model or prepared payload.
+      # One transfer bundle, at most 150 MB; no model or prepared payload.
       - name: Transfer unsigned candidates for Windows validation
         id: upload
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -154,7 +154,7 @@ jobs:
 
       - name: Check executables, installer contents, and small Windows fixtures
         run: |
-          & ./tools/windows_validate.ps1 -Phase All -NativeRoot signing/native -SetupRoot signing/setup -WorkRoot build/signing -Pack @('16go', '32go') -ReportPath validation/windows-unsigned.json
+          & ./tools/windows_validate.ps1 -Phase All -NativeRoot signing/native -SetupRoot signing/setup -WorkRoot build/signing -ReportPath validation/windows-unsigned.json
 
       - name: Verify final ZIP packaging locally, without duplicating uploads
         run: >-

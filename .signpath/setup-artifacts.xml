@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Only the outer installers are signed here; their six home-built PE files were signed first. -->
+<!-- Only the outer installer is signed here; its three home-built PE files were signed first. -->
 <artifact-configuration xmlns="http://signpath.io/artifact-configuration/v1">
   <parameters>
     <parameter name="version" required="true" />
   </parameters>
   <zip-file>
-    <pe-file path="16go/Setup.exe" product-name="OpenCode Local" product-version="${version}" original-filename="Setup.exe">
-      <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
-    </pe-file>
-    <pe-file path="32go/Setup.exe" product-name="OpenCode Local" product-version="${version}" original-filename="Setup.exe">
+    <pe-file path="moe/Setup.exe" product-name="OpenCode Local" product-version="${version}" original-filename="Setup.exe">
       <authenticode-sign hash-algorithm="sha256" description="OpenCode Local" description-url="https://github.com/M4D135/OpenCode-Local" />
     </pe-file>
   </zip-file>

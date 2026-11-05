@@ -1,0 +1,195 @@
+name: Publish the validated MoE pack
+
+on:
+  workflow_run:
+    workflows: ['Build and Windows validation (unsigned)']
+    types: [completed]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: opencode-local-moe-publication
+  cancel-in-progress: false
+
+env:
+  SOURCE_SHA: ${{ github.event.workflow_run.head_sha }}
+  VALIDATION_RUN_ID: ${{ github.event.workflow_run.id }}
+
+jobs:
+  preflight:
+    if: >-
+      github.repository == 'M4D135/OpenCode-Local' &&
+      github.event.repository.private == false &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == 'M4D135/OpenCode-Local' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      ready: ${{ steps.plan.outputs.ready }}
+      cleanup_ready: ${{ steps.plan.outputs.cleanup_ready }}
+      candidate_id: ${{ steps.plan.outputs.candidate_id }}
+      windows_report_id: ${{ steps.plan.outputs.windows_report_id }}
+    steps:
+      - name: Check out the exact source that passed Windows validation
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Check the publication and cleanup safety gates
+        run: python tools/test_release_publish.py
+
+      - name: Validate the source, release plan, and originating artifacts
+        id: plan
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          python tools/publish_single_release.py preflight
+          --source-sha "$SOURCE_SHA" --run-id "$VALIDATION_RUN_ID"
+
+  publish:
+    needs: preflight
+    if: needs.preflight.outputs.ready == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      actions: write
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the identical validated source commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Install the archive reader
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y 7zip
+
+      - name: Download the exact validated candidate bundle
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.preflight.outputs.candidate_id }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: M4D135/OpenCode-Local
+          path: signing
+          merge-multiple: true
+          digest-mismatch: error
+
+      - name: Download the Windows report from the same validation run
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          artifact-ids: ${{ needs.preflight.outputs.windows_report_id }}
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: M4D135/OpenCode-Local
+          path: qa/ci-reports
+          merge-multiple: true
+          digest-mismatch: error
+
+      - name: Finalize the unsigned setup ZIP without downloading model parts
+        run: >-
+          python tools/build_packs.py --phase finalize --signing unsigned --pack moe
+          --artifact-root signing --output-root dist --setup-only
+
+      - name: Prepare pinned model and Linux runtime validation inputs
+        id: inputs
+        run: >-
+          python tools/prepare_release_validation.py
+          --setup signing/setup/moe/Setup.exe --work-root qa/runtime-inputs
+          --report qa/runtime-inputs.json
+
+      # No publication token is placed in the inference process environment.
+      - name: Validate generation, tools, OpenCode, and the memory budget
+        env:
+          OPENCODE_ENGINE: ${{ steps.inputs.outputs.engine }}
+          OPENCODE_MODEL: ${{ steps.inputs.outputs.model }}
+          OPENCODE_BINARY: ${{ steps.inputs.outputs.opencode }}
+          OPENCODE_OFFLINE_SEED: ${{ steps.inputs.outputs.offline_seed }}
+        run: >-
+          python tools/validate_moe_runtime.py
+          --engine "$OPENCODE_ENGINE" --model "$OPENCODE_MODEL"
+          --opencode "$OPENCODE_BINARY" --offline-seed "$OPENCODE_OFFLINE_SEED"
+          --report qa/model-runtime.json --context 8192
+
+      - name: Publish the verified pack and remove the approved obsolete assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          python tools/publish_single_release.py publish
+          --source-sha "$SOURCE_SHA" --run-id "$VALIDATION_RUN_ID"
+          --dist dist/moe --model-report qa/model-runtime.json
+          --windows-report qa/ci-reports/validation/windows-unsigned.json
+
+      - name: Keep only the small validation reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: moe-release-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            qa/publication.json
+            qa/model-runtime.json
+            qa/runtime-inputs.json
+            qa/ci-reports/validation/windows-unsigned.json
+            signing/finalize-manifest.json
+          if-no-files-found: ignore
+          retention-days: 1
+          compression-level: 6
+
+  cleanup:
+    needs: preflight
+    if: needs.preflight.outputs.cleanup_ready == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Check out the exact source recorded for the published pack
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+
+      - name: Select Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+
+      - name: Reverify the published manifest and finish the approved cleanup
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: >-
+          python tools/publish_single_release.py cleanup
+          --source-sha "$SOURCE_SHA" --run-id "$VALIDATION_RUN_ID"
+
+      - name: Keep the cleanup report
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: moe-release-cleanup-${{ github.run_id }}-${{ github.run_attempt }}
+          path: qa/publication.json
+          if-no-files-found: ignore
+          retention-days: 1
+          compression-level: 6

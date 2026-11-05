@@ -169,12 +169,12 @@ class SigningIntegrityTests(unittest.TestCase):
         for path in undeclared:
             path.write_bytes(b"not declared by the verified input manifest")
         build_packs.verify_base(base)
-        payload = build_packs.prepare_payload(base, self.root / "work", load_pack("16go"))
+        payload = build_packs.prepare_payload(base, self.root / "work", load_pack("moe"))
         self.assertEqual((payload / "wad/opencode/opencode.exe").read_bytes(), b"verified upstream fixture")
         for path in undeclared:
             self.assertTrue(path.is_file(), "The original base must remain untouched")
             self.assertFalse((payload / path.relative_to(base)).exists())
-        new_manifest = build_packs.write_manifest(payload, load_pack("16go"))
+        new_manifest = build_packs.write_manifest(payload, load_pack("moe"))
         self.assertFalse(any(entry["path"].endswith(("unlisted.exe", ".interrupted")) for entry in new_manifest))
 
 

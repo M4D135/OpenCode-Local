@@ -13,14 +13,19 @@ import uuid
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "tools"))
+from pack_profiles import pack_names
+
 NAMESPACE = "{http://signpath.io/artifact-configuration/v1}"
-PROFILES = ("16go", "32go")
 HOUSE_FILES = ("OpenCodeLocal.exe", "AssembleModel.exe", "Uninstall.exe")
 
 
 def expected_files(phase: str) -> set[str]:
+    profiles = tuple(pack_names())
+    if profiles != ("moe",):
+        raise ValueError("The reviewed signing configuration permits only the single moe pack")
     names = HOUSE_FILES if phase == "native" else ("Setup.exe",)
-    return {profile + "/" + name for profile in PROFILES for name in names}
+    return {profile + "/" + name for profile in profiles for name in names}
 
 
 def configuration() -> str:
@@ -148,10 +153,10 @@ def main() -> None:
     check = commands.add_parser("layout")
     check.add_argument("phase", choices=("native", "setup"))
     check.add_argument("root", type=Path)
-    check.add_argument("--max-bytes", type=int, default=300_000_000)
+    check.add_argument("--max-bytes", type=int, default=150_000_000)
     budget = commands.add_parser("budget")
     budget.add_argument("paths", type=Path, nargs="+")
-    budget.add_argument("--max-bytes", type=int, default=300_000_000)
+    budget.add_argument("--max-bytes", type=int, default=150_000_000)
     record = commands.add_parser("provenance")
     record.add_argument("output", type=Path)
     args = parser.parse_args()
