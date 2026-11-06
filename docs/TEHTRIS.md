@@ -1,5 +1,44 @@
 # Détection du lanceur et de l'assembleur par TEHTRIS
 
+## Signalement du 6 novembre 2026 — arrêt après le premier message
+
+L'utilisateur indique que le blocage persiste : environ deux minutes après
+le premier message dans OpenCode, un exécutable est supprimé pendant
+l'attente de la réponse. Ce nouveau signalement textuel ne précise pas le
+nom exact du fichier, sa version ou son empreinte. Les photos précédentes
+concernaient notamment `OpenCodeLocal.exe` ; cela ne suffit pas à identifier
+le fichier de cette nouvelle occurrence.
+
+La revue en lecture seule du commit
+`502e7c96bac29a0e72a28f3be3b47ebe50fa0b8e` établit les points suivants dans
+[`src/launcher.cpp`](../src/launcher.cpp) :
+
+- Après l'ouverture d'OpenCode, `RunSession` attend la fin d'OpenCode et
+  contrôle si le moteur s'est arrêté. Cette boucle ne contient ni requête
+  HTTP, ni écriture de fichier, ni lancement de processus, ni minuterie de
+  deux minutes. Le lanceur ne reçoit pas le texte du message utilisateur.
+- Les requêtes `/health` et `/v1/models` sont exécutées par `WaitForEngine`
+  avant l'ouverture d'OpenCode. La limite de chargement configurée est de
+  600 secondes ; les options du fournisseur OpenCode indiquent 900 secondes
+  pour la requête et les en-têtes, et 300 secondes entre les données du flux.
+- Le Job Object utilise `JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE`. Une terminaison
+  externe du lanceur peut donc entraîner celle des enfants lorsque le
+  dernier handle du job est fermé. Cela explique une fermeture de session,
+  sans identifier la cause de la détection.
+
+La boucle d'attente ne journalise pas l'inférence : `launcher.log` seul ne
+permet pas de situer précisément son interruption. La ligne de démarrage
+du moteur y donne le nom du fichier `moteur-*.log` de la même session, qui
+reçoit la sortie standard et la sortie d'erreur du moteur. Les journaux
+OpenCode peuvent compléter cette chronologie. Les chemins sont indiqués
+dans la section « Journaux locaux utiles » ci-dessous. Leur lecture ne
+nécessite ni de restaurer ni de relancer l'exécutable supprimé.
+
+**Aucune cause TEHTRIS n'a été établie et aucun correctif de cette détection
+n'est validé.** Cette revue n'est ni un nouvel essai d'inférence sous Windows
+ni une qualification antivirus. Aucun binaire n'est modifié ou republié
+sur la seule base du délai signalé.
+
 ## Signalement après diffusion de 1.2.1 — blocage persistant
 
 Deux nouvelles photos reçues le 5 novembre 2026 montrent une quarantaine
@@ -285,9 +324,10 @@ correctif 1.2.1.
 
 **Aucune soumission au support TEHTRIS ni demande d’autorisation n’a été
 effectuée dans le cadre de cette mise à jour.** La cause et la qualification
-de l’alerte restent ouvertes. Le correctif de code 1.2.1 est en cours de
-validation ; il n’est pas présenté comme une résolution vérifiée de la
-détection. Les protections du poste restent inchangées.
+de l’alerte restent ouvertes. Les validations fonctionnelles de 1.2.1 et
+1.2.2 ont réussi dans le périmètre décrit dans [VALIDATION.md](../VALIDATION.md) ;
+elles ne constituent pas une résolution vérifiée de la détection. Les
+protections du poste restent inchangées.
 
 ## Références
 
